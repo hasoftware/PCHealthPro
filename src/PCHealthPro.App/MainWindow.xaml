@@ -1,0 +1,29 @@
+<Window x:Class="PCHealthPro.App.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Window.SystemBackdrop><MicaBackdrop/></Window.SystemBackdrop>
+ <NavigationView x:Name="Nav" PaneDisplayMode="Auto" CompactModeThresholdWidth="640"
+   ExpandedModeThresholdWidth="1060" OpenPaneLength="264" IsBackButtonVisible="Collapsed"
+   IsSettingsVisible="False" SelectionChanged="Navigate">
+   <ScrollViewer x:Name="Scroller">
+     <StackPanel x:Name="Body" Padding="24" Spacing="16" MaxWidth="1200" HorizontalAlignment="Stretch">
+       <TextBlock x:Name="Heading" Style="{ThemeResource TitleTextBlockStyle}"/>
+       <StackPanel x:Name="OverviewPanel" Spacing="16">
+         <InfoBar x:Name="SampleNotice" IsOpen="True" IsClosable="False"/>
+         <StackPanel Orientation="Horizontal" Spacing="12">
+           <Button x:Name="QuickCheck" Command="{x:Bind Model.RefreshCommand}" CornerRadius="8" Style="{ThemeResource AccentButtonStyle}"/>
+           <ProgressRing x:Name="Progress" Width="24" Height="24"/>
+         </StackPanel>
+         <TextBlock x:Name="CheckStatus" AutomationProperties.LiveSetting="Polite"/>
+         <Grid x:Name="Cards" ColumnSpacing="12" RowSpacing="12" SizeChanged="ResizeCards"/>
+       </StackPanel>
+       <StackPanel x:Name="SettingsPanel" Spacing="12" Visibility="Collapsed">
+         <ComboBox x:Name="LanguageBox" SelectionChanged="ChangeLanguage" MinWidth="220"/>
+         <TextBlock x:Name="Privacy" TextWrapping="Wrap"/>
+       </StackPanel>
+       <InfoBar x:Name="Placeholder" IsOpen="True" IsClosable="False" Visibility="Collapsed"/>
+       <TeachingTip x:Name="Tip" Target="{x:Bind QuickCheck}" PreferredPlacement="Bottom" Closed="DismissTip"/>
+     </StackPanel>
+   </ScrollViewer>
+ </NavigationView>
+</Window>

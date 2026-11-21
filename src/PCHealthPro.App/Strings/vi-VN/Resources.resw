@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Overview" xml:space="preserve"><value>Tổng quan</value></data>
+  <data name="Compute" xml:space="preserve"><value>CPU &amp; RAM</value></data>
+  <data name="Storage" xml:space="preserve"><value>Ổ cứng</value></data>
+  <data name="Battery" xml:space="preserve"><value>Pin</value></data>
+  <data name="Network" xml:space="preserve"><value>Mạng &amp; WiFi</value></data>
+  <data name="Display" xml:space="preserve"><value>Màn hình</value></data>
+  <data name="Audio" xml:space="preserve"><value>Âm thanh &amp; Mic</value></data>
+  <data name="Camera" xml:space="preserve"><value>Camera</value></data>
+  <data name="Input" xml:space="preserve"><value>Bàn phím &amp; Touchpad</value></data>
+  <data name="Reports" xml:space="preserve"><value>Báo cáo</value></data>
+  <data name="Settings" xml:space="preserve"><value>Cài đặt</value></data>
+  <data name="SystemLanguage" xml:space="preserve"><value>Theo hệ thống</value></data>
+  <data name="Language" xml:space="preserve"><value>Ngôn ngữ hiển thị</value></data>
+  <data name="Good" xml:space="preserve"><value>Tốt</value></data>
+  <data name="Attention" xml:space="preserve"><value>Cần chú ý</value></data>
+  <data name="Problem" xml:space="preserve"><value>Có vấn đề</value></data>
+  <data name="Unknown" xml:space="preserve"><value>Không có dữ liệu</value></data>
+  <data name="CPU" xml:space="preserve"><value>Bộ xử lý</value></data>
+  <data name="GPU" xml:space="preserve"><value>Đồ họa</value></data>
+  <data name="RAM" xml:space="preserve"><value>Bộ nhớ</value></data>
+  <data name="Windows" xml:space="preserve"><value>Windows</value></data>
+  <data name="QuickCheck" xml:space="preserve"><value>Chạy kiểm tra nhanh</value></data>
+  <data name="Sample" xml:space="preserve"><value>Dữ liệu mẫu · Các chỉ số phần cứng được mô phỏng.</value></data>
+  <data name="Pending" xml:space="preserve"><value>Module này sẽ được triển khai trong giai đoạn {0}.</value></data>
+  <data name="Privacy" xml:space="preserve"><value>Kiểm tra phần cứng hoạt động ngoại tuyến. Dữ liệu thiết bị chỉ lưu trên máy này.</value></data>
+  <data name="Completed" xml:space="preserve"><value>Đã kiểm tra xong dữ liệu mẫu</value></data>
+  <data name="Busy" xml:space="preserve"><value>Đang kiểm tra phần cứng mẫu…</value></data>
+  <data name="Hint" xml:space="preserve"><value>Chạy kiểm tra nhanh để cập nhật cả sáu thẻ.</value></data>
+  <data name="Details" xml:space="preserve"><value>Chi tiết</value></data>
+  <data name="Copy" xml:space="preserve"><value>Sao chép</value></data>
+</root>

@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+[Cc][Ll][Aa][Uu][Dd][Ee].md
+[Mm][Ee][Mm][Oo][Rr][Yy].md
+[Dd][Ee][Ss][Ii][Gg][Nn].md
+.env*
+logs/
+reports/
+artifacts/

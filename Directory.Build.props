@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.0.1</Version>
+    <Authors>HASOFTWARE — Hoang Anh Dev</Authors>
+    <Product>PC Health Pro</Product>
+  </PropertyGroup>
+</Project>

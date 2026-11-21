@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <data name="Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Compute" xml:space="preserve"><value>CPU &amp; RAM</value></data>
+  <data name="Storage" xml:space="preserve"><value>Storage</value></data>
+  <data name="Battery" xml:space="preserve"><value>Battery</value></data>
+  <data name="Network" xml:space="preserve"><value>Network &amp; Wi-Fi</value></data>
+  <data name="Display" xml:space="preserve"><value>Display</value></data>
+  <data name="Audio" xml:space="preserve"><value>Audio &amp; microphone</value></data>
+  <data name="Camera" xml:space="preserve"><value>Camera</value></data>
+  <data name="Input" xml:space="preserve"><value>Keyboard &amp; touchpad</value></data>
+  <data name="Reports" xml:space="preserve"><value>Reports</value></data>
+  <data name="Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="SystemLanguage" xml:space="preserve"><value>System default</value></data>
+  <data name="Language" xml:space="preserve"><value>Display language</value></data>
+  <data name="Good" xml:space="preserve"><value>Good</value></data>
+  <data name="Attention" xml:space="preserve"><value>Needs attention</value></data>
+  <data name="Problem" xml:space="preserve"><value>Problem</value></data>
+  <data name="Unknown" xml:space="preserve"><value>No data</value></data>
+  <data name="CPU" xml:space="preserve"><value>Processor</value></data>
+  <data name="GPU" xml:space="preserve"><value>Graphics</value></data>
+  <data name="RAM" xml:space="preserve"><value>Memory</value></data>
+  <data name="Windows" xml:space="preserve"><value>Windows</value></data>
+  <data name="QuickCheck" xml:space="preserve"><value>Run quick check</value></data>
+  <data name="Sample" xml:space="preserve"><value>Sample data · Hardware readings are simulated.</value></data>
+  <data name="Pending" xml:space="preserve"><value>This module is planned for phase {0}.</value></data>
+  <data name="Privacy" xml:space="preserve"><value>Hardware checks run offline. Device data stays on this PC.</value></data>
+  <data name="Completed" xml:space="preserve"><value>Sample check complete</value></data>
+  <data name="Busy" xml:space="preserve"><value>Checking sample hardware…</value></data>
+  <data name="Hint" xml:space="preserve"><value>Run a quick check to refresh all six cards.</value></data>
+  <data name="Details" xml:space="preserve"><value>Details</value></data>
+  <data name="Copy" xml:space="preserve"><value>Copy</value></data>
+</root>
