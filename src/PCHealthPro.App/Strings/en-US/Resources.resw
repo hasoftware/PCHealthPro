@@ -348,4 +348,6 @@
   <data name="GpuIntegratedPci" xml:space="preserve"><value>Integrated GPU · PCI device ID</value></data>
   <data name="GpuDiscretePci" xml:space="preserve"><value>Discrete GPU · PCI device ID</value></data>
   <data name="GpuSharedRam" xml:space="preserve"><value>Uses shared system memory</value></data>
+  <data name="FirmwareProduct" xml:space="preserve"><value>Firmware product information</value></data>
+  <data name="RamMixed" xml:space="preserve"><value>Onboard memory and removable module(s)</value></data>
 </root>

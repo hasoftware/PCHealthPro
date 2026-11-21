@@ -38,7 +38,7 @@ public sealed class InventoryTests
     {
         var source = new Source(new()
         {
-            ["Win32_PhysicalMemory"] = [new() { ["Capacity"] = 8L << 30 }, new() { ["Capacity"] = secondCapacity }],
+            ["Win32_PhysicalMemory"] = [new() { ["Capacity"] = 8L << 30, ["FormFactor"] = 12 }, new() { ["Capacity"] = secondCapacity, ["FormFactor"] = 12 }],
             ["Win32_PhysicalMemoryArray"] = [new() { ["MemoryDevices"] = 4 }]
         });
         var module = InventoryCatalog.Create(source).Single(m => m.Category == "RAM");
@@ -68,7 +68,6 @@ public sealed class InventoryTests
 
     [Theory]
     [InlineData(0, false)]
-    [InlineData(21, false)]
     [InlineData(12, true)]
     public async Task OtherLpddrSystemsNeedModuleEvidenceForSocketCounts(int form, bool removable)
     {
@@ -102,7 +101,7 @@ public sealed class InventoryTests
         {
             var source = new Source(new()
             {
-                ["Win32_PhysicalMemory"] = [new(), new()],
+                ["Win32_PhysicalMemory"] = [new() { ["FormFactor"] = 8 }, new() { ["FormFactor"] = 8 }],
                 ["Win32_PhysicalMemoryArray"] = counts.Select(n => new DeviceRow { ["MemoryDevices"] = n }).ToArray()
             });
             var reading = await InventoryCatalog.Create(source).Single(m => m.Category == "RAM").ReadAsync(default);
@@ -111,6 +110,43 @@ public sealed class InventoryTests
         Assert.Equal(["4", "2", "2"], (await Topology(2, 2)).Select(f => f.Value));
         Assert.Equal([null, "2", null], (await Topology(1)).Select(f => f.Value));
         Assert.Equal([null, "2", null], (await Topology(0, 2)).Select(f => f.Value));
+    }
+
+    [Fact]
+    public async Task DifferentManufacturersCanReportOnboardAndMixedMemory()
+    {
+        foreach (var (vendor, forms, expected) in new[] {
+            ("Dell Inc.", new[] { 21, 22 }, "RamOnboard"),
+            ("LENOVO", new[] { 14, 12 }, "RamMixed"),
+            ("ASUSTeK COMPUTER INC.", new[] { 12, 0 }, "RamSocketsUnconfirmed")
+        })
+        {
+            var source = new Source(new()
+            {
+                ["Win32_ComputerSystem"] = [new() { ["Manufacturer"] = vendor, ["Model"] = "Unlisted" }],
+                ["Win32_PhysicalMemory"] = forms.Select(f => new DeviceRow { ["Capacity"] = 8L << 30, ["FormFactor"] = f }).ToArray(),
+                ["Win32_PhysicalMemoryArray"] = [new() { ["MemoryDevices"] = 2 }]
+            });
+            var ram = await InventoryCatalog.Create(source).Single(m => m.Category == "RAM").ReadAsync(default);
+            Assert.Equal("16 GiB", ram.Value);
+            Assert.Equal(expected, Assert.Single(ram.Groups.Single(g => g.Label == "RAM").Fields).Value);
+        }
+    }
+
+    [Theory]
+    [InlineData("21AB0000", "ThinkPad", "ThinkPad T14 Gen 3", "ThinkPad T14 Gen 3")]
+    [InlineData("21AB0000", "ThinkPad T14 Gen 3", "1.0", "ThinkPad T14 Gen 3")]
+    [InlineData("Latitude 7440", "Latitude", "1.0", "Latitude 7440")]
+    [InlineData("AB123", "System Family", "1.0", "AB123")]
+    public async Task UnlistedModelsUseProductFamilyOnlyWhenItAddsInformation(string model, string family, string version, string expected)
+    {
+        var source = new Source(new()
+        {
+            ["Win32_ComputerSystem"] = [new() { ["Model"] = model, ["SystemFamily"] = family }],
+            ["Win32_ComputerSystemProduct"] = [new() { ["Version"] = version }]
+        });
+        var machine = await InventoryCatalog.Create(source).Single(m => m.Category == "Machine").ReadAsync(default);
+        Assert.Equal(expected, machine.Value);
     }
 
     [Fact]

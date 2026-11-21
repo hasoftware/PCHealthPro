@@ -348,4 +348,6 @@
   <data name="GpuIntegratedPci" xml:space="preserve"><value>GPU tích hợp · Theo mã PCI</value></data>
   <data name="GpuDiscretePci" xml:space="preserve"><value>GPU rời · Theo mã PCI</value></data>
   <data name="GpuSharedRam" xml:space="preserve"><value>Dùng chung RAM hệ thống</value></data>
+  <data name="FirmwareProduct" xml:space="preserve"><value>Sản phẩm theo firmware</value></data>
+  <data name="RamMixed" xml:space="preserve"><value>Có RAM hàn và thanh RAM tháo lắp</value></data>
 </root>

@@ -8,6 +8,7 @@ public static class InventoryCatalog
         const string standard = @"root\StandardCimv2";
         yield return new InventoryModule("Machine", source,
             new InventoryQuery("Machine", "Win32_ComputerSystem", "Model,Manufacturer,PCSystemType,SystemFamily"),
+            new InventoryQuery("FirmwareProduct", "Win32_ComputerSystemProduct", "Name,Version"),
             new InventoryQuery("Chassis", "Win32_SystemEnclosure", "ChassisTypes"),
             new InventoryQuery("BIOS", "Win32_BIOS", "SMBIOSBIOSVersion,Manufacturer,ReleaseDate,SerialNumber"),
             new InventoryQuery("Board", "Win32_BaseBoard", "Product,Manufacturer,SerialNumber"),

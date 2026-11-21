@@ -35,11 +35,29 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
         string.Equals(system?.Text("Manufacturer")?.Split(' ')[0], "Huawei", StringComparison.OrdinalIgnoreCase)
         && system?.Text("Model")?.ToUpperInvariant() is "VGHH" or "VGHH-X" or "VGHH-XX";
 
+    private static string? ProductLine(DeviceRow system, DeviceRow? product)
+    {
+        if (IsMateBookXPro(system)) return "HUAWEI MateBook X Pro Core Ultra Premium Edition";
+        var family = system.Text("SystemFamily");
+        if (family == null || !family.Any(char.IsLetter) || family.ToUpperInvariant() is
+            "SYSTEM FAMILY" or "OEM FAMILY" or "NOTEBOOK" or "LAPTOP" or "DESKTOP" or "UNKNOWN" or "DEFAULT STRING"
+            or "TO BE FILLED BY O.E.M." or "TO BE FILLED BY OEM" or "NONE" or "INVALID") return null;
+        var model = system.Text("Model");
+        if (model?.Contains(family, StringComparison.OrdinalIgnoreCase) == true) return null;
+        var version = product?.Text("Version");
+        if (version?.StartsWith(family + " ", StringComparison.OrdinalIgnoreCase) == true) return version;
+        // Preserve an already descriptive firmware model. Display the family with its
+        // original model code when the OEM only provides a short identifier.
+        return model == null || !model.Contains(' ') || model.Equals("System Product Name", StringComparison.OrdinalIgnoreCase)
+            ? family : null;
+    }
+
     public async Task<HardwareReading> ReadAsync(CancellationToken token)
     {
         var results = await Task.WhenAll(queries.Select(async query =>
             (Query: query, Rows: await source.QueryAsync(query, token).ConfigureAwait(false)))).ConfigureAwait(false);
         var groups = new List<DeviceGroup>();
+        var product = results.Where(r => r.Query.Label == "FirmwareProduct").SelectMany(r => r.Rows).FirstOrDefault();
         string? summary = null;
         foreach (var (query, rows) in results)
         {
@@ -49,8 +67,8 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
             foreach (var row in rows)
             {
                 var fields = InventoryFormat.Fields(query, row);
-                if (query.Label == "Machine" && IsMateBookXPro(row))
-                    fields = [new("ProductLine", "HUAWEI MateBook X Pro Core Ultra Premium Edition"), .. fields];
+                if (query.Label == "Machine" && ProductLine(row, product) is { } line)
+                    fields = [new("ProductLine", line), .. fields];
                 summary ??= fields.Select(f => f.Value).FirstOrDefault(v => v != null);
                 groups.Add(new(query.Label, fields));
             }
@@ -84,10 +102,18 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
             bool mateBookOnboard = IsMateBookXPro(platform) && modules.Count > 0 && modules.All(LowPower);
             // SMBIOS counts memory devices, which may include soldered packages.
             // LPDDR can also be on a replaceable module, so its type alone cannot prove soldering.
-            bool uncertainSlots = modules.Any(m => m.Number("FormFactor") == 21 ||
-                LowPower(m) && m.Number("FormFactor") is not (8 or 12));
-            if (mateBookOnboard || uncertainSlots)
-                groups.Add(new("RAM", [new("MemoryLayout", mateBookOnboard ? "RamOnboard" : "RamSocketsUnconfirmed") { Localize = true }]));
+            int soldered = modules.Count(m => m.Number("FormFactor") is 14 or 21 or 22);
+            int removable = modules.Count(m => m.Number("FormFactor") is 7 or 8 or 11 or 12 or 13);
+            string? layout = (soldered, removable) switch
+            {
+                _ when mateBookOnboard => "RamOnboard",
+                (> 0, > 0) => "RamMixed",
+                (> 0, _) when soldered == modules.Count => "RamOnboard",
+                _ when removable == 0 || removable != modules.Count => "RamSocketsUnconfirmed",
+                _ => null
+            };
+            if (layout != null)
+                groups.Add(new("RAM", [new("MemoryLayout", layout) { Localize = true }]));
             else
                 groups.Add(new("RAM", [new("MemoryDevices", total?.ToString()),
                     new("UsedSlots", used?.ToString()), new("FreeSlots", (total - used)?.ToString())]));
