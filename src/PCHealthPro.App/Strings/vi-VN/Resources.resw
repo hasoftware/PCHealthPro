@@ -169,4 +169,27 @@
   <data name="RunAdmin" xml:space="preserve"><value>Mở lại bằng quyền quản trị</value></data>
   <data name="SmartNotice" xml:space="preserve"><value>Một số chỉ số SMART chưa đọc được. Quyền quản trị có thể cho phép đọc thêm.</value></data>
   <data name="ElevationFailed" xml:space="preserve"><value>Windows chưa thể mở lại ứng dụng bằng quyền quản trị.</value></data>
+  <data name="BenchTitle" xml:space="preserve"><value>Đo tốc độ ổ cứng</value></data>
+  <data name="BenchVolume" xml:space="preserve"><value>Phân vùng</value></data>
+  <data name="BenchSize" xml:space="preserve"><value>Kích thước file thử</value></data>
+  <data name="BenchFolder" xml:space="preserve"><value>Chọn thư mục có quyền ghi…</value></data>
+  <data name="BenchStart" xml:space="preserve"><value>Bắt đầu đo</value></data>
+  <data name="BenchCancel" xml:space="preserve"><value>Hủy</value></data>
+  <data name="BenchClose" xml:space="preserve"><value>Đóng</value></data>
+  <data name="BenchChart" xml:space="preserve"><value>Tốc độ theo thời gian thực (MB/s)</value></data>
+  <data name="BenchNoVolume" xml:space="preserve"><value>Chưa có phân vùng cục bộ khả dụng.</value></data>
+  <data name="BenchConsent" xml:space="preserve"><value>Tạo file thử tạm thời {1} trong {0}? Phép đo ghi tối đa ba lần dung lượng file và làm tăng lượng ghi lên SSD. Bạn có thể hủy bất kỳ lúc nào.</value></data>
+  <data name="BenchRunning" xml:space="preserve"><value>Đang đo</value></data>
+  <data name="BenchDone" xml:space="preserve"><value>Đã đo xong</value></data>
+  <data name="BenchCanceled" xml:space="preserve"><value>Đã hủy phép đo</value></data>
+  <data name="BenchFailed" xml:space="preserve"><value>Đo thất bại. Hãy kiểm tra thư mục đích và quyền ghi.</value></data>
+  <data name="BenchLocalOnly" xml:space="preserve"><value>Hãy chọn phân vùng cục bộ trên ổ trong hoặc ổ rời.</value></data>
+  <data name="BenchNoSpace" xml:space="preserve"><value>Không đủ chỗ cho file thử và 16 MiB dự phòng.</value></data>
+  <data name="BenchAlignment" xml:space="preserve"><value>Phân vùng này không hỗ trợ căn chỉnh I/O trực tiếp 4 KiB cần thiết.</value></data>
+  <data name="SeqWrite" xml:space="preserve"><value>Ghi tuần tự · 1 MiB</value></data>
+  <data name="SeqRead" xml:space="preserve"><value>Đọc tuần tự · 1 MiB</value></data>
+  <data name="RandomWrite1" xml:space="preserve"><value>Ghi ngẫu nhiên · 4 KiB · QD1</value></data>
+  <data name="RandomRead1" xml:space="preserve"><value>Đọc ngẫu nhiên · 4 KiB · QD1</value></data>
+  <data name="RandomWrite32" xml:space="preserve"><value>Ghi ngẫu nhiên · 4 KiB · QD32</value></data>
+  <data name="RandomRead32" xml:space="preserve"><value>Đọc ngẫu nhiên · 4 KiB · QD32</value></data>
 </root>

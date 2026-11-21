@@ -169,4 +169,27 @@
   <data name="RunAdmin" xml:space="preserve"><value>Restart as administrator</value></data>
   <data name="SmartNotice" xml:space="preserve"><value>Some SMART readings are unavailable. Administrator access may expose more counters.</value></data>
   <data name="ElevationFailed" xml:space="preserve"><value>Windows could not restart the application with administrator access.</value></data>
+  <data name="BenchTitle" xml:space="preserve"><value>Disk benchmark</value></data>
+  <data name="BenchVolume" xml:space="preserve"><value>Partition</value></data>
+  <data name="BenchSize" xml:space="preserve"><value>Test file size</value></data>
+  <data name="BenchFolder" xml:space="preserve"><value>Choose a writable folder…</value></data>
+  <data name="BenchStart" xml:space="preserve"><value>Start benchmark</value></data>
+  <data name="BenchCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="BenchClose" xml:space="preserve"><value>Close</value></data>
+  <data name="BenchChart" xml:space="preserve"><value>Live throughput in MB/s</value></data>
+  <data name="BenchNoVolume" xml:space="preserve"><value>No local volume is available.</value></data>
+  <data name="BenchConsent" xml:space="preserve"><value>Create a temporary {1} test file in {0}? This test writes up to three times the file size and contributes to SSD wear. You can cancel at any time.</value></data>
+  <data name="BenchRunning" xml:space="preserve"><value>Measuring</value></data>
+  <data name="BenchDone" xml:space="preserve"><value>Benchmark complete</value></data>
+  <data name="BenchCanceled" xml:space="preserve"><value>Benchmark canceled</value></data>
+  <data name="BenchFailed" xml:space="preserve"><value>Benchmark failed. Check the destination and write permission.</value></data>
+  <data name="BenchLocalOnly" xml:space="preserve"><value>Choose a local fixed or removable volume.</value></data>
+  <data name="BenchNoSpace" xml:space="preserve"><value>Insufficient free space for the test file and 16 MiB reserve.</value></data>
+  <data name="BenchAlignment" xml:space="preserve"><value>This volume does not support the required 4 KiB direct I/O alignment.</value></data>
+  <data name="SeqWrite" xml:space="preserve"><value>Sequential write · 1 MiB</value></data>
+  <data name="SeqRead" xml:space="preserve"><value>Sequential read · 1 MiB</value></data>
+  <data name="RandomWrite1" xml:space="preserve"><value>Random write · 4 KiB · QD1</value></data>
+  <data name="RandomRead1" xml:space="preserve"><value>Random read · 4 KiB · QD1</value></data>
+  <data name="RandomWrite32" xml:space="preserve"><value>Random write · 4 KiB · QD32</value></data>
+  <data name="RandomRead32" xml:space="preserve"><value>Random read · 4 KiB · QD32</value></data>
 </root>

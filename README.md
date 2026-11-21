@@ -25,6 +25,14 @@ Mỗi ổ có đánh giá và lý do. Windows báo ổ lỗi, SMART cảnh báo 
 
 Trang Pin hiển thị dữ liệu riêng từng bộ pin. Độ chai được tính từ dung lượng thiết kế và dung lượng sạc đầy hiện tại. Nếu WMI thiếu thông tin, ứng dụng có thể đọc phần pin đã lắp trong báo cáo XML tạm thời của powercfg và xóa báo cáo sau khi đọc. Máy bàn có trạng thái riêng khi Windows xác nhận máy không có pin.
 
+## Benchmark ổ cứng
+
+Mở trang Ổ cứng, chọn phân vùng và kích thước file thử (256 MiB, 1 GiB hoặc 4 GiB). Nếu thư mục mặc định thiếu quyền ghi, chọn một thư mục khác trên phân vùng muốn đo. Nút **Bắt đầu đo** hiển thị vị trí, kích thước file và cảnh báo hao mòn SSD trước khi chạy.
+
+Ứng dụng ghi rồi đọc tuần tự toàn bộ file theo khối 1 MiB. Sau đó ứng dụng đo ghi và đọc ngẫu nhiên khối 4 KiB, lần lượt với một và tối đa 32 yêu cầu I/O đồng thời (QD1/QD32). Mỗi lượt ngẫu nhiên kết thúc khi đạt kích thước file hoặc sau khoảng ba giây, cộng thời gian hoàn tất I/O đang chờ. Biểu đồ hiển thị tốc độ theo thời gian của lượt hiện tại. Kết quả mỗi lượt gồm tốc độ trung bình tính theo MB/s thập phân và số thao tác mỗi giây (IOPS).
+
+Phép đo dùng I/O trực tiếp và write-through, kiểm tra dung lượng trống, giữ 16 MiB dự phòng và tạo một file mới với chế độ xóa khi đóng. Nút **Hủy** dừng phép đo và giữ kết quả những lượt đã hoàn tất.
+
 ## Mã nguồn
 
 - `PCHealthPro.Core` định nghĩa giao diện module và điều phối kiểm tra.

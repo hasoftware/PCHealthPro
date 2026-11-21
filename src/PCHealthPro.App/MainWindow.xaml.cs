@@ -31,13 +31,14 @@ public sealed partial class MainWindow : Window
     private int columns;
     private readonly bool elevated;
 
-    public MainWindow(OverviewViewModel model, LanguageService language)
+    public MainWindow(OverviewViewModel model, LanguageService language, BenchmarkViewModel benchmark)
     {
         Model = model;
         this.language = language;
         using var identity = WindowsIdentity.GetCurrent();
         elevated = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
         InitializeComponent();
+        Benchmark.Initialize(benchmark, language, this);
         Title = typeof(App).Assembly.GetCustomAttribute<AssemblyProductAttribute>()!.Product;
         Nav.PaneTitle = Title;
         Localize();
@@ -74,6 +75,7 @@ public sealed partial class MainWindow : Window
         LanguageBox.SelectedIndex = language.Selection switch { "vi-VN" => 1, "en-US" => 2, _ => 0 };
         LanguageBox.Header = language.Get("Language");
         Privacy.Text = language.Get("Privacy");
+        Benchmark.Localize();
         QuickCheck.Content = language.Get("QuickCheck");
         AutomationProperties.SetName(QuickCheck, language.Get("QuickCheck"));
         Tip.Title = language.Get("QuickCheck");
@@ -112,6 +114,8 @@ public sealed partial class MainWindow : Window
         Heading.Text = language.Get(section);
         OverviewPanel.Visibility = section is "Settings" or "Reports" ? Visibility.Collapsed : Visibility.Visible;
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
+        Benchmark.Visibility = section == "Storage" ? Visibility.Visible : Visibility.Collapsed;
+        if (section == "Storage") _ = Benchmark.LoadVolumesAsync();
         var phase = Sections.First(item => item.Key == section).Phase;
         Placeholder.Visibility = phase > 3 ? Visibility.Visible : Visibility.Collapsed;
         Placeholder.Message = string.Format(language.Get("Pending"), phase);

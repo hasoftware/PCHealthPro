@@ -1,0 +1,29 @@
+<UserControl x:Class="PCHealthPro.App.BenchmarkPane"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Border Padding="16" BorderThickness="1" CornerRadius="8"
+         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+  <StackPanel Spacing="12">
+   <TextBlock x:Name="Title" Style="{ThemeResource SubtitleTextBlockStyle}"/>
+   <Grid ColumnSpacing="12">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <ComboBox x:Name="Volume" HorizontalAlignment="Stretch" SelectionChanged="VolumeChanged"/>
+    <ComboBox x:Name="SizeBox" Grid.Column="1"/>
+   </Grid>
+   <TextBlock x:Name="DirectoryText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+   <Button x:Name="FolderButton" Click="ChooseFolder"/>
+   <StackPanel Orientation="Horizontal" Spacing="8">
+    <Button x:Name="StartButton" Click="Start" Style="{ThemeResource AccentButtonStyle}"/>
+    <Button x:Name="CancelButton" Click="Cancel"/>
+   </StackPanel>
+   <TextBlock x:Name="StatusText" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+   <ProgressBar x:Name="Meter" Minimum="0" Maximum="100"/>
+   <TextBlock x:Name="Live" TextWrapping="Wrap"/>
+   <TextBlock x:Name="ChartScale" Style="{ThemeResource CaptionTextBlockStyle}"/>
+   <Grid x:Name="Plot" Height="72" SizeChanged="PlotResized" Background="{ThemeResource LayerFillColorDefaultBrush}">
+    <Polyline x:Name="Trace" Stroke="{ThemeResource AccentTextFillColorPrimaryBrush}" StrokeThickness="2"/>
+   </Grid>
+   <TextBlock x:Name="ResultsText" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+  </StackPanel>
+ </Border>
+</UserControl>
