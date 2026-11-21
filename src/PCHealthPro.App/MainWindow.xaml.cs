@@ -70,7 +70,6 @@ public sealed partial class MainWindow : Window
         Privacy.Text = language.Get("Privacy");
         QuickCheck.Content = language.Get("QuickCheck");
         AutomationProperties.SetName(QuickCheck, language.Get("QuickCheck"));
-        SampleNotice.Message = language.Get("Sample");
         Tip.Title = language.Get("QuickCheck");
         Tip.Subtitle = language.Get("Hint");
         updating = false;
@@ -103,11 +102,12 @@ public sealed partial class MainWindow : Window
     private void UpdateSection()
     {
         Heading.Text = language.Get(section);
-        OverviewPanel.Visibility = section == "Overview" ? Visibility.Visible : Visibility.Collapsed;
+        OverviewPanel.Visibility = section is "Settings" or "Reports" ? Visibility.Collapsed : Visibility.Visible;
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
         var phase = Sections.First(item => item.Key == section).Phase;
-        Placeholder.Visibility = phase > 1 ? Visibility.Visible : Visibility.Collapsed;
+        Placeholder.Visibility = phase > 2 ? Visibility.Visible : Visibility.Collapsed;
         Placeholder.Message = string.Format(language.Get("Pending"), phase);
+        DrawCards();
         Scroller.ChangeView(null, 0, null, true);
     }
 
@@ -136,10 +136,17 @@ public sealed partial class MainWindow : Window
         Cards.RowDefinitions.Clear();
         var count = Math.Max(1, columns);
         for (int col = 0; col < count; col++) Cards.ColumnDefinitions.Add(new ColumnDefinition());
-        for (int index = 0; index < Model.Readings.Count; index++)
+        var readings = Model.Readings.Where(reading => section switch
+        {
+            "Overview" => reading.Category is "Machine" or "CPU" or "RAM" or "GPU" or "Windows" or "Storage" or "Battery",
+            "Compute" => reading.Category is "CPU" or "RAM" or "Machine",
+            "Display" => reading.Category is "GPU" or "Display",
+            _ => reading.Category == section
+        }).ToArray();
+        for (int index = 0; index < readings.Length; index++)
         {
             if (index % count == 0) Cards.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            var reading = Model.Readings[index];
+            var reading = readings[index];
             var name = language.Get(reading.Category);
             var value = reading.Value ?? language.Get("Unknown");
             var details = new Expander { Header = name, HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -152,6 +159,22 @@ public sealed partial class MainWindow : Window
                     HealthStatus.Attention => InfoBarSeverity.Warning, HealthStatus.Problem => InfoBarSeverity.Error,
                     _ => InfoBarSeverity.Informational } };
             content.Children.Add(badge);
+            foreach (var group in reading.Groups)
+            {
+                var fields = new StackPanel { Spacing = 6 };
+                foreach (var field in group.Fields)
+                {
+                    var formatted = field.Value == null ? language.Get("Unknown") :
+                        field.Localize ? language.Get(field.Value) : field.Value;
+                    fields.Children.Add(new TextBlock { Text = $"{language.Get(field.Label)} · {formatted}",
+                        TextWrapping = TextWrapping.Wrap, IsTextSelectionEnabled = true });
+                    if (field.Label == "LicenseStatus" && field.Value is "Unlicensed" or "NonGenuineGrace" or "Notification")
+                        fields.Children.Add(new InfoBar { IsOpen = true, IsClosable = false, Severity = InfoBarSeverity.Warning,
+                            Message = language.Get("LicenseWarning") });
+                }
+                content.Children.Add(new Expander { Header = language.Get(group.Label), Content = fields,
+                    HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch });
+            }
             details.Content = content;
             var copy = new MenuFlyoutItem { Text = language.Get("Copy") };
             copy.Click += (_, _) => { var data = new DataPackage(); data.SetText(value); Clipboard.SetContent(data); };

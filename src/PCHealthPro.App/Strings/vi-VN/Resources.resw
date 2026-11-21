@@ -22,12 +22,109 @@
   <data name="RAM" xml:space="preserve"><value>Bộ nhớ</value></data>
   <data name="Windows" xml:space="preserve"><value>Windows</value></data>
   <data name="QuickCheck" xml:space="preserve"><value>Chạy kiểm tra nhanh</value></data>
-  <data name="Sample" xml:space="preserve"><value>Dữ liệu mẫu · Các chỉ số phần cứng được mô phỏng.</value></data>
-  <data name="Pending" xml:space="preserve"><value>Module này sẽ được triển khai trong giai đoạn {0}.</value></data>
+  <data name="Pending" xml:space="preserve"><value>Các bài test hoặc chẩn đoán chuyên sâu của mục này sẽ có ở giai đoạn {0}.</value></data>
   <data name="Privacy" xml:space="preserve"><value>Kiểm tra phần cứng hoạt động ngoại tuyến. Dữ liệu thiết bị chỉ lưu trên máy này.</value></data>
-  <data name="Completed" xml:space="preserve"><value>Đã kiểm tra xong dữ liệu mẫu</value></data>
-  <data name="Busy" xml:space="preserve"><value>Đang kiểm tra phần cứng mẫu…</value></data>
-  <data name="Hint" xml:space="preserve"><value>Chạy kiểm tra nhanh để cập nhật cả sáu thẻ.</value></data>
+  <data name="Completed" xml:space="preserve"><value>Đã kiểm tra xong phần cứng</value></data>
+  <data name="Busy" xml:space="preserve"><value>Đang đọc thông tin phần cứng…</value></data>
+  <data name="Hint" xml:space="preserve"><value>Chạy kiểm tra nhanh để cập nhật thông tin thiết bị.</value></data>
   <data name="Details" xml:space="preserve"><value>Chi tiết</value></data>
   <data name="Copy" xml:space="preserve"><value>Sao chép</value></data>
+  <data name="Detected" xml:space="preserve"><value>Đã nhận diện</value></data>
+  <data name="Machine" xml:space="preserve"><value>Máy tính</value></data>
+  <data name="Board" xml:space="preserve"><value>Bo mạch chủ</value></data>
+  <data name="BIOS" xml:space="preserve"><value>BIOS</value></data>
+  <data name="USB" xml:space="preserve"><value>Bộ điều khiển USB</value></data>
+  <data name="TPM" xml:space="preserve"><value>Mô-đun TPM</value></data>
+  <data name="SecureBoot" xml:space="preserve"><value>Khởi động an toàn</value></data>
+  <data name="MemoryModule" xml:space="preserve"><value>Thanh RAM</value></data>
+  <data name="MemoryArray" xml:space="preserve"><value>Khe RAM</value></data>
+  <data name="Panel" xml:space="preserve"><value>Nhận dạng màn hình (EDID)</value></data>
+  <data name="Dimensions" xml:space="preserve"><value>Kích thước tấm nền</value></data>
+  <data name="DisplayMode" xml:space="preserve"><value>Chế độ hiển thị hiện tại</value></data>
+  <data name="Wifi" xml:space="preserve"><value>Chuẩn Wi-Fi hỗ trợ</value></data>
+  <data name="Bluetooth" xml:space="preserve"><value>Bluetooth</value></data>
+  <data name="WindowsActivation" xml:space="preserve"><value>Kích hoạt Windows</value></data>
+  <data name="Office" xml:space="preserve"><value>Bản Office đã cài</value></data>
+  <data name="OfficeActivation" xml:space="preserve"><value>Kích hoạt Office số lượng lớn</value></data>
+  <data name="OfficeLegacy" xml:space="preserve"><value>Kích hoạt Office đời cũ</value></data>
+  <data name="Model" xml:space="preserve"><value>Mẫu máy</value></data>
+  <data name="Manufacturer" xml:space="preserve"><value>Nhà sản xuất</value></data>
+  <data name="PCSystemType" xml:space="preserve"><value>Loại máy</value></data>
+  <data name="SMBIOSBIOSVersion" xml:space="preserve"><value>Phiên bản BIOS</value></data>
+  <data name="ReleaseDate" xml:space="preserve"><value>Ngày phát hành</value></data>
+  <data name="SerialNumber" xml:space="preserve"><value>Số sê-ri</value></data>
+  <data name="Product" xml:space="preserve"><value>Model</value></data>
+  <data name="Name" xml:space="preserve"><value>Tên</value></data>
+  <data name="Status" xml:space="preserve"><value>Trạng thái thiết bị</value></data>
+  <data name="SpecVersion" xml:space="preserve"><value>Phiên bản đặc tả TPM</value></data>
+  <data name="IsEnabled_InitialValue" xml:space="preserve"><value>Bật khi khởi động</value></data>
+  <data name="SecureBootState" xml:space="preserve"><value>Trạng thái Secure Boot</value></data>
+  <data name="NumberOfCores" xml:space="preserve"><value>Số nhân</value></data>
+  <data name="NumberOfLogicalProcessors" xml:space="preserve"><value>Số luồng</value></data>
+  <data name="CurrentClockSpeed" xml:space="preserve"><value>Xung nhịp Windows báo cáo</value></data>
+  <data name="MaxClockSpeed" xml:space="preserve"><value>Xung tối đa theo firmware</value></data>
+  <data name="NominalMHz" xml:space="preserve"><value>Xung danh định theo Windows (CPU 0)</value></data>
+  <data name="L2CacheSize" xml:space="preserve"><value>Bộ nhớ đệm L2</value></data>
+  <data name="L3CacheSize" xml:space="preserve"><value>Bộ nhớ đệm L3</value></data>
+  <data name="Architecture" xml:space="preserve"><value>Kiến trúc</value></data>
+  <data name="Capacity" xml:space="preserve"><value>Dung lượng</value></data>
+  <data name="DeviceLocator" xml:space="preserve"><value>Khe cắm</value></data>
+  <data name="SMBIOSMemoryType" xml:space="preserve"><value>Loại RAM</value></data>
+  <data name="ConfiguredClockSpeed" xml:space="preserve"><value>Tốc độ RAM đã cấu hình</value></data>
+  <data name="PartNumber" xml:space="preserve"><value>Mã linh kiện</value></data>
+  <data name="MemoryDevices" xml:space="preserve"><value>Tổng số khe</value></data>
+  <data name="FreeSlots" xml:space="preserve"><value>Số khe trống</value></data>
+  <data name="AdapterRAM" xml:space="preserve"><value>Bộ nhớ đồ họa do driver báo</value></data>
+  <data name="DriverVersion" xml:space="preserve"><value>Phiên bản trình điều khiển</value></data>
+  <data name="CurrentHorizontalResolution" xml:space="preserve"><value>Chiều ngang hiện tại</value></data>
+  <data name="CurrentVerticalResolution" xml:space="preserve"><value>Chiều dọc hiện tại</value></data>
+  <data name="CurrentRefreshRate" xml:space="preserve"><value>Tần số quét</value></data>
+  <data name="UserFriendlyName" xml:space="preserve"><value>Tên tấm nền</value></data>
+  <data name="ProductCodeID" xml:space="preserve"><value>Mã sản phẩm EDID</value></data>
+  <data name="ManufacturerName" xml:space="preserve"><value>Hãng theo EDID</value></data>
+  <data name="InstanceName" xml:space="preserve"><value>Mã thiết bị màn hình</value></data>
+  <data name="MaxHorizontalImageSize" xml:space="preserve"><value>Chiều ngang thực</value></data>
+  <data name="MaxVerticalImageSize" xml:space="preserve"><value>Chiều cao thực</value></data>
+  <data name="DisplayName" xml:space="preserve"><value>Đầu ra hiển thị</value></data>
+  <data name="Resolution" xml:space="preserve"><value>Độ phân giải</value></data>
+  <data name="RefreshHz" xml:space="preserve"><value>Tần số quét</value></data>
+  <data name="PanelName" xml:space="preserve"><value>Tên tấm nền (EDID)</value></data>
+  <data name="MonitorCount" xml:space="preserve"><value>Số màn hình hoạt động</value></data>
+  <data name="InterfaceDescription" xml:space="preserve"><value>Bộ điều hợp</value></data>
+  <data name="DriverProvider" xml:space="preserve"><value>Hãng trình điều khiển</value></data>
+  <data name="DriverVersionString" xml:space="preserve"><value>Phiên bản trình điều khiển</value></data>
+  <data name="PermanentAddress" xml:space="preserve"><value>Địa chỉ MAC phần cứng</value></data>
+  <data name="ReceiveLinkSpeed" xml:space="preserve"><value>Tốc độ liên kết nhận</value></data>
+  <data name="TransmitLinkSpeed" xml:space="preserve"><value>Tốc độ liên kết gửi</value></data>
+  <data name="InterfaceType" xml:space="preserve"><value>Loại kết nối</value></data>
+  <data name="RadioTypes" xml:space="preserve"><value>Chuẩn vô tuyến hỗ trợ</value></data>
+  <data name="Caption" xml:space="preserve"><value>Phiên bản</value></data>
+  <data name="Version" xml:space="preserve"><value>Phiên bản</value></data>
+  <data name="BuildNumber" xml:space="preserve"><value>Bản dựng</value></data>
+  <data name="InstallDate" xml:space="preserve"><value>Ngày cài đặt</value></data>
+  <data name="OSArchitecture" xml:space="preserve"><value>Kiến trúc hệ điều hành</value></data>
+  <data name="Description" xml:space="preserve"><value>Kênh kích hoạt / mô tả</value></data>
+  <data name="LicenseStatus" xml:space="preserve"><value>Trạng thái kích hoạt</value></data>
+  <data name="PartialProductKey" xml:space="preserve"><value>Năm ký tự cuối khóa</value></data>
+  <data name="KeyManagementServiceMachine" xml:space="preserve"><value>Máy chủ KMS cấu hình</value></data>
+  <data name="DiscoveredKeyManagementServiceMachineName" xml:space="preserve"><value>Máy chủ KMS tìm thấy</value></data>
+  <data name="ProductReleaseIds" xml:space="preserve"><value>Sản phẩm Office</value></data>
+  <data name="VersionToReport" xml:space="preserve"><value>Phiên bản Office</value></data>
+  <data name="Size" xml:space="preserve"><value>Dung lượng</value></data>
+  <data name="EstimatedChargeRemaining" xml:space="preserve"><value>Mức pin còn lại</value></data>
+  <data name="Enabled" xml:space="preserve"><value>Đã bật</value></data>
+  <data name="Disabled" xml:space="preserve"><value>Đã tắt</value></data>
+  <data name="Desktop" xml:space="preserve"><value>Máy bàn</value></data>
+  <data name="Mobile" xml:space="preserve"><value>Máy tính xách tay</value></data>
+  <data name="Workstation" xml:space="preserve"><value>Máy trạm</value></data>
+  <data name="Server" xml:space="preserve"><value>Máy chủ</value></data>
+  <data name="Unlicensed" xml:space="preserve"><value>Chưa có giấy phép</value></data>
+  <data name="Licensed" xml:space="preserve"><value>Đã kích hoạt</value></data>
+  <data name="Grace" xml:space="preserve"><value>Thời gian gia hạn</value></data>
+  <data name="NonGenuineGrace" xml:space="preserve"><value>Gia hạn do chưa xác thực bản quyền</value></data>
+  <data name="Notification" xml:space="preserve"><value>Thông báo kích hoạt</value></data>
+  <data name="LicenseWarning" xml:space="preserve"><value>Hãy xác minh giấy phép với người bán hoặc quản trị viên của bạn.</value></data>
+<data name="MACAddress" xml:space="preserve"><value>Địa chỉ MAC hiện tại</value></data>
+  <data name="PresentPanels" xml:space="preserve"><value>Màn hình hiện diện (PnP)</value></data>
+  <data name="PresentCount" xml:space="preserve"><value>Số thiết bị màn hình hiện diện</value></data>
 </root>

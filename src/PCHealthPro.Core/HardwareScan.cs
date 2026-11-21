@@ -1,9 +1,12 @@
 // Developed by Hoang Anh Dev at HASOFTWARE (hasoftware.vn).
 namespace PCHealthPro.Core;
 
-public enum HealthStatus { Good, Attention, Problem, Unknown }
+public enum HealthStatus { Good, Attention, Problem, Unknown, Detected }
 
-public sealed record HardwareReading(string Category, string? Value, HealthStatus Status);
+public sealed record HardwareReading(string Category, string? Value, HealthStatus Status)
+{
+    public IReadOnlyList<Inventory.DeviceGroup> Groups { get; init; } = [];
+}
 
 public interface IHardwareModule
 {

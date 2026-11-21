@@ -1,6 +1,6 @@
 # PC Health Pro
 
-Ứng dụng Windows hỗ trợ kiểm tra máy tính trước khi mua hoặc bàn giao. Bản phát triển v0.0.1 có giao diện WinUI 3, sáu thẻ tổng quan dùng dữ liệu mô phỏng và tùy chọn tiếng Việt, tiếng Anh hoặc ngôn ngữ hệ thống. Các trang chức năng khác hiển thị giai đoạn triển khai dự kiến.
+Ứng dụng Windows hỗ trợ kiểm tra máy tính trước khi mua hoặc bàn giao. Bản phát triển v0.0.1 đọc thông tin máy, BIOS, mainboard, CPU, từng thanh RAM, GPU, màn hình, mạng và thiết bị ngoại vi. Giao diện WinUI 3 hỗ trợ tiếng Việt và tiếng Anh.
 
 ## Build và chạy bản phát triển
 
@@ -13,12 +13,14 @@ dotnet test tests/PCHealthPro.Tests --no-build
 dotnet run --project src/PCHealthPro.App --no-build
 ```
 
-Chọn Tổng quan để chạy kiểm tra mẫu. Mở Cài đặt để đổi ngôn ngữ. Ứng dụng lưu lựa chọn ngôn ngữ và trạng thái hướng dẫn lần đầu tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro`.
+Chọn Tổng quan để quét máy. Mở các nhóm trong từng thẻ để xem chi tiết. Thẻ Windows hiển thị thông tin kích hoạt do Windows cung cấp và dữ liệu Office khi có. KMS cũng được sử dụng trong các tổ chức có giấy phép. Trạng thái kích hoạt cần được đối chiếu với chứng từ nếu cần xác minh nguồn bản quyền.
+
+Ứng dụng đọc cục bộ bằng quyền người dùng hiện tại. Trường thiếu quyền hoặc thiếu driver hiển thị “Không có dữ liệu”. Lỗi truy vấn được ghi theo tên nguồn và loại lỗi trong thư mục `logs` cạnh ứng dụng. Mở Cài đặt để đổi ngôn ngữ. Ứng dụng lưu lựa chọn ngôn ngữ và trạng thái hướng dẫn lần đầu tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro`.
 
 ## Mã nguồn
 
 - `PCHealthPro.Core` định nghĩa giao diện module và điều phối kiểm tra.
-- `PCHealthPro.App` chứa cửa sổ WinUI 3, tài nguyên ngôn ngữ, dữ liệu mẫu và cấu hình DI.
+- `PCHealthPro.App` chứa cửa sổ WinUI 3, tài nguyên ngôn ngữ và cấu hình DI.
 - `PCHealthPro.Tests` kiểm tra xử lý lỗi module và hủy kiểm tra.
 
 ## Tác giả

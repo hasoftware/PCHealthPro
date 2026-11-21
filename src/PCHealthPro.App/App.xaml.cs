@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using PCHealthPro.Core;
+using PCHealthPro.Core.Inventory;
 using PCHealthPro.App.Services;
 using PCHealthPro.App.ViewModels;
 
@@ -15,8 +16,9 @@ public partial class App : Application
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
         var services = new ServiceCollection();
-        foreach (var sample in SampleModule.Overview)
-            services.AddSingleton<IHardwareModule>(new SampleModule(sample));
+        var source = new WindowsInventorySource();
+        foreach (var module in InventoryCatalog.Create(source))
+            services.AddSingleton(module);
         services.AddSingleton<HardwareScan>();
         services.AddSingleton<LanguageService>();
         services.AddSingleton<OverviewViewModel>();

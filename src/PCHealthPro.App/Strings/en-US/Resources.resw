@@ -22,12 +22,109 @@
   <data name="RAM" xml:space="preserve"><value>Memory</value></data>
   <data name="Windows" xml:space="preserve"><value>Windows</value></data>
   <data name="QuickCheck" xml:space="preserve"><value>Run quick check</value></data>
-  <data name="Sample" xml:space="preserve"><value>Sample data · Hardware readings are simulated.</value></data>
-  <data name="Pending" xml:space="preserve"><value>This module is planned for phase {0}.</value></data>
+  <data name="Pending" xml:space="preserve"><value>Interactive tests or extended diagnostics for this section are planned for phase {0}.</value></data>
   <data name="Privacy" xml:space="preserve"><value>Hardware checks run offline. Device data stays on this PC.</value></data>
-  <data name="Completed" xml:space="preserve"><value>Sample check complete</value></data>
-  <data name="Busy" xml:space="preserve"><value>Checking sample hardware…</value></data>
-  <data name="Hint" xml:space="preserve"><value>Run a quick check to refresh all six cards.</value></data>
+  <data name="Completed" xml:space="preserve"><value>Hardware scan complete</value></data>
+  <data name="Busy" xml:space="preserve"><value>Reading local hardware…</value></data>
+  <data name="Hint" xml:space="preserve"><value>Run a quick check to refresh the hardware inventory.</value></data>
   <data name="Details" xml:space="preserve"><value>Details</value></data>
   <data name="Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Detected" xml:space="preserve"><value>Detected</value></data>
+  <data name="Machine" xml:space="preserve"><value>Computer</value></data>
+  <data name="Board" xml:space="preserve"><value>Motherboard</value></data>
+  <data name="BIOS" xml:space="preserve"><value>BIOS</value></data>
+  <data name="USB" xml:space="preserve"><value>USB controller</value></data>
+  <data name="TPM" xml:space="preserve"><value>Trusted Platform Module</value></data>
+  <data name="SecureBoot" xml:space="preserve"><value>Secure Boot</value></data>
+  <data name="MemoryModule" xml:space="preserve"><value>Memory module</value></data>
+  <data name="MemoryArray" xml:space="preserve"><value>Memory slots</value></data>
+  <data name="Panel" xml:space="preserve"><value>Panel identification (EDID)</value></data>
+  <data name="Dimensions" xml:space="preserve"><value>Panel dimensions</value></data>
+  <data name="DisplayMode" xml:space="preserve"><value>Active display mode</value></data>
+  <data name="Wifi" xml:space="preserve"><value>Wi-Fi radio capabilities</value></data>
+  <data name="Bluetooth" xml:space="preserve"><value>Bluetooth</value></data>
+  <data name="WindowsActivation" xml:space="preserve"><value>Windows activation</value></data>
+  <data name="Office" xml:space="preserve"><value>Office installation</value></data>
+  <data name="OfficeActivation" xml:space="preserve"><value>Office volume activation</value></data>
+  <data name="OfficeLegacy" xml:space="preserve"><value>Legacy Office activation</value></data>
+  <data name="Model" xml:space="preserve"><value>Model</value></data>
+  <data name="Manufacturer" xml:space="preserve"><value>Manufacturer</value></data>
+  <data name="PCSystemType" xml:space="preserve"><value>System type</value></data>
+  <data name="SMBIOSBIOSVersion" xml:space="preserve"><value>BIOS version</value></data>
+  <data name="ReleaseDate" xml:space="preserve"><value>Release date</value></data>
+  <data name="SerialNumber" xml:space="preserve"><value>Serial number</value></data>
+  <data name="Product" xml:space="preserve"><value>Model</value></data>
+  <data name="Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Status" xml:space="preserve"><value>Device status</value></data>
+  <data name="SpecVersion" xml:space="preserve"><value>TPM specification</value></data>
+  <data name="IsEnabled_InitialValue" xml:space="preserve"><value>Enabled at startup</value></data>
+  <data name="SecureBootState" xml:space="preserve"><value>Secure Boot state</value></data>
+  <data name="NumberOfCores" xml:space="preserve"><value>Cores</value></data>
+  <data name="NumberOfLogicalProcessors" xml:space="preserve"><value>Logical processors</value></data>
+  <data name="CurrentClockSpeed" xml:space="preserve"><value>Reported clock</value></data>
+  <data name="MaxClockSpeed" xml:space="preserve"><value>Maximum clock (firmware)</value></data>
+  <data name="NominalMHz" xml:space="preserve"><value>Nominal clock (Windows, CPU 0)</value></data>
+  <data name="L2CacheSize" xml:space="preserve"><value>L2 cache</value></data>
+  <data name="L3CacheSize" xml:space="preserve"><value>L3 cache</value></data>
+  <data name="Architecture" xml:space="preserve"><value>Architecture</value></data>
+  <data name="Capacity" xml:space="preserve"><value>Capacity</value></data>
+  <data name="DeviceLocator" xml:space="preserve"><value>Slot</value></data>
+  <data name="SMBIOSMemoryType" xml:space="preserve"><value>Memory type</value></data>
+  <data name="ConfiguredClockSpeed" xml:space="preserve"><value>Configured memory rate</value></data>
+  <data name="PartNumber" xml:space="preserve"><value>Part number</value></data>
+  <data name="MemoryDevices" xml:space="preserve"><value>Total slots</value></data>
+  <data name="FreeSlots" xml:space="preserve"><value>Free slots</value></data>
+  <data name="AdapterRAM" xml:space="preserve"><value>Adapter memory reported by driver</value></data>
+  <data name="DriverVersion" xml:space="preserve"><value>Driver version</value></data>
+  <data name="CurrentHorizontalResolution" xml:space="preserve"><value>Active width</value></data>
+  <data name="CurrentVerticalResolution" xml:space="preserve"><value>Active height</value></data>
+  <data name="CurrentRefreshRate" xml:space="preserve"><value>Refresh rate</value></data>
+  <data name="UserFriendlyName" xml:space="preserve"><value>Panel name</value></data>
+  <data name="ProductCodeID" xml:space="preserve"><value>EDID product code</value></data>
+  <data name="ManufacturerName" xml:space="preserve"><value>EDID manufacturer</value></data>
+  <data name="InstanceName" xml:space="preserve"><value>Monitor instance</value></data>
+  <data name="MaxHorizontalImageSize" xml:space="preserve"><value>Physical width</value></data>
+  <data name="MaxVerticalImageSize" xml:space="preserve"><value>Physical height</value></data>
+  <data name="DisplayName" xml:space="preserve"><value>Display output</value></data>
+  <data name="Resolution" xml:space="preserve"><value>Resolution</value></data>
+  <data name="RefreshHz" xml:space="preserve"><value>Refresh rate</value></data>
+  <data name="PanelName" xml:space="preserve"><value>Panel name (EDID)</value></data>
+  <data name="MonitorCount" xml:space="preserve"><value>Active monitors</value></data>
+  <data name="InterfaceDescription" xml:space="preserve"><value>Adapter</value></data>
+  <data name="DriverProvider" xml:space="preserve"><value>Driver provider</value></data>
+  <data name="DriverVersionString" xml:space="preserve"><value>Driver version</value></data>
+  <data name="PermanentAddress" xml:space="preserve"><value>Hardware MAC</value></data>
+  <data name="ReceiveLinkSpeed" xml:space="preserve"><value>Receive link speed</value></data>
+  <data name="TransmitLinkSpeed" xml:space="preserve"><value>Transmit link speed</value></data>
+  <data name="InterfaceType" xml:space="preserve"><value>Interface type</value></data>
+  <data name="RadioTypes" xml:space="preserve"><value>Supported radio types</value></data>
+  <data name="Caption" xml:space="preserve"><value>Edition</value></data>
+  <data name="Version" xml:space="preserve"><value>Version</value></data>
+  <data name="BuildNumber" xml:space="preserve"><value>Build</value></data>
+  <data name="InstallDate" xml:space="preserve"><value>Installation date</value></data>
+  <data name="OSArchitecture" xml:space="preserve"><value>OS architecture</value></data>
+  <data name="Description" xml:space="preserve"><value>Licensing channel / description</value></data>
+  <data name="LicenseStatus" xml:space="preserve"><value>Activation status</value></data>
+  <data name="PartialProductKey" xml:space="preserve"><value>Last five key characters</value></data>
+  <data name="KeyManagementServiceMachine" xml:space="preserve"><value>Configured KMS host</value></data>
+  <data name="DiscoveredKeyManagementServiceMachineName" xml:space="preserve"><value>Discovered KMS host</value></data>
+  <data name="ProductReleaseIds" xml:space="preserve"><value>Office product</value></data>
+  <data name="VersionToReport" xml:space="preserve"><value>Office version</value></data>
+  <data name="Size" xml:space="preserve"><value>Capacity</value></data>
+  <data name="EstimatedChargeRemaining" xml:space="preserve"><value>Charge remaining</value></data>
+  <data name="Enabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="Disabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="Desktop" xml:space="preserve"><value>Desktop</value></data>
+  <data name="Mobile" xml:space="preserve"><value>Laptop</value></data>
+  <data name="Workstation" xml:space="preserve"><value>Workstation</value></data>
+  <data name="Server" xml:space="preserve"><value>Server</value></data>
+  <data name="Unlicensed" xml:space="preserve"><value>Unlicensed</value></data>
+  <data name="Licensed" xml:space="preserve"><value>Activated</value></data>
+  <data name="Grace" xml:space="preserve"><value>Grace period</value></data>
+  <data name="NonGenuineGrace" xml:space="preserve"><value>Non-genuine grace period</value></data>
+  <data name="Notification" xml:space="preserve"><value>Activation notification</value></data>
+  <data name="LicenseWarning" xml:space="preserve"><value>Verify this license with the seller or your IT administrator.</value></data>
+<data name="MACAddress" xml:space="preserve"><value>Current MAC address</value></data>
+  <data name="PresentPanels" xml:space="preserve"><value>Present monitors (PnP)</value></data>
+  <data name="PresentCount" xml:space="preserve"><value>Present monitor devices</value></data>
 </root>
