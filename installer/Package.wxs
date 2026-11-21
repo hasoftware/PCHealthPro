@@ -2,6 +2,9 @@
   <Package Name="$(Product)" Manufacturer="HASOFTWARE" Version="$(Version)"
            UpgradeCode="D415C7E2-2AAD-4030-9CED-E7B69BE397E9" Scope="perUser">
     <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version is already installed."/>
+    <!-- All files are private to this app. Refresh them on same-version upgrades,
+         including WinUI files whose localized version can differ on disk. -->
+    <Property Id="REINSTALLMODE" Value="amus"/>
     <MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsFolder" Name="Programs">
