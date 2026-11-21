@@ -30,6 +30,11 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
 {
     public string Category => category;
 
+    // VGHH family: https://consumer.huawei.com/cn/support/content/zh-cn15993309/
+    private static bool IsMateBookXPro(DeviceRow? system) =>
+        string.Equals(system?.Text("Manufacturer")?.Split(' ')[0], "Huawei", StringComparison.OrdinalIgnoreCase)
+        && system?.Text("Model")?.ToUpperInvariant() is "VGHH" or "VGHH-X" or "VGHH-XX";
+
     public async Task<HardwareReading> ReadAsync(CancellationToken token)
     {
         var results = await Task.WhenAll(queries.Select(async query =>
@@ -38,11 +43,14 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
         string? summary = null;
         foreach (var (query, rows) in results)
         {
+            if (query.Label == "RamPlatform") continue;
             if (rows.Count == 0)
                 groups.Add(new(query.Label, [new("Details", null)]));
             foreach (var row in rows)
             {
                 var fields = InventoryFormat.Fields(query, row);
+                if (query.Label == "Machine" && IsMateBookXPro(row))
+                    fields = [new("ProductLine", "HUAWEI MateBook X Pro Core Ultra Premium Edition"), .. fields];
                 summary ??= fields.Select(f => f.Value).FirstOrDefault(v => v != null);
                 groups.Add(new(query.Label, fields));
             }
@@ -71,8 +79,18 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
                 ? slots.Sum(n => (long)n!.Value) : null;
             if (total < modules.Count) total = null;
             long? used = modules.Count > 0 ? modules.Count : null;
-            groups.Add(new("RAM", [new("MemoryDevices", total?.ToString()),
-                new("UsedSlots", used?.ToString()), new("FreeSlots", (total - used)?.ToString())]));
+            var platform = results.Where(r => r.Query.Label == "RamPlatform").SelectMany(r => r.Rows).FirstOrDefault();
+            static bool LowPower(DeviceRow row) => row.Number("SMBIOSMemoryType") is 27 or 28 or 29 or 30 or 35;
+            bool mateBookOnboard = IsMateBookXPro(platform) && modules.Count > 0 && modules.All(LowPower);
+            // SMBIOS counts memory devices, which may include soldered packages.
+            // LPDDR can also be on a replaceable module, so its type alone cannot prove soldering.
+            bool uncertainSlots = modules.Any(m => m.Number("FormFactor") == 21 ||
+                LowPower(m) && m.Number("FormFactor") is not (8 or 12));
+            if (mateBookOnboard || uncertainSlots)
+                groups.Add(new("RAM", [new("MemoryLayout", mateBookOnboard ? "RamOnboard" : "RamSocketsUnconfirmed") { Localize = true }]));
+            else
+                groups.Add(new("RAM", [new("MemoryDevices", total?.ToString()),
+                    new("UsedSlots", used?.ToString()), new("FreeSlots", (total - used)?.ToString())]));
         }
         if (Category == "Display")
         {

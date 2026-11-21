@@ -36,8 +36,8 @@
   <data name="USB" xml:space="preserve"><value>USB controller</value></data>
   <data name="TPM" xml:space="preserve"><value>Trusted Platform Module</value></data>
   <data name="SecureBoot" xml:space="preserve"><value>Secure Boot</value></data>
-  <data name="MemoryModule" xml:space="preserve"><value>Memory module</value></data>
-  <data name="MemoryArray" xml:space="preserve"><value>Memory slots</value></data>
+  <data name="MemoryModule" xml:space="preserve"><value>Memory device</value></data>
+  <data name="MemoryArray" xml:space="preserve"><value>Memory array</value></data>
   <data name="Panel" xml:space="preserve"><value>Panel identification (EDID)</value></data>
   <data name="Dimensions" xml:space="preserve"><value>Panel dimensions</value></data>
   <data name="DisplayMode" xml:space="preserve"><value>Active display mode</value></data>
@@ -48,6 +48,8 @@
   <data name="OfficeActivation" xml:space="preserve"><value>Office activation (SPP)</value></data>
   <data name="OfficeLegacy" xml:space="preserve"><value>Legacy Office activation</value></data>
   <data name="Model" xml:space="preserve"><value>Model</value></data>
+  <data name="SystemFamily" xml:space="preserve"><value>System family reported by firmware</value></data>
+  <data name="ProductLine" xml:space="preserve"><value>Product line</value></data>
   <data name="Manufacturer" xml:space="preserve"><value>Manufacturer</value></data>
   <data name="PCSystemType" xml:space="preserve"><value>System type</value></data>
   <data name="SMBIOSBIOSVersion" xml:space="preserve"><value>BIOS version</value></data>
@@ -68,7 +70,7 @@
   <data name="L3CacheSize" xml:space="preserve"><value>L3 cache</value></data>
   <data name="Architecture" xml:space="preserve"><value>Architecture</value></data>
   <data name="Capacity" xml:space="preserve"><value>Capacity</value></data>
-  <data name="DeviceLocator" xml:space="preserve"><value>Slot</value></data>
+  <data name="DeviceLocator" xml:space="preserve"><value>Firmware location</value></data>
   <data name="SMBIOSMemoryType" xml:space="preserve"><value>Memory type</value></data>
   <data name="ConfiguredClockSpeed" xml:space="preserve"><value>Configured memory rate</value></data>
   <data name="PartNumber" xml:space="preserve"><value>Part number</value></data>
@@ -338,4 +340,12 @@
   <data name="PanelSummary" xml:space="preserve"><value>Detected monitor</value></data>
   <data name="PreferredMode" xml:space="preserve"><value>Preferred EDID mode</value></data>
   <data name="ManualOptions" xml:space="preserve"><value>Guided manual tests</value></data>
+  <data name="FirmwareDeviceCount" xml:space="preserve"><value>Memory devices reported by SMBIOS</value></data>
+  <data name="MemoryLayout" xml:space="preserve"><value>Memory installation</value></data>
+  <data name="RamOnboard" xml:space="preserve"><value>Memory soldered to the board</value></data>
+  <data name="RamSocketsUnconfirmed" xml:space="preserve"><value>Removable slot count unconfirmed</value></data>
+  <data name="FormFactor" xml:space="preserve"><value>Form factor</value></data>
+  <data name="GpuIntegratedPci" xml:space="preserve"><value>Integrated GPU · PCI device ID</value></data>
+  <data name="GpuDiscretePci" xml:space="preserve"><value>Discrete GPU · PCI device ID</value></data>
+  <data name="GpuSharedRam" xml:space="preserve"><value>Uses shared system memory</value></data>
 </root>

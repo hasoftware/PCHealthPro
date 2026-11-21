@@ -12,6 +12,26 @@ public sealed class InventoryTests
     }
 
     [Theory]
+    [InlineData("HUAWEI", "VGHH-XX", true)]
+    [InlineData("Huawei Technologies Co., Ltd.", "vghh-x", true)]
+    [InlineData("Other", "VGHH-XX", false)]
+    [InlineData("Huawei", "VGHH-XX-PCB", false)]
+    [InlineData("Huawei", "Unlisted", false)]
+    public async Task MachineSummaryResolvesKnownVendorModelAndRetainsFirmwareValues(string maker, string model, bool known)
+    {
+        var source = new Source(new()
+        {
+            ["Win32_ComputerSystem"] = [new() { ["Manufacturer"] = maker, ["Model"] = model, ["SystemFamily"] = "OEM family" }]
+        });
+        var machine = InventoryCatalog.Create(source).Single(m => m.Category == "Machine");
+        var result = await machine.ReadAsync(default);
+        Assert.Equal(known ? "HUAWEI MateBook X Pro Core Ultra Premium Edition" : model, result.Value);
+        var fields = result.Groups.Single(g => g.Label == "Machine").Fields;
+        Assert.Contains(fields, f => f.Label == "Model" && f.Value == model);
+        Assert.Contains(fields, f => f.Label == "SystemFamily" && f.Value == "OEM family");
+    }
+
+    [Theory]
     [InlineData("8589934592", "16 GiB")]
     [InlineData(null, null)]
     public async Task MemoryKeepsIndividualModulesAndCountsFreeSlots(string? secondCapacity, string? expected)
@@ -26,6 +46,53 @@ public sealed class InventoryTests
         Assert.Equal(expected, result.Value);
         Assert.Equal(2, result.Groups.Count(g => g.Label == "MemoryModule"));
         Assert.Contains(result.Groups.SelectMany(g => g.Fields), f => f.Label == "FreeSlots" && f.Value == "2");
+    }
+
+    [Fact]
+    public async Task MateBookReportsSolderedCapacityAndKeepsFirmwareCountInDetails()
+    {
+        var source = new Source(new()
+        {
+            ["Win32_ComputerSystem"] = [new() { ["Manufacturer"] = "HUAWEI", ["Model"] = "VGHH-XX" }],
+            ["Win32_PhysicalMemory"] = Enumerable.Range(0, 8).Select(i => new DeviceRow
+                { ["Capacity"] = 4L << 30, ["SMBIOSMemoryType"] = 35, ["DeviceLocator"] = $"Controller{i}", ["ConfiguredClockSpeed"] = 6400 }).ToArray(),
+            ["Win32_PhysicalMemoryArray"] = [new() { ["MemoryDevices"] = 8 }]
+        });
+        var reading = await InventoryCatalog.Create(source).Single(m => m.Category == "RAM").ReadAsync(default);
+        Assert.Equal("32 GiB", reading.Value);
+        var fields = reading.Groups.SelectMany(g => g.Fields).ToArray();
+        Assert.Contains(fields, f => f.Label == "MemoryLayout" && f.Value == "RamOnboard" && f.Localize);
+        Assert.Contains(fields, f => f.Label == "FirmwareDeviceCount" && f.Value == "8");
+        Assert.DoesNotContain(fields, f => f.Label is "MemoryDevices" or "UsedSlots" or "FreeSlots");
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(21, false)]
+    [InlineData(12, true)]
+    public async Task OtherLpddrSystemsNeedModuleEvidenceForSocketCounts(int form, bool removable)
+    {
+        var source = new Source(new()
+        {
+            ["Win32_PhysicalMemory"] = [new() { ["SMBIOSMemoryType"] = 35, ["FormFactor"] = form }],
+            ["Win32_PhysicalMemoryArray"] = [new() { ["MemoryDevices"] = 2 }]
+        });
+        var result = await InventoryCatalog.Create(source).Single(m => m.Category == "RAM").ReadAsync(default);
+        var topology = result.Groups.Single(g => g.Label == "RAM").Fields;
+        if (removable) Assert.Contains(topology, f => f.Label == "FreeSlots" && f.Value == "1");
+        else Assert.Equal("RamSocketsUnconfirmed", Assert.Single(topology).Value);
+    }
+
+    [Theory]
+    [InlineData(@"pci\ven_8086&dev_7d55&subsys_1234\0", "GpuIntegratedPci")]
+    [InlineData(@"PCI\VEN_8086&DEV_7DD5", "GpuIntegratedPci")]
+    [InlineData(@"PCI\VEN_8086&DEV_56A0", "GpuDiscretePci")]
+    [InlineData(@"PCI\VEN_8086&DEV_7D550", null)]
+    [InlineData(@"PCI\VEN_1234&DEV_7D55", null)]
+    [InlineData(null, null)]
+    public void IntelArcAdaptersAreClassifiedByExactPciIdentity(string? instance, string? expected)
+    {
+        Assert.Equal(expected, GraphicsAdapterType.FromProduct("Intel", "Intel(R) Arc(TM) Graphics", instance));
     }
 
     [Fact]

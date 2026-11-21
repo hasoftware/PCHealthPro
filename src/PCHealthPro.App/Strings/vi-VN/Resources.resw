@@ -36,8 +36,8 @@
   <data name="USB" xml:space="preserve"><value>Bộ điều khiển USB</value></data>
   <data name="TPM" xml:space="preserve"><value>Mô-đun TPM</value></data>
   <data name="SecureBoot" xml:space="preserve"><value>Khởi động an toàn</value></data>
-  <data name="MemoryModule" xml:space="preserve"><value>Thanh RAM</value></data>
-  <data name="MemoryArray" xml:space="preserve"><value>Khe RAM</value></data>
+  <data name="MemoryModule" xml:space="preserve"><value>Thiết bị bộ nhớ</value></data>
+  <data name="MemoryArray" xml:space="preserve"><value>Mảng bộ nhớ</value></data>
   <data name="Panel" xml:space="preserve"><value>Nhận dạng màn hình (EDID)</value></data>
   <data name="Dimensions" xml:space="preserve"><value>Kích thước tấm nền</value></data>
   <data name="DisplayMode" xml:space="preserve"><value>Chế độ hiển thị hiện tại</value></data>
@@ -48,6 +48,8 @@
   <data name="OfficeActivation" xml:space="preserve"><value>Kích hoạt Office (SPP)</value></data>
   <data name="OfficeLegacy" xml:space="preserve"><value>Kích hoạt Office đời cũ</value></data>
   <data name="Model" xml:space="preserve"><value>Mẫu máy</value></data>
+  <data name="SystemFamily" xml:space="preserve"><value>Dòng máy theo firmware</value></data>
+  <data name="ProductLine" xml:space="preserve"><value>Tên dòng máy</value></data>
   <data name="Manufacturer" xml:space="preserve"><value>Nhà sản xuất</value></data>
   <data name="PCSystemType" xml:space="preserve"><value>Loại máy</value></data>
   <data name="SMBIOSBIOSVersion" xml:space="preserve"><value>Phiên bản BIOS</value></data>
@@ -68,7 +70,7 @@
   <data name="L3CacheSize" xml:space="preserve"><value>Bộ nhớ đệm L3</value></data>
   <data name="Architecture" xml:space="preserve"><value>Kiến trúc</value></data>
   <data name="Capacity" xml:space="preserve"><value>Dung lượng</value></data>
-  <data name="DeviceLocator" xml:space="preserve"><value>Khe cắm</value></data>
+  <data name="DeviceLocator" xml:space="preserve"><value>Vị trí theo firmware</value></data>
   <data name="SMBIOSMemoryType" xml:space="preserve"><value>Loại RAM</value></data>
   <data name="ConfiguredClockSpeed" xml:space="preserve"><value>Tốc độ RAM đã cấu hình</value></data>
   <data name="PartNumber" xml:space="preserve"><value>Mã linh kiện</value></data>
@@ -338,4 +340,12 @@
   <data name="PanelSummary" xml:space="preserve"><value>Màn hình đã nhận diện</value></data>
   <data name="PreferredMode" xml:space="preserve"><value>Chế độ ưu tiên theo EDID</value></data>
   <data name="ManualOptions" xml:space="preserve"><value>Bài thử thủ công trong quy trình</value></data>
+  <data name="FirmwareDeviceCount" xml:space="preserve"><value>Số thiết bị bộ nhớ theo SMBIOS</value></data>
+  <data name="MemoryLayout" xml:space="preserve"><value>Kiểu lắp RAM</value></data>
+  <data name="RamOnboard" xml:space="preserve"><value>RAM hàn trên bo mạch</value></data>
+  <data name="RamSocketsUnconfirmed" xml:space="preserve"><value>Chưa xác định số khe RAM tháo lắp</value></data>
+  <data name="FormFactor" xml:space="preserve"><value>Dạng đóng gói</value></data>
+  <data name="GpuIntegratedPci" xml:space="preserve"><value>GPU tích hợp · Theo mã PCI</value></data>
+  <data name="GpuDiscretePci" xml:space="preserve"><value>GPU rời · Theo mã PCI</value></data>
+  <data name="GpuSharedRam" xml:space="preserve"><value>Dùng chung RAM hệ thống</value></data>
 </root>

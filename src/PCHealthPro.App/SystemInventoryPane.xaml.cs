@@ -135,7 +135,8 @@ public sealed partial class SystemInventoryPane : UserControl
             return new(key, values.Length == 0 ? null : string.Join(" · ", values));
         }
         Add("RAM", "\uE964", Reading("RAM")?.Value ?? strings.Get("Unknown"), strings.Get("RAM"),
-            [DistinctValues("SMBIOSMemoryType"), DistinctValues("ConfiguredClockSpeed"), DistinctValues("FreeSlots")], ram);
+            [DistinctValues("SMBIOSMemoryType"), DistinctValues("ConfiguredClockSpeed"),
+                ram.Select(g => Field(g, "MemoryLayout")).FirstOrDefault(f => f != null) ?? DistinctValues("FreeSlots")], ram);
     }
 
     private void Platform()
@@ -143,8 +144,8 @@ public sealed partial class SystemInventoryPane : UserControl
         foreach (var group in Groups("Machine").GroupBy(g => g.Label))
         {
             var g = group.First();
-            var title = Value(g, "Product") ?? Value(g, "SMBIOSBIOSVersion") ?? strings.Get(g.Label);
-            var metrics = g.Fields.Where(f => f.Label is "Manufacturer" or "PCSystemType" or "ReleaseDate" or
+            var title = Value(g, "ProductLine") ?? Value(g, "Product") ?? Value(g, "SMBIOSBIOSVersion") ?? strings.Get(g.Label);
+            var metrics = g.Fields.Where(f => f.Label is "Model" or "Manufacturer" or "PCSystemType" or "ReleaseDate" or
                 "SpecVersion" or "SecureBootState" or "IsEnabled_InitialValue").ToArray();
             Add(g.Label, "\uE950", title, title == strings.Get(g.Label) ? null : strings.Get(g.Label), metrics, group.ToArray());
         }

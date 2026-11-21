@@ -24,7 +24,8 @@ internal sealed record OverviewTileContent(string Title, string Facts, string De
                 var total = Field(topology, "MemoryDevices");
                 var used = Field(topology, "UsedSlots");
                 var free = Field(topology, "FreeSlots");
-                facts = (total, used, free) switch
+                var layout = Field(topology, "MemoryLayout");
+                facts = layout != null ? T(layout) : (total, used, free) switch
                 {
                     (not null, not null, not null) => Format("RamOccupancy", used, total, free),
                     (_, not null, _) => Format("RamModulesOnly", used),
@@ -32,9 +33,9 @@ internal sealed record OverviewTileContent(string Title, string Facts, string De
                     _ => T("RamSlotsUnknown")
                 };
                 var modules = groups.Where(g => g.Label == "MemoryModule")
-                    .Select(g => Join(Field(g, "Capacity"), Field(g, "SMBIOSMemoryType"), Field(g, "ConfiguredClockSpeed")))
+                    .Select(g => Join(layout == null ? Field(g, "Capacity") : null, Field(g, "SMBIOSMemoryType"), Field(g, "ConfiguredClockSpeed")))
                     .Where(s => s.Length > 0).GroupBy(s => s);
-                detail = string.Join("\n", modules.Select(m => $"{m.Count()} × {m.Key}"));
+                detail = string.Join("\n", modules.Select(m => layout == null ? $"{m.Count()} × {m.Key}" : m.Key));
                 break;
             case "CPU":
                 var processors = groups.Where(g => Field(g, "Name") != null).ToArray();
@@ -54,7 +55,8 @@ internal sealed record OverviewTileContent(string Title, string Facts, string De
             case "GPU":
                 var gpu = groups.FirstOrDefault();
                 facts = T(Field(gpu, "GpuType") ?? "GpuUnknown");
-                detail = Join(Field(gpu, "Manufacturer"), Field(gpu, "AdapterRAM"));
+                var integrated = Field(gpu, "GpuType") is "GpuIntegrated" or "GpuIntegratedModel" or "GpuIntegratedPci";
+                detail = Join(Field(gpu, "Manufacturer"), integrated ? T("GpuSharedRam") : Field(gpu, "AdapterRAM"));
                 break;
             case "Storage" when groups.Count > 0:
                 title = Format("DiskCount", groups.Count);

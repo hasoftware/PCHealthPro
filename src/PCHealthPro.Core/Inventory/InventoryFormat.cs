@@ -8,7 +8,8 @@ internal static class InventoryFormat
 
     internal static InventoryField[] Fields(InventoryQuery query, DeviceRow row) =>
         query.Columns.Split(',').Where(name => name != "PNPDeviceID")
-            .Select(name => Format(name, row)).ToArray();
+            .Select(name => query.Label == "MemoryArray" && name == "MemoryDevices"
+                ? new InventoryField("FirmwareDeviceCount", row.Text(name)) : Format(name, row)).ToArray();
 
     private static string? Chassis(ushort[] codes)
     {
@@ -24,6 +25,7 @@ internal static class InventoryFormat
         string? value = name switch
         {
             "Capacity" or "AdapterRAM" or "Size" => n is > 0 ? Bytes(n.Value) : null,
+            "FormFactor" => n switch { 8 => "DIMM", 12 => "SO-DIMM", 21 => "BGA", > 0 => text, _ => null },
             "CurrentClockSpeed" or "MaxClockSpeed" or "NominalMHz" or "BaseClock" => n > 0 ? $"{n / 1000d:0.###} GHz" : null,
             "RefreshHz" or "CurrentRefreshRate" => WithUnit("Hz"),
             "MaxHorizontalImageSize" or "MaxVerticalImageSize" => WithUnit("cm"),

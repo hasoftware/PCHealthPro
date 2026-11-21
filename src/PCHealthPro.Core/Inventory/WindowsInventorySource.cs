@@ -157,7 +157,7 @@ public sealed class WindowsInventorySource : IInventorySource
             };
             try { row["GpuType"] = GraphicsAdapterType.Read(id); }
             catch (Exception error) when (!token.IsCancellationRequested) { Log("GpuType", error); }
-            if (row.Text("GpuType") == null) row["GpuType"] = GraphicsAdapterType.FromProduct(row.Text("Manufacturer"), row.Text("Name"));
+            if (row.Text("GpuType") == null) row["GpuType"] = GraphicsAdapterType.FromProduct(row.Text("Manufacturer"), row.Text("Name"), id);
         }
         return rows;
     }

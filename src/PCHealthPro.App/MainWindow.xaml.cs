@@ -305,6 +305,9 @@ public sealed partial class MainWindow : Window
             : model;
         CheckStatus.Text = busy || Model.CheckedAt == null ? language.Get("Busy")
             : string.Format(language.Get("ScannedAt"), Model.CheckedAt.Value.ToLocalTime().ToString("HH:mm"));
+        var rawModel = machineFields?.FirstOrDefault(f => f.Label == "Model")?.Value;
+        if (machineFields?.Any(f => f.Label == "ProductLine") == true && rawModel != null)
+            CheckStatus.Text = $"{language.Get("Model")} {rawModel} · {CheckStatus.Text}";
         var results = tests.Snapshot().Where(t => language.ManualEnabled(t.Test.ToString())).ToArray();
         var next = results.FirstOrDefault(t => t.Verdict == TestVerdict.Untested);
         ManualProgress.Visibility = results.Length > 0 && section == "Overview" && !busy && Model.CheckedAt != null

@@ -3,14 +3,28 @@ using System.Runtime.Versioning;
 
 namespace PCHealthPro.Core.Inventory;
 
-[SupportedOSPlatform("windows")]
 internal static class GraphicsAdapterType
 {
     // Resolve the interface for this exact PnP instance, including render-only GPUs.
     private static readonly Guid DisplayInterface = new("5B45201D-F2F2-4F3B-85BB-30FF1F953599");
 
-    internal static string? FromProduct(string? vendor, string? model)
+    internal static string? FromProduct(string? vendor, string? model, string? instance)
     {
+        // Match the adapter, including on hybrid systems. Intel uses the Arc name
+        // on both Meteor Lake integrated graphics and discrete graphics products.
+        // PCI IDs: linux/include/drm/intel/pciids.h (MTL and DG2).
+        var path = instance?.ToUpperInvariant().Split('\\');
+        if (path is ["PCI", var hardware, ..])
+        {
+            var parts = hardware.Split('&');
+            if (parts.Contains("VEN_8086"))
+            {
+                var device = Array.Find(parts, p => p.StartsWith("DEV_", StringComparison.Ordinal));
+                if (device is "DEV_7D40" or "DEV_7D45" or "DEV_7D55" or "DEV_7D60" or "DEV_7DD5")
+                    return "GpuIntegratedPci";
+                if (device is "DEV_56A0" or "DEV_56A1" or "DEV_56A5") return "GpuDiscretePci";
+            }
+        }
         if (model == null) return null;
         var name = model.ToUpperInvariant();
         if (vendor == "NVIDIA" && (name.Contains("GEFORCE RTX") || name.Contains("GEFORCE GTX"))) return "GpuDiscreteModel";
@@ -19,6 +33,7 @@ internal static class GraphicsAdapterType
         return null;
     }
 
+    [SupportedOSPlatform("windows")]
     internal static string? Read(string? instance)
     {
         if (string.IsNullOrWhiteSpace(instance)) return null;

@@ -7,7 +7,7 @@ public static class InventoryCatalog
         const string wmi = @"root\WMI";
         const string standard = @"root\StandardCimv2";
         yield return new InventoryModule("Machine", source,
-            new InventoryQuery("Machine", "Win32_ComputerSystem", "Model,Manufacturer,PCSystemType"),
+            new InventoryQuery("Machine", "Win32_ComputerSystem", "Model,Manufacturer,PCSystemType,SystemFamily"),
             new InventoryQuery("Chassis", "Win32_SystemEnclosure", "ChassisTypes"),
             new InventoryQuery("BIOS", "Win32_BIOS", "SMBIOSBIOSVersion,Manufacturer,ReleaseDate,SerialNumber"),
             new InventoryQuery("Board", "Win32_BaseBoard", "Product,Manufacturer,SerialNumber"),
@@ -18,7 +18,8 @@ public static class InventoryCatalog
             new InventoryQuery("CPU", "Win32_Processor", "Name,Manufacturer,NumberOfCores,NumberOfLogicalProcessors,CurrentClockSpeed,MaxClockSpeed,L2CacheSize,L3CacheSize,Architecture"),
             new InventoryQuery("CPU", "ProcessorRegistry", "NominalMHz,BaseClock"));
         yield return new InventoryModule("RAM", source,
-            new InventoryQuery("MemoryModule", "Win32_PhysicalMemory", "Capacity,DeviceLocator,SMBIOSMemoryType,ConfiguredClockSpeed,Manufacturer,PartNumber"),
+            new InventoryQuery("RamPlatform", "Win32_ComputerSystem", "Manufacturer,Model"),
+            new InventoryQuery("MemoryModule", "Win32_PhysicalMemory", "Capacity,DeviceLocator,SMBIOSMemoryType,ConfiguredClockSpeed,Manufacturer,PartNumber,FormFactor"),
             new InventoryQuery("MemoryArray", "Win32_PhysicalMemoryArray", "MemoryDevices", Filter: "Use = 3"));
         yield return new InventoryModule("GPU", source,
             new InventoryQuery("GPU", "GraphicsAdapters", "Name,Manufacturer,GpuType,AdapterRAM,DriverVersion,CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate,PNPDeviceID"));
