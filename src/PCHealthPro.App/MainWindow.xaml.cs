@@ -1,4 +1,7 @@
 using System.Reflection;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Security.Principal;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Automation;
 using Microsoft.UI.Xaml.Controls;
@@ -26,11 +29,14 @@ public sealed partial class MainWindow : Window
     private string section = "Overview";
     private bool updating;
     private int columns;
+    private readonly bool elevated;
 
     public MainWindow(OverviewViewModel model, LanguageService language)
     {
         Model = model;
         this.language = language;
+        using var identity = WindowsIdentity.GetCurrent();
+        elevated = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
         InitializeComponent();
         Title = typeof(App).Assembly.GetCustomAttribute<AssemblyProductAttribute>()!.Product;
         Nav.PaneTitle = Title;
@@ -71,6 +77,8 @@ public sealed partial class MainWindow : Window
         QuickCheck.Content = language.Get("QuickCheck");
         AutomationProperties.SetName(QuickCheck, language.Get("QuickCheck"));
         Tip.Title = language.Get("QuickCheck");
+        Elevate.Content = language.Get("RunAdmin");
+        SmartNotice.Message = language.Get("SmartNotice");
         Tip.Subtitle = language.Get("Hint");
         updating = false;
         UpdateSection();
@@ -105,13 +113,25 @@ public sealed partial class MainWindow : Window
         OverviewPanel.Visibility = section is "Settings" or "Reports" ? Visibility.Collapsed : Visibility.Visible;
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
         var phase = Sections.First(item => item.Key == section).Phase;
-        Placeholder.Visibility = phase > 2 ? Visibility.Visible : Visibility.Collapsed;
+        Placeholder.Visibility = phase > 3 ? Visibility.Visible : Visibility.Collapsed;
         Placeholder.Message = string.Format(language.Get("Pending"), phase);
         DrawCards();
         Scroller.ChangeView(null, 0, null, true);
     }
 
     private void DismissTip(TeachingTip sender, TeachingTipClosedEventArgs args) => language.DismissHint();
+
+    private void RestartElevated(object sender, RoutedEventArgs args)
+    {
+        if (Environment.ProcessPath is not string exe) return;
+        try
+        {
+            using var process = Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true, Verb = "runas" });
+            if (process != null) Close();
+        }
+        catch (Win32Exception error) when (error.NativeErrorCode == 1223) { }
+        catch (Win32Exception) { SmartNotice.Message = language.Get("ElevationFailed"); }
+    }
 
     private void UpdateStatus()
     {
@@ -134,7 +154,8 @@ public sealed partial class MainWindow : Window
         Cards.Children.Clear();
         Cards.ColumnDefinitions.Clear();
         Cards.RowDefinitions.Clear();
-        var count = Math.Max(1, columns);
+        SmartNotice.IsOpen = !elevated && section == "Storage" && Model.Readings.Any(r => r.LimitedSmart);
+        var count = section is "Storage" or "Battery" ? 1 : Math.Max(1, columns);
         for (int col = 0; col < count; col++) Cards.ColumnDefinitions.Add(new ColumnDefinition());
         var readings = Model.Readings.Where(reading => section switch
         {
@@ -148,7 +169,7 @@ public sealed partial class MainWindow : Window
             if (index % count == 0) Cards.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             var reading = readings[index];
             var name = language.Get(reading.Category);
-            var value = reading.Value ?? language.Get("Unknown");
+            var value = reading.Value ?? language.Get(reading.Status == HealthStatus.Absent ? "Absent" : "Unknown");
             var details = new Expander { Header = name, HorizontalAlignment = HorizontalAlignment.Stretch,
                 HorizontalContentAlignment = HorizontalAlignment.Stretch, CornerRadius = new CornerRadius(8),
                 IsExpanded = true };
@@ -158,7 +179,7 @@ public sealed partial class MainWindow : Window
                 Severity = reading.Status switch { HealthStatus.Good => InfoBarSeverity.Success,
                     HealthStatus.Attention => InfoBarSeverity.Warning, HealthStatus.Problem => InfoBarSeverity.Error,
                     _ => InfoBarSeverity.Informational } };
-            content.Children.Add(badge);
+            if (reading.Status != HealthStatus.Absent) content.Children.Add(badge);
             foreach (var group in reading.Groups)
             {
                 var fields = new StackPanel { Spacing = 6 };
@@ -172,7 +193,8 @@ public sealed partial class MainWindow : Window
                         fields.Children.Add(new InfoBar { IsOpen = true, IsClosable = false, Severity = InfoBarSeverity.Warning,
                             Message = language.Get("LicenseWarning") });
                 }
-                content.Children.Add(new Expander { Header = language.Get(group.Label), Content = fields,
+                content.Children.Add(new Expander { Header = group.DeviceName ?? language.Get(group.Label), Content = fields,
+                    IsExpanded = section is "Storage" or "Battery",
                     HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch });
             }
             details.Content = content;

@@ -43,9 +43,8 @@ public static class InventoryCatalog
         yield return new InventoryModule("Camera", source, Pnp("Camera", "PNPClass = 'Camera' OR PNPClass = 'Image'"));
         yield return new InventoryModule("Audio", source, Pnp("Audio", "PNPClass = 'AudioEndpoint'"));
         yield return new InventoryModule("Input", source, Pnp("Input", "PNPClass = 'Mouse' OR PNPClass = 'Keyboard' OR Name LIKE '%touchpad%' OR Name LIKE '%trackpad%'"));
-        // Basic enumeration only. SMART, disk health and battery wear belong to phase 3.
-        yield return new InventoryModule("Storage", source, new InventoryQuery("Storage", "Win32_DiskDrive", "Model,Size"));
-        yield return new InventoryModule("Battery", source, new InventoryQuery("Battery", "Win32_Battery", "Name,EstimatedChargeRemaining"));
+        yield return new StorageModule(source);
+        yield return new BatteryModule(source);
     }
 
     private static InventoryQuery Pnp(string label, string condition) =>

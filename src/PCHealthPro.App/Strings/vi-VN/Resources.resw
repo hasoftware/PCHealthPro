@@ -127,4 +127,46 @@
 <data name="MACAddress" xml:space="preserve"><value>Địa chỉ MAC hiện tại</value></data>
   <data name="PresentPanels" xml:space="preserve"><value>Màn hình hiện diện (PnP)</value></data>
   <data name="PresentCount" xml:space="preserve"><value>Số thiết bị màn hình hiện diện</value></data>
+  <data name="Firmware" xml:space="preserve"><value>Phiên bản firmware</value></data>
+  <data name="DriveMedia" xml:space="preserve"><value>Loại ổ</value></data>
+  <data name="DriveBus" xml:space="preserve"><value>Giao tiếp</value></data>
+  <data name="DriveHealth" xml:space="preserve"><value>Sức khỏe ổ</value></data>
+  <data name="HealthReason" xml:space="preserve"><value>Cơ sở đánh giá</value></data>
+  <data name="Temperature" xml:space="preserve"><value>Nhiệt độ</value></data>
+  <data name="PowerOnHours" xml:space="preserve"><value>Thời gian bật nguồn</value></data>
+  <data name="PowerCycles" xml:space="preserve"><value>Số lần bật nguồn</value></data>
+  <data name="Reallocated" xml:space="preserve"><value>Sector đã phân bổ lại (ATA)</value></data>
+  <data name="PendingSectors" xml:space="preserve"><value>Sector đang chờ xử lý (ATA)</value></data>
+  <data name="MediaErrors" xml:space="preserve"><value>Lỗi phương tiện và toàn vẹn dữ liệu (NVMe)</value></data>
+  <data name="Wear" xml:space="preserve"><value>Tuổi thọ ghi đã dùng</value></data>
+  <data name="BytesWritten" xml:space="preserve"><value>Tổng dữ liệu đã ghi</value></data>
+  <data name="SmartFailed" xml:space="preserve"><value>Ổ báo cảnh báo SMART nghiêm trọng hoặc dự báo hỏng.</value></data>
+  <data name="StorageUnhealthy" xml:space="preserve"><value>Windows Storage báo ổ có vấn đề.</value></data>
+  <data name="UncorrectableErrors" xml:space="preserve"><value>Đã ghi nhận sector chờ xử lý hoặc lỗi dữ liệu chưa sửa được.</value></data>
+  <data name="EnduranceSpent" xml:space="preserve"><value>Ổ báo đã dùng từ 100% tuổi thọ ghi định mức.</value></data>
+  <data name="EnduranceLow" xml:space="preserve"><value>Ổ báo đã dùng từ 90% tuổi thọ ghi định mức.</value></data>
+  <data name="RemappedSectors" xml:space="preserve"><value>Ổ đã ghi nhận sector phải phân bổ lại.</value></data>
+  <data name="HighTemperature" xml:space="preserve"><value>Nhiệt độ đạt ngưỡng cảnh báo 60 °C của ứng dụng.</value></data>
+  <data name="StorageWarning" xml:space="preserve"><value>Windows Storage báo cần chú ý.</value></data>
+  <data name="SmartClear" xml:space="preserve"><value>Ổ không báo cảnh báo lỗi SMART hiện hành.</value></data>
+  <data name="StorageHealthy" xml:space="preserve"><value>Windows Storage báo ổ ở trạng thái tốt.</value></data>
+  <data name="NoHealthSignal" xml:space="preserve"><value>Trình điều khiển chưa cung cấp tín hiệu đánh giá sức khỏe.</value></data>
+  <data name="Absent" xml:space="preserve"><value>Máy không có pin</value></data>
+  <data name="RelativeDesign" xml:space="preserve"><value>Dung lượng thiết kế (đơn vị tương đối)</value></data>
+  <data name="RelativeFull" xml:space="preserve"><value>Dung lượng sạc đầy (đơn vị tương đối)</value></data>
+  <data name="DesignCapacity" xml:space="preserve"><value>Dung lượng thiết kế</value></data>
+  <data name="FullCapacity" xml:space="preserve"><value>Dung lượng sạc đầy hiện tại</value></data>
+  <data name="BatteryWear" xml:space="preserve"><value>Độ chai pin</value></data>
+  <data name="CycleCount" xml:space="preserve"><value>Số chu kỳ sạc</value></data>
+  <data name="ChargeState" xml:space="preserve"><value>Trạng thái sạc</value></data>
+  <data name="Charging" xml:space="preserve"><value>Đang sạc</value></data>
+  <data name="Discharging" xml:space="preserve"><value>Đang xả</value></data>
+  <data name="BatteryIdle" xml:space="preserve"><value>Chờ</value></data>
+  <data name="BatteryFull" xml:space="preserve"><value>Đã sạc đầy</value></data>
+  <data name="Runtime" xml:space="preserve"><value>Thời gian còn lại ước tính</value></data>
+  <data name="ChargeRate" xml:space="preserve"><value>Công suất sạc</value></data>
+  <data name="DischargeRate" xml:space="preserve"><value>Công suất xả</value></data>
+  <data name="RunAdmin" xml:space="preserve"><value>Mở lại bằng quyền quản trị</value></data>
+  <data name="SmartNotice" xml:space="preserve"><value>Một số chỉ số SMART chưa đọc được. Quyền quản trị có thể cho phép đọc thêm.</value></data>
+  <data name="ElevationFailed" xml:space="preserve"><value>Windows chưa thể mở lại ứng dụng bằng quyền quản trị.</value></data>
 </root>

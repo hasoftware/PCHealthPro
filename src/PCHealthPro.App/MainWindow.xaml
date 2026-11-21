@@ -14,6 +14,9 @@
            <ProgressRing x:Name="Progress" Width="24" Height="24"/>
          </StackPanel>
          <TextBlock x:Name="CheckStatus" AutomationProperties.LiveSetting="Polite"/>
+         <InfoBar x:Name="SmartNotice" IsClosable="False" Severity="Informational">
+           <InfoBar.ActionButton><Button x:Name="Elevate" Click="RestartElevated"/></InfoBar.ActionButton>
+         </InfoBar>
          <Grid x:Name="Cards" ColumnSpacing="12" RowSpacing="12" SizeChanged="ResizeCards"/>
        </StackPanel>
        <StackPanel x:Name="SettingsPanel" Spacing="12" Visibility="Collapsed">

@@ -53,6 +53,9 @@ public sealed class WindowsInventorySource : IInventorySource
     {
         switch (query.Class)
         {
+            case "SystemPower": return BatterySources.Presence();
+            case "BatteryReport": return BatterySources.Report(token);
+            case "DriveSmart": return [StorageDeviceReader.Read(query.DriveIndex, query.SectorSize, token)];
             case "SecureBootRegistry":
                 return [new() { ["SecureBootState"] = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecureBoot\State", "UEFISecureBootEnabled", null) }];
             case "ProcessorRegistry":
@@ -69,6 +72,8 @@ public sealed class WindowsInventorySource : IInventorySource
             case "DisplayModes": return NativeInventory.Displays();
         }
         string wql = $"SELECT {query.Columns} FROM {query.Class}";
+        bool batteryProvider = query.Scope.Equals(@"root\WMI", StringComparison.OrdinalIgnoreCase) && query.Class.StartsWith("Battery", StringComparison.Ordinal);
+        if (batteryProvider) wql = $"SELECT * FROM {query.Class}";
         if (query.Filter != null) wql += " WHERE " + query.Filter;
         if (query.Class == "PresentPanels")
             wql = "SELECT Name,PNPDeviceID FROM Win32_PnPEntity WHERE PNPClass = 'Monitor' AND Present = TRUE";
@@ -96,6 +101,11 @@ public sealed class WindowsInventorySource : IInventorySource
                         if (Registry.GetValue(path, "EDID", null) is byte[] edid) NativeInventory.DecodeEdid(edid, row);
                     }
                     catch (Exception error) { Log("PanelEdid", error); }
+                }
+                else if (batteryProvider)
+                {
+                    if (item.Properties.Cast<PropertyData>().Any(p => p.Name == "Active" && p.Value is false)) continue;
+                    foreach (var property in item.Properties) row[property.Name] = property.Value;
                 }
                 else foreach (var name in query.Columns.Split(',')) row[name] = item[name];
                 if (query.Class == "Win32_VideoController") ReadVideoMemory(row);

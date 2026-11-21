@@ -4,9 +4,16 @@ public sealed record InventoryField(string Label, string? Value)
 {
     public bool Localize { get; init; }
 }
-public sealed record DeviceGroup(string Label, IReadOnlyList<InventoryField> Fields);
+public sealed record DeviceGroup(string Label, IReadOnlyList<InventoryField> Fields)
+{
+    public string? DeviceName { get; init; }
+}
 public sealed record InventoryQuery(string Label, string Class, string Columns,
-    string Scope = @"root\cimv2", string? Filter = null);
+    string Scope = @"root\cimv2", string? Filter = null)
+{
+    public uint DriveIndex { get; init; }
+    public uint SectorSize { get; init; }
+}
 public sealed class DeviceRow : Dictionary<string, object?>
 {
     public DeviceRow() : base(StringComparer.OrdinalIgnoreCase) { }

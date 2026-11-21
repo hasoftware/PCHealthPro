@@ -127,4 +127,46 @@
 <data name="MACAddress" xml:space="preserve"><value>Current MAC address</value></data>
   <data name="PresentPanels" xml:space="preserve"><value>Present monitors (PnP)</value></data>
   <data name="PresentCount" xml:space="preserve"><value>Present monitor devices</value></data>
+  <data name="Firmware" xml:space="preserve"><value>Firmware revision</value></data>
+  <data name="DriveMedia" xml:space="preserve"><value>Drive type</value></data>
+  <data name="DriveBus" xml:space="preserve"><value>Interface</value></data>
+  <data name="DriveHealth" xml:space="preserve"><value>Drive health</value></data>
+  <data name="HealthReason" xml:space="preserve"><value>Assessment reason</value></data>
+  <data name="Temperature" xml:space="preserve"><value>Temperature</value></data>
+  <data name="PowerOnHours" xml:space="preserve"><value>Power-on hours</value></data>
+  <data name="PowerCycles" xml:space="preserve"><value>Power cycles</value></data>
+  <data name="Reallocated" xml:space="preserve"><value>Reallocated sectors (ATA)</value></data>
+  <data name="PendingSectors" xml:space="preserve"><value>Pending sectors (ATA)</value></data>
+  <data name="MediaErrors" xml:space="preserve"><value>Media and data integrity errors (NVMe)</value></data>
+  <data name="Wear" xml:space="preserve"><value>Rated endurance used</value></data>
+  <data name="BytesWritten" xml:space="preserve"><value>Lifetime host writes</value></data>
+  <data name="SmartFailed" xml:space="preserve"><value>The drive reports a critical SMART warning or predicts failure.</value></data>
+  <data name="StorageUnhealthy" xml:space="preserve"><value>Windows Storage reports an unhealthy disk.</value></data>
+  <data name="UncorrectableErrors" xml:space="preserve"><value>Pending sectors or uncorrected media errors were reported.</value></data>
+  <data name="EnduranceSpent" xml:space="preserve"><value>Reported endurance usage reached 100% or more.</value></data>
+  <data name="EnduranceLow" xml:space="preserve"><value>Reported endurance usage reached 90% or more.</value></data>
+  <data name="RemappedSectors" xml:space="preserve"><value>The drive reports reallocated sectors.</value></data>
+  <data name="HighTemperature" xml:space="preserve"><value>Measured temperature reached the application warning threshold of 60 °C.</value></data>
+  <data name="StorageWarning" xml:space="preserve"><value>Windows Storage reports a warning.</value></data>
+  <data name="SmartClear" xml:space="preserve"><value>The drive reports no active SMART failure warning.</value></data>
+  <data name="StorageHealthy" xml:space="preserve"><value>Windows Storage reports a healthy disk.</value></data>
+  <data name="NoHealthSignal" xml:space="preserve"><value>The driver did not provide a health assessment.</value></data>
+  <data name="Absent" xml:space="preserve"><value>No system battery installed</value></data>
+  <data name="RelativeDesign" xml:space="preserve"><value>Design capacity (relative units)</value></data>
+  <data name="RelativeFull" xml:space="preserve"><value>Full charge capacity (relative units)</value></data>
+  <data name="DesignCapacity" xml:space="preserve"><value>Design capacity</value></data>
+  <data name="FullCapacity" xml:space="preserve"><value>Full charge capacity</value></data>
+  <data name="BatteryWear" xml:space="preserve"><value>Battery wear</value></data>
+  <data name="CycleCount" xml:space="preserve"><value>Charge cycles</value></data>
+  <data name="ChargeState" xml:space="preserve"><value>Charging state</value></data>
+  <data name="Charging" xml:space="preserve"><value>Charging</value></data>
+  <data name="Discharging" xml:space="preserve"><value>Discharging</value></data>
+  <data name="BatteryIdle" xml:space="preserve"><value>Idle</value></data>
+  <data name="BatteryFull" xml:space="preserve"><value>Fully charged</value></data>
+  <data name="Runtime" xml:space="preserve"><value>Estimated time remaining</value></data>
+  <data name="ChargeRate" xml:space="preserve"><value>Charging power</value></data>
+  <data name="DischargeRate" xml:space="preserve"><value>Discharging power</value></data>
+  <data name="RunAdmin" xml:space="preserve"><value>Restart as administrator</value></data>
+  <data name="SmartNotice" xml:space="preserve"><value>Some SMART readings are unavailable. Administrator access may expose more counters.</value></data>
+  <data name="ElevationFailed" xml:space="preserve"><value>Windows could not restart the application with administrator access.</value></data>
 </root>
