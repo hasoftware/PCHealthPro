@@ -10,6 +10,8 @@ using Microsoft.UI.Xaml.Media.Animation;
 using PCHealthPro.App.Services;
 using PCHealthPro.App.ViewModels;
 using PCHealthPro.Core;
+using PCHealthPro.Core.Diagnostics;
+using PCHealthPro.App.Diagnostics;
 using Windows.ApplicationModel.DataTransfer;
 
 namespace PCHealthPro.App;
@@ -31,13 +33,15 @@ public sealed partial class MainWindow : Window
     private int columns;
     private readonly bool elevated;
 
-    public MainWindow(OverviewViewModel model, LanguageService language, BenchmarkViewModel benchmark)
+    private readonly InteractivePane manual;
+    public MainWindow(OverviewViewModel model, LanguageService language, BenchmarkViewModel benchmark, ManualTestSession session)
     {
         Model = model;
         this.language = language;
         using var identity = WindowsIdentity.GetCurrent();
         elevated = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
         InitializeComponent();
+        manual = new InteractivePane(ManualPane, language, session, this);
         Benchmark.Initialize(benchmark, language, this);
         Title = typeof(App).Assembly.GetCustomAttribute<AssemblyProductAttribute>()!.Product;
         Nav.PaneTitle = Title;
@@ -45,7 +49,7 @@ public sealed partial class MainWindow : Window
         Model.PropertyChanged += (_, _) => DrawCards();
         Model.RefreshCommand.PropertyChanged += (_, _) => UpdateStatus();
         Nav.Loaded += StartOverview;
-        Closed += (_, _) => Model.RefreshCommand.Cancel();
+        Closed += (_, _) => { Model.RefreshCommand.Cancel(); manual.Dispose(); };
     }
 
     private async void StartOverview(object sender, RoutedEventArgs args)
@@ -112,12 +116,13 @@ public sealed partial class MainWindow : Window
     private void UpdateSection()
     {
         Heading.Text = language.Get(section);
+        manual.Show(section);
         OverviewPanel.Visibility = section is "Settings" or "Reports" ? Visibility.Collapsed : Visibility.Visible;
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
         Benchmark.Visibility = section == "Storage" ? Visibility.Visible : Visibility.Collapsed;
         if (section == "Storage") _ = Benchmark.LoadVolumesAsync();
         var phase = Sections.First(item => item.Key == section).Phase;
-        Placeholder.Visibility = phase > 3 ? Visibility.Visible : Visibility.Collapsed;
+        Placeholder.Visibility = phase > 5 ? Visibility.Visible : Visibility.Collapsed;
         Placeholder.Message = string.Format(language.Get("Pending"), phase);
         DrawCards();
         Scroller.ChangeView(null, 0, null, true);

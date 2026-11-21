@@ -9,6 +9,7 @@
    <ScrollViewer x:Name="Scroller">
      <StackPanel x:Name="Body" Padding="24" Spacing="16" MaxWidth="1200" HorizontalAlignment="Stretch">
        <TextBlock x:Name="Heading" Style="{ThemeResource TitleTextBlockStyle}"/>
+       <StackPanel x:Name="ManualPane" Spacing="12" Visibility="Collapsed"/>
        <StackPanel x:Name="OverviewPanel" Spacing="16">
          <StackPanel Orientation="Horizontal" Spacing="12">
            <Button x:Name="QuickCheck" Command="{x:Bind Model.RefreshCommand}" CornerRadius="8" Style="{ThemeResource AccentButtonStyle}"/>

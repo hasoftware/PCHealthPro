@@ -192,4 +192,49 @@
   <data name="RandomRead1" xml:space="preserve"><value>Random read · 4 KiB · QD1</value></data>
   <data name="RandomWrite32" xml:space="preserve"><value>Random write · 4 KiB · QD32</value></data>
   <data name="RandomRead32" xml:space="preserve"><value>Random read · 4 KiB · QD32</value></data>
+  <data name="TestCamera" xml:space="preserve"><value>Camera</value></data>
+  <data name="TestMicrophone" xml:space="preserve"><value>Microphone</value></data>
+  <data name="TestSpeakers" xml:space="preserve"><value>Speakers</value></data>
+  <data name="TestDisplay" xml:space="preserve"><value>Display pixel test</value></data>
+  <data name="TestKeyboard" xml:space="preserve"><value>Keyboard</value></data>
+  <data name="TestPointer" xml:space="preserve"><value>Touchpad, mouse and touch</value></data>
+  <data name="TestVerdict" xml:space="preserve"><value>Your result</value></data>
+  <data name="VerdictUntested" xml:space="preserve"><value>Not tested</value></data>
+  <data name="VerdictPass" xml:space="preserve"><value>Pass</value></data>
+  <data name="VerdictFail" xml:space="preserve"><value>Fail</value></data>
+  <data name="VerdictSkip" xml:space="preserve"><value>Skipped</value></data>
+  <data name="ManualResults" xml:space="preserve"><value>Interactive test results for this session</value></data>
+  <data name="TestNoDevice" xml:space="preserve"><value>No available device detected.</value></data>
+  <data name="TestPermission" xml:space="preserve"><value>Access denied. Check desktop app permissions in Windows privacy settings.</value></data>
+  <data name="TestUnavailable" xml:space="preserve"><value>Device unavailable.</value></data>
+  <data name="TestStop" xml:space="preserve"><value>Stop</value></data>
+  <data name="TestReset" xml:space="preserve"><value>Reset test</value></data>
+  <data name="TestOpening" xml:space="preserve"><value>Opening device…</value></data>
+  <data name="CameraDevice" xml:space="preserve"><value>Camera device</value></data>
+  <data name="CameraStart" xml:space="preserve"><value>Start live preview</value></data>
+  <data name="CameraSnap" xml:space="preserve"><value>Take a test photo</value></data>
+  <data name="NoColorStream" xml:space="preserve"><value>No color video stream is available.</value></data>
+  <data name="MicDevice" xml:space="preserve"><value>Input device</value></data>
+  <data name="MicLevel" xml:space="preserve"><value>Microphone level</value></data>
+  <data name="MicMonitor" xml:space="preserve"><value>Monitor input level</value></data>
+  <data name="MicRecord" xml:space="preserve"><value>Record 5 seconds and play back</value></data>
+  <data name="MicReplay" xml:space="preserve"><value>Replay recording</value></data>
+  <data name="MicRecording" xml:space="preserve"><value>Recording five seconds…</value></data>
+  <data name="MicReady" xml:space="preserve"><value>Recording ready</value></data>
+  <data name="MicTimeout" xml:space="preserve"><value>The microphone did not supply five seconds of audio.</value></data>
+  <data name="SpeakerDevice" xml:space="preserve"><value>Output device</value></data>
+  <data name="SpeakerVolume" xml:space="preserve"><value>Test volume (%)</value></data>
+  <data name="ToneLeft" xml:space="preserve"><value>Left channel</value></data>
+  <data name="ToneRight" xml:space="preserve"><value>Right channel</value></data>
+  <data name="ToneStereo" xml:space="preserve"><value>Both channels</value></data>
+  <data name="ToneSweep" xml:space="preserve"><value>Frequency sweep · 80 Hz – 12 kHz</value></data>
+  <data name="TestPlaying" xml:space="preserve"><value>Playing…</value></data>
+  <data name="TestPlaybackDone" xml:space="preserve"><value>Playback complete</value></data>
+  <data name="DisplayHint" xml:space="preserve"><value>Check each colour and the grayscale gradient. Click or press a key to advance. Press Esc to exit.</value></data>
+  <data name="DisplayStart" xml:space="preserve"><value>Start full-screen test</value></data>
+  <data name="KeyboardListen" xml:space="preserve"><value>Focus keyboard test</value></data>
+  <data name="KeyboardHint" xml:space="preserve"><value>Focus the test button, then press keys. Tested keys stay highlighted. Tab moves focus.</value></data>
+  <data name="KeyboardSeen" xml:space="preserve"><value>Distinct keys detected:</value></data>
+  <data name="PointerHint" xml:space="preserve"><value>Click, scroll, or draw inside the area. Touch the screen with multiple fingers to test simultaneous contacts.</value></data>
+  <data name="PointerCounts" xml:space="preserve"><value>Left {0} · Right {1} · Wheel Y {2} / X {3} · Touches {4} (peak {5})</value></data>
 </root>

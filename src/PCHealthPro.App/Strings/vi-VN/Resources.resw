@@ -192,4 +192,49 @@
   <data name="RandomRead1" xml:space="preserve"><value>Đọc ngẫu nhiên · 4 KiB · QD1</value></data>
   <data name="RandomWrite32" xml:space="preserve"><value>Ghi ngẫu nhiên · 4 KiB · QD32</value></data>
   <data name="RandomRead32" xml:space="preserve"><value>Đọc ngẫu nhiên · 4 KiB · QD32</value></data>
+  <data name="TestCamera" xml:space="preserve"><value>Camera</value></data>
+  <data name="TestMicrophone" xml:space="preserve"><value>Micro</value></data>
+  <data name="TestSpeakers" xml:space="preserve"><value>Loa</value></data>
+  <data name="TestDisplay" xml:space="preserve"><value>Kiểm tra điểm ảnh</value></data>
+  <data name="TestKeyboard" xml:space="preserve"><value>Bàn phím</value></data>
+  <data name="TestPointer" xml:space="preserve"><value>Touchpad, chuột và cảm ứng</value></data>
+  <data name="TestVerdict" xml:space="preserve"><value>Kết quả bạn đánh giá</value></data>
+  <data name="VerdictUntested" xml:space="preserve"><value>Chưa kiểm tra</value></data>
+  <data name="VerdictPass" xml:space="preserve"><value>Đạt</value></data>
+  <data name="VerdictFail" xml:space="preserve"><value>Không đạt</value></data>
+  <data name="VerdictSkip" xml:space="preserve"><value>Bỏ qua</value></data>
+  <data name="ManualResults" xml:space="preserve"><value>Kết quả kiểm tra tương tác trong phiên này</value></data>
+  <data name="TestNoDevice" xml:space="preserve"><value>Không tìm thấy thiết bị khả dụng.</value></data>
+  <data name="TestPermission" xml:space="preserve"><value>Windows từ chối truy cập. Kiểm tra quyền cho ứng dụng desktop trong cài đặt quyền riêng tư của Windows.</value></data>
+  <data name="TestUnavailable" xml:space="preserve"><value>Thiết bị chưa sẵn sàng.</value></data>
+  <data name="TestStop" xml:space="preserve"><value>Dừng</value></data>
+  <data name="TestReset" xml:space="preserve"><value>Làm lại</value></data>
+  <data name="TestOpening" xml:space="preserve"><value>Đang mở thiết bị…</value></data>
+  <data name="CameraDevice" xml:space="preserve"><value>Thiết bị camera</value></data>
+  <data name="CameraStart" xml:space="preserve"><value>Xem trực tiếp</value></data>
+  <data name="CameraSnap" xml:space="preserve"><value>Chụp ảnh thử</value></data>
+  <data name="NoColorStream" xml:space="preserve"><value>Thiết bị không có luồng video màu khả dụng.</value></data>
+  <data name="MicDevice" xml:space="preserve"><value>Thiết bị đầu vào</value></data>
+  <data name="MicLevel" xml:space="preserve"><value>Mức tín hiệu micro</value></data>
+  <data name="MicMonitor" xml:space="preserve"><value>Đo mức âm thanh</value></data>
+  <data name="MicRecord" xml:space="preserve"><value>Ghi 5 giây rồi phát lại</value></data>
+  <data name="MicReplay" xml:space="preserve"><value>Nghe lại</value></data>
+  <data name="MicRecording" xml:space="preserve"><value>Đang ghi âm 5 giây…</value></data>
+  <data name="MicReady" xml:space="preserve"><value>Đã ghi âm xong</value></data>
+  <data name="MicTimeout" xml:space="preserve"><value>Micro chưa cung cấp đủ 5 giây âm thanh.</value></data>
+  <data name="SpeakerDevice" xml:space="preserve"><value>Thiết bị đầu ra</value></data>
+  <data name="SpeakerVolume" xml:space="preserve"><value>Âm lượng thử (%)</value></data>
+  <data name="ToneLeft" xml:space="preserve"><value>Kênh trái</value></data>
+  <data name="ToneRight" xml:space="preserve"><value>Kênh phải</value></data>
+  <data name="ToneStereo" xml:space="preserve"><value>Cả hai kênh</value></data>
+  <data name="ToneSweep" xml:space="preserve"><value>Quét tần số · 80 Hz – 12 kHz</value></data>
+  <data name="TestPlaying" xml:space="preserve"><value>Đang phát…</value></data>
+  <data name="TestPlaybackDone" xml:space="preserve"><value>Đã phát xong</value></data>
+  <data name="DisplayHint" xml:space="preserve"><value>Quan sát từng màu và dải chuyển sắc. Bấm chuột hoặc nhấn phím để đổi màu. Nhấn Esc để thoát.</value></data>
+  <data name="DisplayStart" xml:space="preserve"><value>Kiểm tra toàn màn hình</value></data>
+  <data name="KeyboardListen" xml:space="preserve"><value>Bắt đầu thử phím</value></data>
+  <data name="KeyboardHint" xml:space="preserve"><value>Chọn nút thử phím rồi nhấn các phím. Phím đã thử sẽ giữ màu đánh dấu. Tab chuyển tiêu điểm.</value></data>
+  <data name="KeyboardSeen" xml:space="preserve"><value>Số phím đã nhận:</value></data>
+  <data name="PointerHint" xml:space="preserve"><value>Nhấp chuột, cuộn hoặc vẽ trong vùng thử. Chạm màn hình bằng nhiều ngón tay để kiểm tra các điểm chạm đồng thời.</value></data>
+  <data name="PointerCounts" xml:space="preserve"><value>Trái {0} · Phải {1} · Cuộn dọc {2} / ngang {3} · Điểm chạm {4} (tối đa {5})</value></data>
 </root>

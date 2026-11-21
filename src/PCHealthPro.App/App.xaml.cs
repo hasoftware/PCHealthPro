@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using PCHealthPro.Core;
+using PCHealthPro.Core.Diagnostics;
 using PCHealthPro.Core.Benchmark;
 using PCHealthPro.Core.Inventory;
 using PCHealthPro.App.Services;
@@ -23,6 +24,7 @@ public partial class App : Application
         services.AddSingleton<HardwareScan>();
         services.AddSingleton<LanguageService>();
         services.AddSingleton<OverviewViewModel>();
+        services.AddSingleton<ManualTestSession>();
         services.AddSingleton<DiskBenchmark>();
         services.AddSingleton<BenchmarkViewModel>();
         services.AddSingleton<MainWindow>();

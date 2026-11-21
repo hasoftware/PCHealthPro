@@ -33,6 +33,16 @@ Mở trang Ổ cứng, chọn phân vùng và kích thước file thử (256 MiB
 
 Phép đo dùng I/O trực tiếp và write-through, kiểm tra dung lượng trống, giữ 16 MiB dự phòng và tạo một file mới với chế độ xóa khi đóng. Nút **Hủy** dừng phép đo và giữ kết quả những lượt đã hoàn tất.
 
+## Kiểm tra tương tác
+
+Trên trang Camera, chọn thiết bị rồi mở xem trực tiếp. Ứng dụng hiển thị kích thước và tốc độ khung hình của định dạng camera đang dùng. Chọn **Chụp ảnh thử** để giữ một khung hình bên dưới luồng xem trước.
+
+Trong **Âm thanh & Mic**, chọn micro để xem mức tín hiệu hoặc thu thử 5 giây. Nếu có đầu ra, ứng dụng tự phát lại bằng loa đã chọn. Phần Loa hỗ trợ thử kênh trái, phải, cả hai và quét tần số từ 80 Hz đến 12 kHz. Thanh âm lượng chỉ tác động lên âm thanh thử của ứng dụng. Camera và micro sử dụng quyền dành cho ứng dụng desktop trong cài đặt quyền riêng tư Windows. Rời trang sẽ giải phóng thiết bị và bỏ nội dung thu thử khỏi phiên.
+
+Trên trang Màn hình, mở chế độ toàn màn hình, nhấp chuột hoặc nhấn phím để chuyển qua năm màu và một dải chuyển sắc. Nhấn Esc để thoát. Trên trang Bàn phím & Touchpad, chọn **Bắt đầu thử phím** để xem các phím Windows chuyển đến ứng dụng. Trong vùng vẽ, thử chuột trái, chuột phải, cuộn hoặc chạm bằng nhiều ngón. Bộ đếm điểm chạm phản ánh các tiếp xúc Windows gửi dưới dạng cảm ứng; cử chỉ touchpad có thể xuất hiện dưới dạng chuột hoặc cuộn.
+
+Chọn **Đạt**, **Không đạt** hoặc **Bỏ qua** riêng cho từng bài. Trang **Báo cáo** tổng hợp sáu kết quả của phiên đang mở. Ảnh thử và âm thanh được xử lý trong bộ nhớ.
+
 ## Mã nguồn
 
 - `PCHealthPro.Core` định nghĩa giao diện module và điều phối kiểm tra.
