@@ -10,6 +10,12 @@ public sealed class LanguageService
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HASOFTWARE", "PCHealthPro");
     public string Selection { get; private set; } = "system";
     public bool ShowHint => !File.Exists(Path.Combine(preferences, "intro-seen"));
+    public bool CheckUpdates => File.Exists(Path.Combine(preferences, "check-updates"));
+    public void SetUpdates(bool enabled)
+    {
+        if (enabled) Save("check-updates", "1");
+        else File.Delete(Path.Combine(preferences, "check-updates"));
+    }
 
     public LanguageService()
     {
@@ -19,7 +25,7 @@ public sealed class LanguageService
         catch (UnauthorizedAccessException) { }
     }
 
-    public string Get(string key) => manager.MainResourceMap.GetValue("Resources/" + key, context).ValueAsString;
+    public string Get(string key) => manager.MainResourceMap.TryGetValue("Resources/" + key, context)?.ValueAsString ?? key;
 
     public void Change(string language)
     {

@@ -37,13 +37,6 @@ internal sealed class InteractivePane(StackPanel host, LanguageService strings, 
                 ui.Card(host, ManualTest.Pointer, out var pointer);
                 InputTests.Pointer(pointer, ui);
                 break;
-            case "Reports":
-                var heading = ui.Text(ui.T("ManualResults"));
-                heading.Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
-                host.Children.Add(heading);
-                foreach (var r in session.Snapshot())
-                    host.Children.Add(ui.Text($"{ui.T("Test" + r.Test)} · {ui.T("Verdict" + r.Verdict)}"));
-                break;
             default:
                 host.Visibility = Visibility.Collapsed;
                 break;

@@ -12,6 +12,8 @@ public sealed class BenchmarkViewModel(DiskBenchmark benchmark) : ObservableObje
     public List<double> Series { get; } = [];
     public string Status { get; private set; } = "";
     public string? ErrorDetail { get; private set; }
+    public string? Volume { get; private set; }
+    public int SizeMiB { get; private set; }
 
     public async Task RunAsync(string directory, int sizeMiB)
     {
@@ -19,6 +21,8 @@ public sealed class BenchmarkViewModel(DiskBenchmark benchmark) : ObservableObje
         using var run = new CancellationTokenSource();
         active = run;
         Results.Clear();
+        Volume = Path.GetPathRoot(directory);
+        SizeMiB = sizeMiB;
         Series.Clear();
         Latest = null;
         ErrorDetail = null;

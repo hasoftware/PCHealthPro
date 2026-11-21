@@ -237,4 +237,28 @@
   <data name="KeyboardSeen" xml:space="preserve"><value>Distinct keys detected:</value></data>
   <data name="PointerHint" xml:space="preserve"><value>Click, scroll, or draw inside the area. Touch the screen with multiple fingers to test simultaneous contacts.</value></data>
   <data name="PointerCounts" xml:space="preserve"><value>Left {0} · Right {1} · Wheel Y {2} / X {3} · Touches {4} (peak {5})</value></data>
+  <data name="ReportTitle" xml:space="preserve"><value>Hardware inspection report</value></data>
+  <data name="ReportNotes" xml:space="preserve"><value>Inspection notes</value></data>
+  <data name="ReportSeller" xml:space="preserve"><value>Seller</value></data>
+  <data name="ReportPrice" xml:space="preserve"><value>Price (include currency)</value></data>
+  <data name="ReportCondition" xml:space="preserve"><value>Condition and notes</value></data>
+  <data name="ReportSource" xml:space="preserve"><value>Inspection to view or export</value></data>
+  <data name="ReportCompare" xml:space="preserve"><value>Compare against (reference → selected)</value></data>
+  <data name="ReportCurrent" xml:space="preserve"><value>Current session</value></data>
+  <data name="ReportNoComparison" xml:space="preserve"><value>No comparison</value></data>
+  <data name="ReportHide" xml:space="preserve"><value>Hide serial numbers and MAC addresses</value></data>
+  <data name="ReportSave" xml:space="preserve"><value>Save to history</value></data>
+  <data name="ReportExport" xml:space="preserve"><value>Export file</value></data>
+  <data name="ReportEqual" xml:space="preserve"><value>The displayed results match.</value></data>
+  <data name="ReportWritten" xml:space="preserve"><value>Report exported</value></data>
+  <data name="ReportSaved" xml:space="preserve"><value>Inspection saved to local history.</value></data>
+  <data name="ReportWait" xml:space="preserve"><value>Waiting for a completed hardware scan.</value></data>
+  <data name="NextManual" xml:space="preserve"><value>Continue testing</value></data>
+  <data name="UpdateOptIn" xml:space="preserve"><value>Check GitHub Releases at startup</value></data>
+  <data name="UpdateAction" xml:space="preserve"><value>Download and apply</value></data>
+  <data name="UpdateStandard" xml:space="preserve"><value>Open as a standard user to check for updates.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>A newer release is available</value></data>
+  <data name="UpdateCurrent" xml:space="preserve"><value>No newer release is available.</value></data>
+  <data name="UpdateZip" xml:space="preserve"><value>Download and verify the portable ZIP, open it in a new folder beside this copy and close this session? Save the inspection first.</value></data>
+  <data name="UpdateMsi" xml:space="preserve"><value>Download and verify the MSI, start Windows Installer and close this session? Save the inspection first.</value></data>
 </root>

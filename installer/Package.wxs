@@ -1,0 +1,23 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Package Name="$(Product)" Manufacturer="HASOFTWARE" Version="$(Version)"
+           UpgradeCode="D415C7E2-2AAD-4030-9CED-E7B69BE397E9" Scope="perUser">
+    <MajorUpgrade DowngradeErrorMessage="A newer version is already installed."/>
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
+    <StandardDirectory Id="LocalAppDataFolder">
+      <Directory Id="ProgramsFolder" Name="Programs">
+        <Directory Id="INSTALLFOLDER" Name="PCHealthPro" ComponentGuidGenerationSeed="57962D23-6061-41DA-A046-DD977DD93AE0"/>
+      </Directory>
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Component Id="MenuShortcut" Guid="C2C1108F-86F6-42BD-BBC2-E42F3A82D60A">
+        <Shortcut Id="LaunchApp" Name="$(Product)" Target="[INSTALLFOLDER]PCHealthPro.App.exe" WorkingDirectory="INSTALLFOLDER"/>
+        <RegistryValue Root="HKCU" Key="Software\HASOFTWARE\PCHealthPro\Installer" Name="Installed" Type="integer" Value="1" KeyPath="yes"/>
+        <RegistryValue Root="HKCU" Key="Software\HASOFTWARE\PCHealthPro\Installer" Name="Path" Type="string" Value="[INSTALLFOLDER]"/>
+      </Component>
+    </StandardDirectory>
+    <Feature Id="Application" Title="$(Product)" Level="1">
+      <Files Directory="INSTALLFOLDER" Include="$(Payload)\**"/>
+      <ComponentRef Id="MenuShortcut"/>
+    </Feature>
+  </Package>
+</Wix>

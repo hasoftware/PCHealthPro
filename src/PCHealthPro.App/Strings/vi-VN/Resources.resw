@@ -237,4 +237,28 @@
   <data name="KeyboardSeen" xml:space="preserve"><value>Số phím đã nhận:</value></data>
   <data name="PointerHint" xml:space="preserve"><value>Nhấp chuột, cuộn hoặc vẽ trong vùng thử. Chạm màn hình bằng nhiều ngón tay để kiểm tra các điểm chạm đồng thời.</value></data>
   <data name="PointerCounts" xml:space="preserve"><value>Trái {0} · Phải {1} · Cuộn dọc {2} / ngang {3} · Điểm chạm {4} (tối đa {5})</value></data>
+  <data name="ReportTitle" xml:space="preserve"><value>Báo cáo kiểm tra phần cứng</value></data>
+  <data name="ReportNotes" xml:space="preserve"><value>Ghi chú kiểm tra</value></data>
+  <data name="ReportSeller" xml:space="preserve"><value>Người bán</value></data>
+  <data name="ReportPrice" xml:space="preserve"><value>Giá (kèm đơn vị tiền)</value></data>
+  <data name="ReportCondition" xml:space="preserve"><value>Ngoại hình và ghi chú</value></data>
+  <data name="ReportSource" xml:space="preserve"><value>Lần kiểm tra để xem hoặc xuất</value></data>
+  <data name="ReportCompare" xml:space="preserve"><value>So sánh (bản đối chiếu → bản đang xem)</value></data>
+  <data name="ReportCurrent" xml:space="preserve"><value>Phiên hiện tại</value></data>
+  <data name="ReportNoComparison" xml:space="preserve"><value>Không so sánh</value></data>
+  <data name="ReportHide" xml:space="preserve"><value>Ẩn số sê-ri và địa chỉ MAC</value></data>
+  <data name="ReportSave" xml:space="preserve"><value>Lưu lịch sử</value></data>
+  <data name="ReportExport" xml:space="preserve"><value>Xuất file</value></data>
+  <data name="ReportEqual" xml:space="preserve"><value>Các kết quả hiển thị trùng nhau.</value></data>
+  <data name="ReportWritten" xml:space="preserve"><value>Đã xuất báo cáo</value></data>
+  <data name="ReportSaved" xml:space="preserve"><value>Đã lưu lần kiểm tra vào lịch sử cục bộ.</value></data>
+  <data name="ReportWait" xml:space="preserve"><value>Đang chờ lần quét phần cứng hoàn tất.</value></data>
+  <data name="NextManual" xml:space="preserve"><value>Kiểm tra tiếp</value></data>
+  <data name="UpdateOptIn" xml:space="preserve"><value>Kiểm tra GitHub Releases khi mở ứng dụng</value></data>
+  <data name="UpdateAction" xml:space="preserve"><value>Tải và áp dụng</value></data>
+  <data name="UpdateStandard" xml:space="preserve"><value>Mở bằng quyền người dùng thường để kiểm tra cập nhật.</value></data>
+  <data name="UpdateAvailable" xml:space="preserve"><value>Đã có bản phát hành mới</value></data>
+  <data name="UpdateCurrent" xml:space="preserve"><value>Chưa có bản phát hành mới hơn.</value></data>
+  <data name="UpdateZip" xml:space="preserve"><value>Tải và xác minh ZIP portable, mở bản mới ở thư mục bên cạnh rồi đóng phiên này? Hãy lưu lần kiểm tra trước.</value></data>
+  <data name="UpdateMsi" xml:space="preserve"><value>Tải và xác minh MSI, mở Windows Installer rồi đóng phiên này? Hãy lưu lần kiểm tra trước.</value></data>
 </root>

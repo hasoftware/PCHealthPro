@@ -43,11 +43,43 @@ Trên trang Màn hình, mở chế độ toàn màn hình, nhấp chuột hoặc
 
 Chọn **Đạt**, **Không đạt** hoặc **Bỏ qua** riêng cho từng bài. Trang **Báo cáo** tổng hợp sáu kết quả của phiên đang mở. Ảnh thử và âm thanh được xử lý trong bộ nhớ.
 
+## Xuất báo cáo và so sánh các lần kiểm tra
+
+Mở **Tổng quan**, đợi ứng dụng quét xong rồi dùng **Kiểm tra tiếp** để thực hiện các bài tương tác còn lại. Trên trang **Báo cáo**, chọn **Phiên hiện tại**, nhập người bán, giá kèm đơn vị tiền và ghi chú ngoại hình nếu cần.
+
+- Chọn **PDF** để in hoặc gửi bản đã dàn trang, **HTML** để đọc bằng trình duyệt ngoại tuyến hoặc **JSON** để xử lý dữ liệu. Chọn **Xuất file** và chọn nơi lưu. Báo cáo gồm thời điểm quét, tên máy, thông số, đánh giá, sáu kết quả tương tác và các lượt benchmark đã đo trong phiên.
+- Tùy chọn **Ẩn số sê-ri và địa chỉ MAC** được bật sẵn và áp dụng cả khi xuất file lẫn lưu lịch sử. Bản đã lưu với tùy chọn này sẽ giữ các giá trị đã che. Tên máy và ghi chú vẫn xuất hiện trong báo cáo, nên hãy xem lại trước khi chia sẻ. Ảnh và âm thanh thử chỉ tồn tại trong bộ nhớ.
+- Chọn **Lưu lịch sử** để lưu một bản JSON tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro\history`. Mở lại trang **Báo cáo** và chọn lần kiểm tra theo tên máy, ngày giờ để xem hoặc xuất lại. Ở ô **So sánh**, chọn bản đối chiếu. Mỗi thay đổi hiển thị theo chiều từ bản đối chiếu sang bản đang xem. Có thể sao lưu các file JSON trong thư mục này.
+
+## Đóng gói và chạy trên Windows x64
+
+Từ thư mục chứa solution, chạy lệnh sau trên máy build. Script dùng .NET SDK 10, khôi phục WiX từ manifest của kho mã và đóng gói cùng một bản ứng dụng cho cả hai hình thức phân phối.
+
+```powershell
+.\scripts\publish.ps1
+```
+
+Thư mục `artifacts` chứa ZIP portable, bộ cài MSI và file `.sha256` theo phiên bản khai báo trong `Directory.Build.props`. Cả hai gói đều chứa runtime .NET và Windows App SDK. Máy sử dụng chỉ cần Windows x64 tương thích.
+
+- **Portable**. Giải nén toàn bộ ZIP vào một thư mục trên máy hoặc USB rồi mở `PCHealthPro.App.exe`. Giữ các DLL và tài nguyên giao diện cùng cấu trúc thư mục đã giải nén. Lịch sử và lựa chọn ngôn ngữ thuộc tài khoản Windows trên máy đang dùng.
+- **MSI**. Mở file MSI để cài cho tài khoản hiện tại. Khởi chạy **PC Health Pro** từ Start Menu. Gỡ qua mục ứng dụng đã cài của Windows. Lịch sử kiểm tra được lưu riêng với thư mục cài đặt.
+
+Gói nghiệm thu v0.0.1 chưa ký số. Trước khi chạy gói phân phối, lấy bộ cài và danh sách SHA-256 từ nguồn HASOFTWARE tin cậy rồi đối chiếu kết quả của lệnh sau với dòng có cùng tên file.
+
+```powershell
+Get-FileHash .\artifacts\PCHealthPro-0.0.1-win-x64.zip -Algorithm SHA256
+Get-FileHash .\artifacts\PCHealthPro-0.0.1-win-x64.msi -Algorithm SHA256
+Get-Content .\artifacts\PCHealthPro-0.0.1-win-x64.sha256
+```
+
+Kiểm tra phần cứng và xuất báo cáo hoạt động ngoại tuyến. Trong **Cài đặt**, có thể bật kiểm tra GitHub Releases khi mở ứng dụng bằng quyền thường. Khi có bản mới, ứng dụng hỏi trước khi tải, kiểm tra kích thước và SHA-256, rồi mở MSI hoặc giải nén và chạy bản portable ở thư mục bên cạnh. Hãy lưu phiên kiểm tra trước khi đồng ý cập nhật. Dữ liệu kiểm tra được giữ trên máy. [Kho mã và bản phát hành của HASOFTWARE](https://github.com/hasoftware/PCHealthPro/releases)
+
 ## Mã nguồn
 
 - `PCHealthPro.Core` định nghĩa giao diện module và điều phối kiểm tra.
 - `PCHealthPro.App` chứa cửa sổ WinUI 3, tài nguyên ngôn ngữ và cấu hình DI.
-- `PCHealthPro.Tests` kiểm tra xử lý lỗi module và hủy kiểm tra.
+- `PCHealthPro.Tests` kiểm tra logic chẩn đoán, benchmark, kết quả tương tác, tạo báo cáo, ẩn định danh và lịch sử.
+- `installer/Package.wxs` mô tả bộ cài MSI. `scripts/publish.ps1` tạo các gói và tính SHA-256.
 
 ## Tác giả
 

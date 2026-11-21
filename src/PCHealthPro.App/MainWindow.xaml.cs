@@ -32,29 +32,36 @@ public sealed partial class MainWindow : Window
     private bool updating;
     private int columns;
     private readonly bool elevated;
+    private readonly CancellationTokenSource lifetime = new();
+    private UpdatePackage? update;
+    private int checkRevision;
 
     private readonly InteractivePane manual;
+    private readonly ManualTestSession tests;
     public MainWindow(OverviewViewModel model, LanguageService language, BenchmarkViewModel benchmark, ManualTestSession session)
     {
         Model = model;
+        tests = session;
         this.language = language;
         using var identity = WindowsIdentity.GetCurrent();
         elevated = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
         InitializeComponent();
         manual = new InteractivePane(ManualPane, language, session, this);
         Benchmark.Initialize(benchmark, language, this);
+        Report.Initialize(this, language, model, benchmark, session);
         Title = typeof(App).Assembly.GetCustomAttribute<AssemblyProductAttribute>()!.Product;
         Nav.PaneTitle = Title;
         Localize();
         Model.PropertyChanged += (_, _) => DrawCards();
         Model.RefreshCommand.PropertyChanged += (_, _) => UpdateStatus();
         Nav.Loaded += StartOverview;
-        Closed += (_, _) => { Model.RefreshCommand.Cancel(); manual.Dispose(); };
+        Closed += (_, _) => { lifetime.Cancel(); Model.RefreshCommand.Cancel(); manual.Dispose(); };
     }
 
     private async void StartOverview(object sender, RoutedEventArgs args)
     {
         Nav.Loaded -= StartOverview;
+        if (!elevated && language.CheckUpdates) _ = CheckUpdatesAsync();
         try { await Model.RefreshCommand.ExecuteAsync(null); }
         catch (OperationCanceledException) { return; }
         Tip.IsOpen = language.ShowHint && section == "Overview";
@@ -79,6 +86,11 @@ public sealed partial class MainWindow : Window
         LanguageBox.SelectedIndex = language.Selection switch { "vi-VN" => 1, "en-US" => 2, _ => 0 };
         LanguageBox.Header = language.Get("Language");
         Privacy.Text = language.Get("Privacy");
+        Updates.Content = language.Get("UpdateOptIn");
+        Updates.IsChecked = language.CheckUpdates;
+        Updates.IsEnabled = !elevated;
+        ApplyUpdate.Content = language.Get("UpdateAction");
+        if (elevated) UpdateState.Text = language.Get("UpdateStandard");
         Benchmark.Localize();
         QuickCheck.Content = language.Get("QuickCheck");
         AutomationProperties.SetName(QuickCheck, language.Get("QuickCheck"));
@@ -97,6 +109,48 @@ public sealed partial class MainWindow : Window
         if (updating || LanguageBox.SelectedIndex < 0) return;
         language.Change(LanguageBox.SelectedIndex switch { 1 => "vi-VN", 2 => "en-US", _ => "system" });
         Localize();
+    }
+
+    private async void ToggleUpdates(object sender, RoutedEventArgs args)
+    {
+        try
+        {
+            language.SetUpdates(Updates.IsChecked == true);
+            checkRevision++;
+            update = null; UpdateNotice.IsOpen = false; UpdateState.Text = "";
+            if (Updates.IsChecked == true) await CheckUpdatesAsync();
+        }
+        catch (Exception e) { UpdateState.Text = e.Message; }
+    }
+
+    private async Task CheckUpdatesAsync()
+    {
+        int revision = ++checkRevision;
+        try
+        {
+            var found = await ReleaseUpdates.CheckAsync(lifetime.Token);
+            if (checkRevision != revision || lifetime.IsCancellationRequested) return;
+            update = found;
+            UpdateState.Text = language.Get(found == null ? "UpdateCurrent" : "UpdateAvailable");
+            if (found == null) return;
+            UpdateNotice.Title = $"{language.Get("UpdateAvailable")} · {found.Tag}";
+            UpdateNotice.IsOpen = true;
+        }
+        catch (Exception e) { if (revision == checkRevision && !lifetime.IsCancellationRequested) UpdateState.Text = e.Message; }
+    }
+
+    private async void InstallUpdate(object sender, RoutedEventArgs args)
+    {
+        if (update is not { } package || elevated) return;
+        var dialog = new ContentDialog { XamlRoot = Body.XamlRoot, Title = package.Tag,
+            Content = language.Get(package.Installed ? "UpdateMsi" : "UpdateZip"),
+            PrimaryButtonText = language.Get("UpdateAction"), CloseButtonText = language.Get("BenchCancel"),
+            DefaultButton = ContentDialogButton.Close };
+        if (await dialog.ShowAsync() != ContentDialogResult.Primary) return;
+        ApplyUpdate.IsEnabled = Updates.IsEnabled = false;
+        try { await ReleaseUpdates.ApplyAsync(package, lifetime.Token); Close(); }
+        catch (Exception e) { if (!lifetime.IsCancellationRequested) UpdateNotice.Message = e.Message; }
+        finally { if (!lifetime.IsCancellationRequested) ApplyUpdate.IsEnabled = Updates.IsEnabled = true; }
     }
 
     private void Navigate(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -121,9 +175,8 @@ public sealed partial class MainWindow : Window
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
         Benchmark.Visibility = section == "Storage" ? Visibility.Visible : Visibility.Collapsed;
         if (section == "Storage") _ = Benchmark.LoadVolumesAsync();
-        var phase = Sections.First(item => item.Key == section).Phase;
-        Placeholder.Visibility = phase > 5 ? Visibility.Visible : Visibility.Collapsed;
-        Placeholder.Message = string.Format(language.Get("Pending"), phase);
+        Report.Show(section == "Reports");
+        UpdateStatus();
         DrawCards();
         Scroller.ChangeView(null, 0, null, true);
     }
@@ -148,7 +201,19 @@ public sealed partial class MainWindow : Window
         Progress.IsActive = busy;
         Progress.Visibility = busy ? Visibility.Visible : Visibility.Collapsed;
         CheckStatus.Text = language.Get(busy ? "Busy" : "Completed");
+        var next = tests.Snapshot().FirstOrDefault(t => t.Verdict == TestVerdict.Untested);
+        NextManual.Visibility = section == "Overview" && !busy && Model.CheckedAt != null && next != null
+            ? Visibility.Visible : Visibility.Collapsed;
+        if (next != null)
+        {
+            NextManual.Content = $"{language.Get("NextManual")} · {language.Get("Test" + next.Test)}";
+            NextManual.Tag = next.Test switch { ManualTest.Microphone or ManualTest.Speakers => "Audio",
+                ManualTest.Keyboard or ManualTest.Pointer => "Input", _ => next.Test.ToString() };
+        }
     }
+
+    private void OpenNextManual(object sender, RoutedEventArgs args) =>
+        Nav.SelectedItem = Nav.MenuItems.OfType<NavigationViewItem>().FirstOrDefault(i => Equals(i.Tag, NextManual.Tag));
 
     private void ResizeCards(object sender, SizeChangedEventArgs args)
     {
