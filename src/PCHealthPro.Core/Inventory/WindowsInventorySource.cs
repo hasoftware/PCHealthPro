@@ -25,7 +25,7 @@ public sealed class WindowsInventorySource : IInventorySource
     public async Task<IReadOnlyList<DeviceRow>> QueryAsync(InventoryQuery query, CancellationToken token)
     {
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(token);
-        deadline.CancelAfter(budget);
+        deadline.CancelAfter(query.Class == "SoftwareLicensingProduct" ? budget + budget : budget);
         var queryToken = deadline.Token;
         try
         {
@@ -53,13 +53,20 @@ public sealed class WindowsInventorySource : IInventorySource
     {
         switch (query.Class)
         {
+            case "WindowsValidation": return [WindowsLicense.Read()];
+            case "GraphicsAdapters":
+                return ReadGraphics(token);
             case "SystemPower": return BatterySources.Presence();
             case "BatteryReport": return BatterySources.Report(token);
             case "DriveSmart": return [StorageDeviceReader.Read(query.DriveIndex, query.SectorSize, token)];
             case "SecureBootRegistry":
                 return [new() { ["SecureBootState"] = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecureBoot\State", "UEFISecureBootEnabled", null) }];
             case "ProcessorRegistry":
-                return [new() { ["NominalMHz"] = Registry.GetValue(@"HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\CentralProcessor\0", "~MHz", null) }];
+                return [new() { ["BaseClock"] = System.Runtime.Intrinsics.X86.X86Base.IsSupported &&
+                    System.Runtime.Intrinsics.X86.X86Base.CpuId(0, 0).Eax >= 0x16 ?
+                    System.Runtime.Intrinsics.X86.X86Base.CpuId(0x16, 0).Eax & 0xffff : null,
+                    ["NominalMHz"] = Registry.GetValue(@"HKEY_LOCAL_MACHINE\HARDWARE\DESCRIPTION\System\CentralProcessor\0", "~MHz", null) }];
+            case "OfficeSubscription": return OfficeLicenses.Read(token);
             case "OfficeRegistry":
                 foreach (var view in new[] { RegistryView.Registry64, RegistryView.Registry32 })
                 {
@@ -72,6 +79,8 @@ public sealed class WindowsInventorySource : IInventorySource
             case "DisplayModes": return NativeInventory.Displays();
         }
         string wql = $"SELECT {query.Columns} FROM {query.Class}";
+        bool licensing = query.Class is "SoftwareLicensingProduct" or "OfficeSoftwareProtectionProduct";
+        if (licensing) wql = $"SELECT * FROM {query.Class}";
         bool batteryProvider = query.Scope.Equals(@"root\WMI", StringComparison.OrdinalIgnoreCase) && query.Class.StartsWith("Battery", StringComparison.Ordinal);
         if (batteryProvider) wql = $"SELECT * FROM {query.Class}";
         if (query.Filter != null) wql += " WHERE " + query.Filter;
@@ -95,6 +104,7 @@ public sealed class WindowsInventorySource : IInventorySource
                 if (query.Class == "PresentPanels")
                 {
                     row["Name"] = item["Name"];
+                    row["PanelInstance"] = item["PNPDeviceID"];
                     try
                     {
                         var path = @"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\" + item["PNPDeviceID"] + @"\Device Parameters";
@@ -107,10 +117,47 @@ public sealed class WindowsInventorySource : IInventorySource
                     if (item.Properties.Cast<PropertyData>().Any(p => p.Name == "Active" && p.Value is false)) continue;
                     foreach (var property in item.Properties) row[property.Name] = property.Value;
                 }
-                else foreach (var name in query.Columns.Split(',')) row[name] = item[name];
+                else foreach (var name in query.Columns.Split(','))
+                {
+                    if (!licensing || item.Properties.Cast<PropertyData>().Any(p => p.Name == name))
+                        row[name] = item[name];
+                }
                 if (query.Class == "Win32_VideoController") ReadVideoMemory(row);
                 rows.Add(row);
             }
+        }
+        return rows;
+    }
+
+    private static IReadOnlyList<DeviceRow> ReadGraphics(CancellationToken token)
+    {
+        IReadOnlyList<DeviceRow> Optional(InventoryQuery query)
+        {
+            try { return Read(query, token); }
+            catch (Exception error) when (!token.IsCancellationRequested) { Log(query.Class, error); return []; }
+        }
+        var rows = Optional(new("GPU", "Win32_VideoController",
+            "Name,AdapterRAM,DriverVersion,CurrentHorizontalResolution,CurrentVerticalResolution,CurrentRefreshRate,PNPDeviceID,AdapterCompatibility")).ToList();
+        var present = Optional(new("GPU", "Win32_PnPEntity", "Name,Manufacturer,PNPDeviceID", Filter: "Present = TRUE AND PNPClass = 'Display'"));
+        foreach (var device in present)
+        {
+            var id = device.Text("PNPDeviceID");
+            if (id != null && !rows.Any(r => string.Equals(r.Text("PNPDeviceID"), id, StringComparison.OrdinalIgnoreCase))) rows.Add(device);
+        }
+        foreach (var row in rows)
+        {
+            token.ThrowIfCancellationRequested();
+            var id = row.Text("PNPDeviceID");
+            row["Manufacturer"] = id?.ToUpperInvariant() switch
+            {
+                string p when p.StartsWith(@"PCI\VEN_8086") => "Intel",
+                string p when p.StartsWith(@"PCI\VEN_1002") => "AMD",
+                string p when p.StartsWith(@"PCI\VEN_10DE") => "NVIDIA",
+                _ => row.Text("AdapterCompatibility") ?? row.Text("Manufacturer")
+            };
+            try { row["GpuType"] = GraphicsAdapterType.Read(id); }
+            catch (Exception error) when (!token.IsCancellationRequested) { Log("GpuType", error); }
+            if (row.Text("GpuType") == null) row["GpuType"] = GraphicsAdapterType.FromProduct(row.Text("Manufacturer"), row.Text("Name"));
         }
         return rows;
     }

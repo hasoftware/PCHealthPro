@@ -13,6 +13,8 @@ public sealed partial class DeviceCard : UserControl
     private LanguageService language = null!;
 
     public DeviceCard() => InitializeComponent();
+    internal void SetBenchSummary(string message) { BenchSummary.Text = message; BenchSummary.Visibility = Visibility.Visible; }
+    internal void SetBrand(string? brand) => BrandMark.Apply(BrandHost, brand);
 
     internal void Identify(string category)
     {
@@ -33,7 +35,13 @@ public sealed partial class DeviceCard : UserControl
         string? ShowValue(InventoryField? f) => f?.Localize == true && f.Value != null ? strings.Get(f.Value) : f?.Value;
         var description = disk ? new[] { "DriveMedia", "DriveBus" } : ["Manufacturer", "ChargeState"];
         var subtitle = string.Join(" · ", description.Select(k => ShowValue(Field(k))).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct());
-        string[] keys = disk ? ["Size", "Temperature", "PowerOnHours"] : ["EstimatedChargeRemaining", "BatteryWear", "CycleCount"];
+        string[] keys = disk
+            ? Field("DriveMedia")?.Value == "HDD" && Field("LifeRemaining")?.Value == null
+                ? ["Size", "Temperature", "PowerOnHours", "HoursTrend"]
+                : ["Size", "Temperature", "PowerOnHours", "LifeRemaining", "HoursTrend"]
+            : [Field("RelativeDesign") != null ? "RelativeDesign" : "DesignCapacity",
+                Field("RelativeFull") != null ? "RelativeFull" : "FullCapacity", "BatteryWear",
+                "EstimatedChargeRemaining", "Temperature", "CycleCount", "ManufactureDate", "BatteryAgeDays", "TimeOnBattery"];
         Bind(strings, disk ? "\uEDA2" : "\uE83F", string.IsNullOrWhiteSpace(device?.DeviceName) ? fallback : device.DeviceName,
             subtitle, device == null ? [] : keys.Select(k => Field(k) ?? new(k, null)), device == null ? [] : [device],
             strings.Get(disk ? "DiskDetails" : "BatteryDetails"));
@@ -86,7 +94,8 @@ public sealed partial class DeviceCard : UserControl
     private void ResizeMetrics(object sender, SizeChangedEventArgs args)
     {
         int count = Math.Clamp(Metrics.Children.Count, 1, args.NewSize.Width >= 360 ? 3 : args.NewSize.Width >= 230 ? 2 : 1);
-        if (Metrics.ColumnDefinitions.Count == count) return;
+        int rows = (Metrics.Children.Count + count - 1) / count;
+        if (Metrics.ColumnDefinitions.Count == count && Metrics.RowDefinitions.Count == rows) return;
         Metrics.ColumnDefinitions.Clear();
         Metrics.RowDefinitions.Clear();
         for (int i = 0; i < count; i++) Metrics.ColumnDefinitions.Add(new ColumnDefinition());

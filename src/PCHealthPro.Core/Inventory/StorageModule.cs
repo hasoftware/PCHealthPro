@@ -2,7 +2,7 @@ using System.Numerics;
 
 namespace PCHealthPro.Core.Inventory;
 
-internal sealed class StorageModule(IInventorySource source) : IHardwareModule
+internal sealed class StorageModule(IInventorySource source, DriveHourHistory? history = null) : IHardwareModule
 {
     public string Category => "Storage";
     private const string StorageScope = @"root\Microsoft\Windows\Storage";
@@ -15,7 +15,8 @@ internal sealed class StorageModule(IInventorySource source) : IHardwareModule
             "DeviceId,SerialNumber,FriendlyName,Model,FirmwareVersion,Size,MediaType,BusType,HealthStatus", StorageScope), token);
         var counters = source.QueryAsync(new("Storage", "MSFT_StorageReliabilityCounter",
             "DeviceId,Temperature,PowerOnHours,Wear,ReadErrorsUncorrected,WriteErrorsUncorrected", StorageScope), token);
-        await Task.WhenAll(drives, physical, counters).ConfigureAwait(false);
+        var partitions = source.QueryAsync(new("Storage", "MSFT_Partition", "DiskNumber,DriveLetter", StorageScope), token);
+        await Task.WhenAll(drives, physical, counters, partitions).ConfigureAwait(false);
         var disks = await drives;
         var providers = await physical;
         var metrics = await counters;
@@ -66,18 +67,35 @@ internal sealed class StorageModule(IInventorySource source) : IHardwareModule
             string? Unit(string key, string unit) => smart.Text(key) is string value ? $"{value} {unit}" : null;
             string? tbw = BigInteger.TryParse(smart.Text("BytesWritten"), out var bytes)
                 ? $"{(double)bytes / 1e12:0.######} TB" : null;
+            var indexNumber = disk.Number("Index");
+            var volumes = indexNumber == null ? [] : (await partitions).Where(p => p.Number("DiskNumber") == indexNumber)
+                .Select(p => p.Text("DriveLetter")).Where(letter => letter?.Length == 1 && char.IsAsciiLetter(letter[0]))
+                .Select(letter => letter!.ToUpperInvariant() + @":\").Distinct().ToArray();
+            var serialNumber = disk.Text("SerialNumber") ?? provider?.Text("SerialNumber");
+            var identityRows = disks.Count > 0 ? disks : providers;
+            var trend = history?.Compare(model, Unique(identityRows, "SerialNumber", serialNumber) == null ? null : serialNumber, smart.Number("PowerOnHours")) ?? "HoursUnavailable";
+            var wear = smart.Number("Wear");
+            var life = media is "SSD" or "NVMe" || bus == 17 ? wear : null;
             InventoryField[] fields =
             [
                 new("Model", model), new("SerialNumber", disk.Text("SerialNumber") ?? provider?.Text("SerialNumber")),
                 new("Firmware", disk.Text("FirmwareRevision") ?? provider?.Text("FirmwareVersion")),
                 new("Size", size > 0 ? InventoryFormat.Bytes(size.Value) : null),
-                new("DriveMedia", media), new("DriveBus", busName),
+                new("Volumes", string.Join(", ", volumes)), new("HoursTrend", trend) { Localize = true },
+                new("LifeRemaining", life == null ? null : $"{100 - Math.Min(life.Value, 100)} %"), new("DriveMedia", media), new("DriveBus", busName),
                 new("DriveHealth", state.ToString()) { Localize = true }, new("HealthReason", reason) { Localize = true },
                 new("Temperature", Unit("Temperature", "°C")), new("PowerOnHours", Unit("PowerOnHours", "h")),
                 new("PowerCycles", smart.Text("PowerCycles")), new("Reallocated", smart.Text("Reallocated")),
                 new("PendingSectors", smart.Text("PendingSectors")), new("MediaErrors", smart.Text("MediaErrors")),
                 new("Wear", Unit("Wear", "%")), new("BytesWritten", tbw)
             ];
+            if (trend == "HoursDecreased" && state != HealthStatus.Problem)
+            {
+                state = HealthStatus.Attention;
+                int pos = Array.FindIndex(fields, f => f.Label == "DriveHealth");
+                fields[pos] = fields[pos] with { Value = state.ToString() };
+                fields[pos + 1] = fields[pos + 1] with { Value = "HoursDecreased" };
+            }
             return (new DeviceGroup(Category, fields) { DeviceName = model }, state,
                 smart.Text("PowerOnHours") == null || smart.Text("PowerCycles") == null || smart.Text("Temperature") == null);
         }

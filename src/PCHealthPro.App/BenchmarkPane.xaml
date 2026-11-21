@@ -7,6 +7,7 @@
     <FontIcon Glyph="&#xE9D9;" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
     <TextBlock x:Name="Title" Style="{ThemeResource SubtitleTextBlockStyle}"/>
    </StackPanel>
+   <TextBlock x:Name="MethodInfo" Style="{StaticResource MetricLabel}" TextWrapping="Wrap"/>
    <Grid ColumnSpacing="12">
     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
     <ComboBox x:Name="Volume" HorizontalAlignment="Stretch" SelectionChanged="VolumeChanged"/>

@@ -4,7 +4,7 @@ using Microsoft.Win32.SafeHandles;
 
 namespace PCHealthPro.Core.Benchmark;
 
-public enum BenchmarkPhase { SeqWrite, SeqRead, RandomWrite1, RandomRead1, RandomWrite32, RandomRead32 }
+public enum BenchmarkPhase { SeqWrite, SeqRead, RandomWrite1, RandomRead1, RandomWrite32, RandomRead32, SeqWrite8, SeqRead8 }
 
 public sealed record BenchmarkSample(BenchmarkPhase Phase, double Progress, double MegabytesPerSecond,
     double Iops, bool PhaseComplete);
@@ -41,16 +41,18 @@ public sealed class DiskBenchmark
     private static async Task MeasureAsync(BenchmarkPhase phase, SafeFileHandle handle, long length, int alignment,
         IProgress<BenchmarkSample> progress, CancellationToken token)
     {
-        bool sequential = phase is BenchmarkPhase.SeqWrite or BenchmarkPhase.SeqRead;
-        bool write = phase is BenchmarkPhase.SeqWrite or BenchmarkPhase.RandomWrite1 or BenchmarkPhase.RandomWrite32;
-        int depth = phase is BenchmarkPhase.RandomWrite32 or BenchmarkPhase.RandomRead32 ? 32 : 1;
+        bool sequential = phase is BenchmarkPhase.SeqWrite or BenchmarkPhase.SeqRead or BenchmarkPhase.SeqWrite8 or BenchmarkPhase.SeqRead8;
+        bool write = phase is BenchmarkPhase.SeqWrite or BenchmarkPhase.RandomWrite1 or BenchmarkPhase.RandomWrite32 or BenchmarkPhase.SeqWrite8;
+        int depth = phase is BenchmarkPhase.RandomWrite32 or BenchmarkPhase.RandomRead32 ? 32 : phase is BenchmarkPhase.SeqRead8 or BenchmarkPhase.SeqWrite8 ? 8 : 1;
         int block = sequential ? MiB : 4096;
         long blocks = length / block;
+        depth = (int)Math.Min(depth, blocks);
         var buffers = Enumerable.Range(0, depth).Select(_ => BenchmarkFile.Buffer(block, alignment)).ToArray();
         if (write) foreach (var buffer in buffers) RandomNumberGenerator.Fill(buffer.Span);
 
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(token);
         long completed = 0;
+        long nextSequential = -1;
         var clock = Stopwatch.StartNew();
         // Random stages sample for up to three seconds or one file's worth of I/O.
         // Each lane owns disjoint offsets, even when 32 writes are in flight.
@@ -64,7 +66,7 @@ public sealed class DiskBenchmark
                 {
                     stop.Token.ThrowIfCancellationRequested();
                     if (!sequential && i > 0 && clock.Elapsed.TotalSeconds >= 3) break;
-                    long index = sequential ? i : lane + depth * Random.Shared.NextInt64(laneBlocks);
+                    long index = sequential ? Interlocked.Increment(ref nextSequential) : lane + depth * Random.Shared.NextInt64(laneBlocks);
                     if (write) await RandomAccess.WriteAsync(handle, buffer, index * block, stop.Token).ConfigureAwait(false);
                     else if (await RandomAccess.ReadAsync(handle, buffer, index * block, stop.Token).ConfigureAwait(false) != block)
                         throw new EndOfStreamException();

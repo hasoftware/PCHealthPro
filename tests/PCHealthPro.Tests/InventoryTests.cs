@@ -29,6 +29,37 @@ public sealed class InventoryTests
     }
 
     [Fact]
+    public async Task SlotTotalsCombineArraysAndIgnoreContradictoryCounts()
+    {
+        async Task<IReadOnlyList<InventoryField>> Topology(params int[] counts)
+        {
+            var source = new Source(new()
+            {
+                ["Win32_PhysicalMemory"] = [new(), new()],
+                ["Win32_PhysicalMemoryArray"] = counts.Select(n => new DeviceRow { ["MemoryDevices"] = n }).ToArray()
+            });
+            var reading = await InventoryCatalog.Create(source).Single(m => m.Category == "RAM").ReadAsync(default);
+            return reading.Groups.Single(g => g.Label == "RAM").Fields;
+        }
+        Assert.Equal(["4", "2", "2"], (await Topology(2, 2)).Select(f => f.Value));
+        Assert.Equal([null, "2", null], (await Topology(1)).Select(f => f.Value));
+        Assert.Equal([null, "2", null], (await Topology(0, 2)).Select(f => f.Value));
+    }
+
+    [Fact]
+    public void ModernOfficeLicenseKeepsOnlyProductAndStatus()
+    {
+        using var doc = System.Text.Json.JsonDocument.Parse("""{"ProductReleaseId":"O365BusinessRetail","Metadata":{"NotAfter":"2026-10-20T00:00:00Z","UserId":"private"},"ExpiresOn":"2026-10-01T00:00:00Z"}""");
+        foreach (var (month, day, status) in new[] { (9, 1, "1"), (10, 5, "2"), (11, 1, "5") })
+        {
+            var row = OfficeLicenses.Describe(doc.RootElement, new DateTimeOffset(2026, month, day, 0, 0, 0, TimeSpan.Zero))!;
+            Assert.Equal(status, row.Text("LicenseStatus"));
+            Assert.Equal(3, row.Count);
+            Assert.DoesNotContain("private", row.Values);
+        }
+    }
+
+    [Fact]
     public async Task MissingActivationAndInvalidKeyDoNotImplyCounterfeit()
     {
         var source = new Source(new() { ["SoftwareLicensingProduct"] = [new() { ["Name"] = "Example", ["PartialProductKey"] = "long-private-value" }] });

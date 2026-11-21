@@ -4,7 +4,7 @@ using PCHealthPro.Core;
 
 namespace PCHealthPro.App.ViewModels;
 
-public sealed partial class OverviewViewModel(HardwareScan scan) : ObservableObject
+public sealed partial class OverviewViewModel(HardwareScan scan, Services.LanguageService settings) : ObservableObject
 {
     public DateTimeOffset? CheckedAt { get; private set; }
     [ObservableProperty]
@@ -13,7 +13,7 @@ public sealed partial class OverviewViewModel(HardwareScan scan) : ObservableObj
     [RelayCommand]
     private async Task RefreshAsync(CancellationToken token)
     {
-        var readings = await scan.RunAsync(token);
+        var readings = await scan.RunAsync(token, settings.ScanEnabled);
         CheckedAt = DateTimeOffset.Now;
         Readings = readings;
     }

@@ -4,7 +4,7 @@
  <Border Style="{StaticResource InspectionSurface}">
   <StackPanel Spacing="12">
    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-    <Border Width="44" Height="44" VerticalAlignment="Top" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
+     <Border x:Name="BrandHost" Width="44" Height="44" VerticalAlignment="Top" Background="{ThemeResource LayerFillColorDefaultBrush}" CornerRadius="8">
      <FontIcon x:Name="Icon" FontSize="22" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
     </Border>
     <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
@@ -13,6 +13,7 @@
     </StackPanel>
    </Grid>
    <Grid x:Name="Metrics" ColumnDefinitions="*,*,*" ColumnSpacing="12" RowSpacing="8" SizeChanged="ResizeMetrics"/>
+   <TextBlock x:Name="BenchSummary" TextWrapping="Wrap" Visibility="Collapsed"/>
    <InfoBar x:Name="Health" IsClosable="False" IsOpen="False" Visibility="Collapsed"/>
    <Expander x:Name="Details" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Expanding="OpenFields"/>
   </StackPanel>

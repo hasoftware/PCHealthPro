@@ -18,19 +18,19 @@
        <InfoBar x:Name="UpdateNotice" IsClosable="True" Visibility="{x:Bind UpdateNotice.IsOpen, Mode=OneWay}">
          <InfoBar.ActionButton><Button x:Name="ApplyUpdate" Click="InstallUpdate"/></InfoBar.ActionButton>
        </InfoBar>
+       <local:SystemInventoryPane x:Name="SystemInventory" Visibility="Collapsed"/>
        <StackPanel x:Name="ManualPane" Spacing="12" Visibility="Collapsed"/>
        <local:ReportPane x:Name="Report" Visibility="Collapsed"/>
-       <local:SystemInventoryPane x:Name="SystemInventory" Visibility="Collapsed"/>
        <StackPanel x:Name="OverviewPanel" Spacing="12">
          <Grid x:Name="ScanPanel" CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
            <Border IsHitTestVisible="False" Opacity=".12"><Border.Background>
              <LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="{ThemeResource SystemAccentColor}"/><GradientStop Offset="1" Color="Transparent"/></LinearGradientBrush>
            </Border.Background></Border>
            <Grid Padding="16" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto" SizeChanged="ResizeScanPanel">
-             <Border Grid.RowSpan="2" Width="44" Height="44" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" VerticalAlignment="Center"><FontIcon Glyph="&#xE7F4;" FontSize="24" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/></Border>
+             <local:MachineIllustration Grid.RowSpan="2" x:Name="MachineArt" VerticalAlignment="Center"/>
              <TextBlock x:Name="MachineName" Grid.Column="1" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
              <TextBlock x:Name="CheckStatus" Grid.Column="1" Grid.Row="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
-             <Button x:Name="QuickCheck" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Command="{x:Bind Model.RefreshCommand}">
+             <Button x:Name="QuickCheck" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Click="RunQuickCheck">
                <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/><TextBlock x:Name="QuickCheckLabel"/></StackPanel>
              </Button>
            </Grid>
@@ -81,6 +81,17 @@
              </StackPanel>
            </Grid>
          </Border>
+         <Expander x:Name="ScanPreferences" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+           <StackPanel Spacing="8">
+             <TextBlock x:Name="ScanScopeHint" TextWrapping="Wrap"/>
+             <Grid x:Name="ScanChoices" ColumnDefinitions="*,*" ColumnSpacing="12"/>
+             <TextBlock x:Name="ManualOptionsTitle" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+             <Grid x:Name="ManualChoices" ColumnDefinitions="*,*" ColumnSpacing="12"/>
+             <TextBlock x:Name="SettingsError" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" Visibility="Collapsed"/>
+             <CheckBox x:Name="BenchmarkChoice" Click="ChooseBenchmark"/>
+             <TextBlock x:Name="IniPath" Style="{StaticResource MetricLabel}" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
+           </StackPanel>
+         </Expander>
          <TextBlock x:Name="AppVersion" Style="{StaticResource MetricLabel}" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
        </StackPanel>
        <TeachingTip x:Name="Tip" Target="{x:Bind QuickCheck}" PreferredPlacement="Bottom" Closed="DismissTip"/>

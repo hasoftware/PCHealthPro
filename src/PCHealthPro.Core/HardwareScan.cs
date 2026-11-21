@@ -17,12 +17,13 @@ public interface IHardwareModule
 
 public sealed class HardwareScan(IEnumerable<IHardwareModule> modules)
 {
+    public static IReadOnlyList<string> Categories { get; } = ["Machine", "CPU", "RAM", "GPU", "Display", "Network", "Windows", "Camera", "Audio", "Input", "Storage", "Battery"];
     private readonly IHardwareModule[] modules = modules.ToArray();
 
-    public async Task<IReadOnlyList<HardwareReading>> RunAsync(CancellationToken token = default)
+    public async Task<IReadOnlyList<HardwareReading>> RunAsync(CancellationToken token = default, Func<string, bool>? include = null)
     {
         token.ThrowIfCancellationRequested();
-        return await Task.WhenAll(modules.Select(ReadModuleAsync)).ConfigureAwait(false);
+        return await Task.WhenAll(modules.Where(m => include?.Invoke(m.Category) != false).Select(ReadModuleAsync)).ConfigureAwait(false);
 
         async Task<HardwareReading> ReadModuleAsync(IHardwareModule module)
         {

@@ -17,11 +17,12 @@ internal sealed class BatteryModule(IInventorySource source) : IHardwareModule
             Query("BatteryFullChargedCapacity", "InstanceName,FullChargedCapacity"),
             Query("BatteryCycleCount", "InstanceName,CycleCount"),
             Query("BatteryStatus", "InstanceName,RemainingCapacity,Charging,Discharging,ChargeRate,DischargeRate"),
-            Query("Win32_Battery", "Name,PNPDeviceID,EstimatedChargeRemaining,EstimatedRunTime,BatteryStatus,DesignCapacity,FullChargeCapacity", @"root\cimv2")
+            Query("BatteryTemperature", "InstanceName,Temperature"),
+            Query("Win32_Battery", "Name,PNPDeviceID,EstimatedChargeRemaining,EstimatedRunTime,BatteryStatus,DesignCapacity,FullChargeCapacity,DesignVoltage,TimeOnBattery", @"root\cimv2")
         };
         var results = await Task.WhenAll(queries).ConfigureAwait(false);
         var packs = new Dictionary<string, DeviceRow>(StringComparer.OrdinalIgnoreCase);
-        foreach (var rows in results.Take(4))
+        foreach (var rows in results.SkipLast(1))
         foreach (var row in rows)
         {
             if (row.Text("InstanceName") is not string id) continue;
@@ -30,12 +31,12 @@ internal sealed class BatteryModule(IInventorySource source) : IHardwareModule
         }
 
         var devices = packs.Values.ToList();
-        foreach (var basic in results[4])
+        foreach (var basic in results[^1])
         {
             var pnp = basic.Text("PNPDeviceID");
             var target = devices.FirstOrDefault(p => pnp != null && string.Equals(
                 p.Text("InstanceName"), pnp + "_0", StringComparison.OrdinalIgnoreCase));
-            if (target == null && results[4].Count == 1 && devices.Count == 1) target = devices[0];
+            if (target == null && results[^1].Count == 1 && devices.Count == 1) target = devices[0];
             if (target == null) { target = new(); devices.Add(target); }
             foreach (var field in basic) if (field.Value != null) target[field.Key] = field.Value;
         }
@@ -80,7 +81,19 @@ internal sealed class BatteryModule(IInventorySource source) : IHardwareModule
         ulong? design = Capacity(pack, "DesignedCapacity", "DesignCapacity");
         ulong? full = Capacity(pack, "FullChargedCapacity", "FullChargeCapacity");
         bool relative = (pack.Number("Capabilities").GetValueOrDefault() & 0x40000000) != 0;
-        string? Energy(ulong? n) => n == null ? null : relative ? n.ToString() : $"{n / 1000d:0.###} Wh";
+        var voltage = Counter(pack, "DesignVoltage");
+        string? Energy(ulong? n)
+        {
+            if (relative || n == null) return n?.ToString();
+            string wh = $"{n / 1000d:0.###} Wh";
+            return voltage is > 0 ? $"{wh} ({(double)n * 1000 / voltage:0} mAh)" : wh;
+        }
+        var stamp = pack.Text("ManufactureDate");
+        DateOnly? built = null;
+        if (stamp?.Length >= 8 && DateOnly.TryParseExact(stamp[..8], "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture,
+            System.Globalization.DateTimeStyles.None, out var parsed) && parsed.Year >= 1980 && parsed <= DateOnly.FromDateTime(DateTime.Today)) built = parsed;
+        var kelvin = Counter(pack, "Temperature");
+        var seconds = Counter(pack, "TimeOnBattery");
         string? Rate(string key) => !relative && Counter(pack, key) is ulong n && n < int.MaxValue ? $"{n / 1000d:0.###} W" : null;
         var wear = Wear(design, full);
         var percent = Counter(pack, "EstimatedChargeRemaining");
@@ -98,6 +111,10 @@ internal sealed class BatteryModule(IInventorySource source) : IHardwareModule
             new("Model", model), new("Manufacturer", pack.Text("ManufactureName") ?? pack.Text("Manufacturer")),
             new("SerialNumber", pack.Text("SerialNumber")), new(relative ? "RelativeDesign" : "DesignCapacity", Energy(design)),
             new(relative ? "RelativeFull" : "FullCapacity", Energy(full)), new("BatteryWear", wear == null ? null : $"{wear:0.#} %"),
+            new("Temperature", kelvin is > 0 and < 10000 ? $"{kelvin / 10d - 273.15:0.#} °C" : null),
+            new("ManufactureDate", built?.ToString("yyyy-MM-dd")),
+            new("BatteryAgeDays", built == null ? null : (DateOnly.FromDateTime(DateTime.Today).DayNumber - built.Value.DayNumber).ToString()),
+            new("TimeOnBattery", seconds is > 0 ? TimeSpan.FromSeconds(seconds.Value).ToString("g") : null),
             new("CycleCount", Counter(pack, "CycleCount")?.ToString()), new("ChargeState", state) { Localize = true },
             new("EstimatedChargeRemaining", percent == null ? null : $"{percent} %"),
             new("Runtime", minutes == null ? null : $"{minutes} min"), new("ChargeRate", Rate("ChargeRate")),

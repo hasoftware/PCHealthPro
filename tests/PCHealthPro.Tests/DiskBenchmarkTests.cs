@@ -53,7 +53,7 @@ public sealed class DiskBenchmarkTests
                 Assert.All(results, s =>
                 {
                     Assert.True(s.MegabytesPerSecond > 0 && s.Iops > 0);
-                    var bytes = s.Phase is BenchmarkPhase.SeqRead or BenchmarkPhase.SeqWrite ? 1 << 20 : 4096;
+                    var bytes = s.Phase is BenchmarkPhase.SeqRead or BenchmarkPhase.SeqWrite or BenchmarkPhase.SeqRead8 or BenchmarkPhase.SeqWrite8 ? 1 << 20 : 4096;
                     Assert.Equal(bytes, s.MegabytesPerSecond * 1e6 / s.Iops, 4);
                 });
                 Assert.Equal(1d, samples.Last().Progress);

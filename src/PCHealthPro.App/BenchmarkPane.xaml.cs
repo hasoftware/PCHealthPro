@@ -57,6 +57,7 @@ public sealed partial class BenchmarkPane : UserControl
 
     public void Localize()
     {
+        MethodInfo.Text = language.Get("BenchMethod");
         Title.Text = language.Get("BenchTitle");
         Volume.Header = language.Get("BenchVolume");
         SizeBox.Header = language.Get("BenchSize");

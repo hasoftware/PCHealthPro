@@ -1,0 +1,28 @@
+<UserControl x:Class="PCHealthPro.App.MachineIllustration"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Viewbox Width="132" Height="88">
+  <Grid Width="160" Height="104">
+   <Grid x:Name="Desktop">
+    <Path Fill="#536372" Data="M48,78 L61,78 63,92 76,94 76,97 33,97 33,94 46,92 Z"/>
+    <Border Margin="2,14,48,24" Background="#26343E" BorderBrush="#647887" BorderThickness="2" CornerRadius="4"/>
+    <Border Margin="7,19,53,32" CornerRadius="1">
+     <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#8AD9E7"/><GradientStop Offset=".55" Color="#3977A6"/><GradientStop Offset="1" Color="#254660"/></LinearGradientBrush></Border.Background>
+    </Border>
+    <Border Margin="118,5,6,8" Background="#33414E" CornerRadius="4" BorderBrush="#738492" BorderThickness="2"/>
+    <Path Stroke="#8797A3" StrokeThickness="2" Data="M125,20 L146,20 M125,25 L146,25 M125,73 L146,73 M125,78 L146,78 M125,83 L146,83"/>
+    <Ellipse Width="5" Height="5" Margin="0,0,20,18" HorizontalAlignment="Right" VerticalAlignment="Bottom" Fill="#75E0C2"/>
+   </Grid>
+   <Grid x:Name="Laptop" Visibility="Collapsed">
+    <Border Margin="18,7,18,24" Background="#29343D" BorderBrush="#8B9AA5" BorderThickness="2" CornerRadius="6,6,2,2"/>
+    <Border Margin="24,14,24,31" CornerRadius="1" Background="#E9F2F6">
+     <Grid Margin="9"><Image x:Name="OemLogo" Stretch="Uniform"/><TextBlock x:Name="OemName" Foreground="#263848" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold"/></Grid>
+    </Border>
+    <Path Fill="#9BAAB5" Stroke="#637585" Data="M18,80 L142,80 158,93 155,97 5,97 2,93 Z"/>
+    <Path Fill="#617687" Data="M57,81 L102,81 106,86 53,86 Z"/>
+    <Path Stroke="#465766" StrokeThickness="2" Data="M4,94 L156,94"/>
+   </Grid>
+   <FontIcon x:Name="Other" Visibility="Collapsed" Glyph="&#xE977;" FontSize="44" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+  </Grid>
+ </Viewbox>
+</UserControl>

@@ -18,7 +18,7 @@
   <data name="Problem" xml:space="preserve"><value>Có vấn đề</value></data>
   <data name="Unknown" xml:space="preserve"><value>Không có dữ liệu</value></data>
   <data name="CPU" xml:space="preserve"><value>Bộ xử lý</value></data>
-  <data name="GPU" xml:space="preserve"><value>Đồ họa</value></data>
+  <data name="GPU" xml:space="preserve"><value>Card đồ họa</value></data>
   <data name="RAM" xml:space="preserve"><value>Bộ nhớ</value></data>
   <data name="Windows" xml:space="preserve"><value>Windows</value></data>
   <data name="QuickCheck" xml:space="preserve"><value>Chạy kiểm tra nhanh</value></data>
@@ -45,7 +45,7 @@
   <data name="Bluetooth" xml:space="preserve"><value>Bluetooth</value></data>
   <data name="WindowsActivation" xml:space="preserve"><value>Kích hoạt Windows</value></data>
   <data name="Office" xml:space="preserve"><value>Bản Office đã cài</value></data>
-  <data name="OfficeActivation" xml:space="preserve"><value>Kích hoạt Office số lượng lớn</value></data>
+  <data name="OfficeActivation" xml:space="preserve"><value>Kích hoạt Office (SPP)</value></data>
   <data name="OfficeLegacy" xml:space="preserve"><value>Kích hoạt Office đời cũ</value></data>
   <data name="Model" xml:space="preserve"><value>Mẫu máy</value></data>
   <data name="Manufacturer" xml:space="preserve"><value>Nhà sản xuất</value></data>
@@ -61,7 +61,7 @@
   <data name="SecureBootState" xml:space="preserve"><value>Trạng thái Secure Boot</value></data>
   <data name="NumberOfCores" xml:space="preserve"><value>Số nhân</value></data>
   <data name="NumberOfLogicalProcessors" xml:space="preserve"><value>Số luồng</value></data>
-  <data name="CurrentClockSpeed" xml:space="preserve"><value>Xung nhịp Windows báo cáo</value></data>
+  <data name="CurrentClockSpeed" xml:space="preserve"><value>Xung nhịp hiện tại (WMI)</value></data>
   <data name="MaxClockSpeed" xml:space="preserve"><value>Xung tối đa theo firmware</value></data>
   <data name="NominalMHz" xml:space="preserve"><value>Xung danh định theo Windows (CPU 0)</value></data>
   <data name="L2CacheSize" xml:space="preserve"><value>Bộ nhớ đệm L2</value></data>
@@ -186,8 +186,8 @@
   <data name="BenchLocalOnly" xml:space="preserve"><value>Hãy chọn phân vùng cục bộ trên ổ trong hoặc ổ rời.</value></data>
   <data name="BenchNoSpace" xml:space="preserve"><value>Không đủ chỗ cho file thử và 16 MiB dự phòng.</value></data>
   <data name="BenchAlignment" xml:space="preserve"><value>Phân vùng này không hỗ trợ căn chỉnh I/O trực tiếp 4 KiB cần thiết.</value></data>
-  <data name="SeqWrite" xml:space="preserve"><value>Ghi tuần tự · 1 MiB</value></data>
-  <data name="SeqRead" xml:space="preserve"><value>Đọc tuần tự · 1 MiB</value></data>
+  <data name="SeqWrite" xml:space="preserve"><value>Ghi tuần tự · 1 MiB Q1</value></data>
+  <data name="SeqRead" xml:space="preserve"><value>Đọc tuần tự · 1 MiB Q1</value></data>
   <data name="RandomWrite1" xml:space="preserve"><value>Ghi ngẫu nhiên · 4 KiB · QD1</value></data>
   <data name="RandomRead1" xml:space="preserve"><value>Đọc ngẫu nhiên · 4 KiB · QD1</value></data>
   <data name="RandomWrite32" xml:space="preserve"><value>Ghi ngẫu nhiên · 4 KiB · QD32</value></data>
@@ -287,4 +287,55 @@
   <data name="BluetoothUnavailable" xml:space="preserve"><value>Windows chưa cung cấp thông tin thiết bị Bluetooth.</value></data>
   <data name="OfficeUnavailable" xml:space="preserve"><value>Chưa đọc được thông tin cài đặt hoặc kích hoạt Office.</value></data>
   <data name="AdaptersUnavailable" xml:space="preserve"><value>Chưa đọc được thông tin bộ điều hợp mạng.</value></data>
+  <data name="UsedSlots" xml:space="preserve"><value>Khe đang dùng</value></data>
+  <data name="RamOccupancy" xml:space="preserve"><value>Đã dùng {0}/{1} khe RAM · Còn trống {2}</value></data>
+  <data name="RamModulesOnly" xml:space="preserve"><value>Phát hiện {0} thanh · Chưa rõ tổng số khe</value></data>
+  <data name="RamSlotsOnly" xml:space="preserve"><value>{0} khe RAM · Chưa rõ số khe đang dùng</value></data>
+  <data name="RamSlotsUnknown" xml:space="preserve"><value>Chưa đọc được số khe RAM</value></data>
+  <data name="CpuPackages" xml:space="preserve"><value>{0} bộ xử lý</value></data>
+  <data name="DiskCount" xml:space="preserve"><value>{0} ổ đĩa vật lý</value></data>
+  <data name="BaseClock" xml:space="preserve"><value>Xung nhịp cơ bản</value></data>
+  <data name="GpuType" xml:space="preserve"><value>Loại GPU</value></data>
+  <data name="GpuVirtual" xml:space="preserve"><value>Bộ điều hợp ảo</value></data>
+  <data name="GpuIntegrated" xml:space="preserve"><value>GPU tích hợp (onboard)</value></data>
+  <data name="GpuDiscrete" xml:space="preserve"><value>GPU rời</value></data>
+  <data name="GpuUnknown" xml:space="preserve"><value>Chưa xác định loại GPU</value></data>
+  <data name="LicenseTab" xml:space="preserve"><value>Bản quyền</value></data>
+  <data name="WindowsValidation" xml:space="preserve"><value>Xác thực Windows</value></data>
+  <data name="GenuineState" xml:space="preserve"><value>Xác thực cục bộ</value></data>
+  <data name="GenuineLocal" xml:space="preserve"><value>Dịch vụ Windows xác thực thành công</value></data>
+  <data name="GenuineInvalid" xml:space="preserve"><value>Windows báo giấy phép không hợp lệ</value></data>
+  <data name="GenuineTampered" xml:space="preserve"><value>Windows phát hiện dữ liệu bản quyền bị sửa</value></data>
+  <data name="GenuineOffline" xml:space="preserve"><value>Chưa thể xác thực ngoại tuyến</value></data>
+  <data name="ProductKeyChannel" xml:space="preserve"><value>Kênh cấp phép</value></data>
+  <data name="LicenseEvidence" xml:space="preserve"><value>Đối chiếu kết quả trên máy với hóa đơn hoặc quyền sử dụng của tổ chức. KMS là hình thức kích hoạt số lượng lớn của tổ chức.</value></data>
+  <data name="OfficeLicenseMissing" xml:space="preserve"><value>Chưa có dữ liệu kích hoạt Office từ dịch vụ cấp phép. Trong Word hoặc Excel, mở Tệp → Tài khoản để xem quyền sử dụng của tài khoản.</value></data>
+  <data name="ScanScope" xml:space="preserve"><value>Phạm vi kiểm tra</value></data>
+  <data name="ScanScopeHint" xml:space="preserve"><value>Chọn các nhóm cho lần kiểm tra nhanh tiếp theo.</value></data>
+  <data name="OfferBenchmark" xml:space="preserve"><value>Mở bước đo đọc/ghi ổ đĩa sau khi kiểm tra nhanh</value></data>
+  <data name="ManufactureDate" xml:space="preserve"><value>Ngày sản xuất pin</value></data>
+  <data name="BatteryAgeDays" xml:space="preserve"><value>Số ngày kể từ khi sản xuất</value></data>
+  <data name="TimeOnBattery" xml:space="preserve"><value>Thời gian dùng pin từ khi rút nguồn</value></data>
+  <data name="LifeRemaining" xml:space="preserve"><value>Tuổi thọ SSD còn lại (ước tính)</value></data>
+  <data name="HoursTrend" xml:space="preserve"><value>Đối chiếu giờ SMART</value></data>
+  <data name="HoursFirst" xml:space="preserve"><value>Đã lưu mốc giờ đầu tiên</value></data>
+  <data name="HoursConsistent" xml:space="preserve"><value>Số giờ không giảm từ mốc đã lưu</value></data>
+  <data name="HoursDecreased" xml:space="preserve"><value>Số giờ thấp hơn mốc đã lưu của cùng ổ. Cần xác minh lịch sử thiết bị.</value></data>
+  <data name="HoursUnavailable" xml:space="preserve"><value>Chưa đủ dữ liệu để đối chiếu</value></data>
+  <data name="Volumes" xml:space="preserve"><value>Phân vùng</value></data>
+  <data name="NotMeasured" xml:space="preserve"><value>Tốc độ đọc/ghi · Chưa đo trong phiên này</value></data>
+  <data name="BenchMethod" xml:space="preserve"><value>Tuần tự 1 MiB ở Q1 và Q8, ngẫu nhiên 4 KiB ở Q1 và Q32. Đọc trực tiếp và ghi xuyên bộ nhớ đệm hệ điều hành. So sánh kết quả ở cùng kích thước, độ sâu hàng đợi và chế độ ghi.</value></data>
+  <data name="SeqWrite8" xml:space="preserve"><value>Ghi tuần tự · 1 MiB Q8</value></data>
+  <data name="SeqRead8" xml:space="preserve"><value>Đọc tuần tự · 1 MiB Q8</value></data>
+  <data name="Chassis" xml:space="preserve"><value>Dạng thân máy</value></data>
+  <data name="ChassisTypes" xml:space="preserve"><value>Loại máy</value></data>
+  <data name="PanelVendor" xml:space="preserve"><value>Mã hãng màn hình (EDID)</value></data>
+  <data name="ScopeDisabled" xml:space="preserve"><value>Nhóm này chưa có trong lần quét. Chọn tại Cài đặt và chạy kiểm tra nhanh.</value></data>
+  <data name="RatedBaseClock" xml:space="preserve"><value>Xung cơ bản (danh định)</value></data>
+  <data name="GpuDiscreteModel" xml:space="preserve"><value>GPU rời · Theo dòng sản phẩm</value></data>
+  <data name="GpuIntegratedModel" xml:space="preserve"><value>GPU tích hợp · Theo dòng sản phẩm</value></data>
+  <data name="OfficeSubscription" xml:space="preserve"><value>Thuê bao Microsoft 365</value></data>
+  <data name="PanelSummary" xml:space="preserve"><value>Màn hình đã nhận diện</value></data>
+  <data name="PreferredMode" xml:space="preserve"><value>Chế độ ưu tiên theo EDID</value></data>
+  <data name="ManualOptions" xml:space="preserve"><value>Bài thử thủ công trong quy trình</value></data>
 </root>

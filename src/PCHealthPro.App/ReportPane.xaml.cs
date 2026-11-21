@@ -134,9 +134,9 @@ public sealed partial class ReportPane : UserControl
     }
     private InspectionReport? Current()
     {
-        if (overview.CheckedAt == null || overview.Readings.Count == 0 || overview.RefreshCommand.IsRunning) return null;
+        if (overview.CheckedAt == null || overview.RefreshCommand.IsRunning) return null;
         return new(overview.CheckedAt.Value, Environment.MachineName, selected == null ? ReadNotes() : draft,
-            overview.Readings.ToArray(), manual.Snapshot(), benchmark.Status == "" ? null :
+            overview.Readings.ToArray(), manual.Snapshot().Where(t => strings.ManualEnabled(t.Test.ToString()) || t.Verdict != TestVerdict.Untested).ToArray(), benchmark.Status == "" ? null :
                 new(benchmark.Volume, benchmark.SizeMiB, benchmark.Status, benchmark.Results.ToArray()));
     }
 

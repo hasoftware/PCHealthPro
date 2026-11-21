@@ -47,6 +47,17 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
                 groups.Add(new(query.Label, fields));
             }
         }
+        if (Category == "CPU")
+        {
+            var chips = results.First(r => r.Query.Class == "Win32_Processor").Rows;
+            var registry = results.First(r => r.Query.Class == "ProcessorRegistry").Rows.FirstOrDefault();
+            // Some hypervisors hide CPUID leaf 16. The nominal registry frequency and
+            // SMBIOS-rated clock can corroborate a nominal base, independent of current load.
+            if (chips.Count == 1 && registry?.Number("BaseClock") is not > 0 &&
+                registry?.Number("NominalMHz") is > 0 and var nominal && chips[0].Number("MaxClockSpeed") is > 0 and var rated &&
+                Math.Abs((double)nominal - rated) / rated < 0.02)
+                groups.Add(new("CPU", [new("RatedBaseClock", $"{rated / 1000d:0.###} GHz")]));
+        }
         if (Category == "RAM")
         {
             var modules = results.First(r => r.Query.Class == "Win32_PhysicalMemory").Rows;
@@ -56,11 +67,12 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
                 : null;
             var arrays = results.First(r => r.Query.Class == "Win32_PhysicalMemoryArray").Rows;
             var slots = arrays.Select(r => r.Number("MemoryDevices")).ToArray();
-            if (modules.Count > 0 && slots.Length > 0 && slots.All(n => n > 0))
-            {
-                var free = slots.Sum(n => (long)n!.Value) - modules.Count;
-                groups.Add(new("RAM", [new("FreeSlots", free >= 0 ? free.ToString() : null)]));
-            }
+            long? total = slots.Length > 0 && slots.All(n => n is > 0 and <= ushort.MaxValue)
+                ? slots.Sum(n => (long)n!.Value) : null;
+            if (total < modules.Count) total = null;
+            long? used = modules.Count > 0 ? modules.Count : null;
+            groups.Add(new("RAM", [new("MemoryDevices", total?.ToString()),
+                new("UsedSlots", used?.ToString()), new("FreeSlots", (total - used)?.ToString())]));
         }
         if (Category == "Display")
         {
@@ -70,6 +82,19 @@ public sealed class InventoryModule(string category, IInventorySource source, pa
             if (count == 0) count = panels.Count;
             if (count > 0) groups.Insert(0, new("Display", [new("MonitorCount", count.ToString())]));
             var present = results.First(r => r.Query.Class == "PresentPanels").Rows;
+            // Match by monitor instance so identical models on different outputs stay separate.
+            var summaries = new Dictionary<string, DeviceRow>(StringComparer.OrdinalIgnoreCase);
+            foreach (var row in present.Concat(panels).Concat(modes))
+            {
+                string? id = row.Text("PanelInstance") ?? row.Text("InstanceName");
+                if (id?.EndsWith("_0", StringComparison.Ordinal) == true) id = id[..^2];
+                id ??= row.Text("MonitorPath") ?? row.Text("DisplayName") ?? $"panel-{summaries.Count}";
+                if (!summaries.TryGetValue(id, out var merged)) summaries[id] = merged = new();
+                foreach (var field in row) if (field.Value != null) merged[field.Key] = field.Value;
+            }
+            var layoutQuery = new InventoryQuery("PanelSummary", "", "PanelName,UserFriendlyName,Name,PanelVendor,ManufacturerName,Resolution,RefreshHz,PreferredMode,MaxHorizontalImageSize,MaxVerticalImageSize,DisplayName");
+            foreach (var panel in summaries.Values)
+                groups.Add(new("PanelSummary", InventoryFormat.Fields(layoutQuery, panel)));
             groups.Insert(0, new("PresentPanels", [new("PresentCount", present.Count > 0 ? present.Count.ToString() : null)]));
             summary = results.Where(r => r.Query.Class == "WmiMonitorID").SelectMany(r => r.Rows.Select(row =>
                     InventoryFormat.Fields(r.Query, row).First(f => f.Label == "UserFriendlyName").Value))

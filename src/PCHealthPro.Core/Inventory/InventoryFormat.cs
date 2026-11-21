@@ -10,6 +10,12 @@ internal static class InventoryFormat
         query.Columns.Split(',').Where(name => name != "PNPDeviceID")
             .Select(name => Format(name, row)).ToArray();
 
+    private static string? Chassis(ushort[] codes)
+    {
+        if (codes.Any(n => n is 8 or 9 or 10 or 14 or 30 or 31 or 32)) return "Mobile";
+        return codes.Any(n => n is 3 or 4 or 5 or 6 or 7 or 13 or 15 or 16 or 35 or 36) ? "Desktop" : null;
+    }
+
     private static InventoryField Format(string name, DeviceRow row)
     {
         var text = row.Text(name);
@@ -18,7 +24,7 @@ internal static class InventoryFormat
         string? value = name switch
         {
             "Capacity" or "AdapterRAM" or "Size" => n is > 0 ? Bytes(n.Value) : null,
-            "CurrentClockSpeed" or "MaxClockSpeed" or "NominalMHz" => WithUnit("MHz"),
+            "CurrentClockSpeed" or "MaxClockSpeed" or "NominalMHz" or "BaseClock" => n > 0 ? $"{n / 1000d:0.###} GHz" : null,
             "RefreshHz" or "CurrentRefreshRate" => WithUnit("Hz"),
             "MaxHorizontalImageSize" or "MaxVerticalImageSize" => WithUnit("cm"),
             "L2CacheSize" or "L3CacheSize" => WithUnit("KiB"),
@@ -34,7 +40,9 @@ internal static class InventoryFormat
             "UserFriendlyName" or "ProductCodeID" or "ManufacturerName" => row.GetValueOrDefault(name) is ushort[] chars
                 ? new string(chars.TakeWhile(c => c != 0).Select(c => (char)c).ToArray()).Trim() : null,
             "PartialProductKey" => text?.Length == 5 ? text : null,
+            "GenuineState" => n switch { 0 => "GenuineLocal", 1 => "GenuineInvalid", 2 => "GenuineTampered", 3 => "GenuineOffline", _ => null },
             "LicenseStatus" => n switch { 0 => "Unlicensed", 1 => "Licensed", 2 or 3 or 6 => "Grace", 4 => "NonGenuineGrace", 5 => "Notification", _ => null },
+            "ChassisTypes" => row.GetValueOrDefault(name) is ushort[] codes ? Chassis(codes) : null,
             "PCSystemType" => n switch { 1 => "Desktop", 2 => "Mobile", 3 => "Workstation", 4 or 5 or 7 => "Server", _ => null },
             "SecureBootState" => n switch { 0 => "Disabled", 1 => "Enabled", _ => null },
             "IsEnabled_InitialValue" => row.GetValueOrDefault(name) switch { true => "Enabled", false => "Disabled", _ => null },
@@ -42,6 +50,6 @@ internal static class InventoryFormat
             _ => text
         };
         return new(name, string.IsNullOrWhiteSpace(value) ? null : value)
-            { Localize = name is "LicenseStatus" or "PCSystemType" or "SecureBootState" or "IsEnabled_InitialValue" };
+            { Localize = name is "ChassisTypes" or "GpuType" or "GenuineState" or "LicenseStatus" or "PCSystemType" or "SecureBootState" or "IsEnabled_InitialValue" };
     }
 }

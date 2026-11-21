@@ -13,11 +13,11 @@ dotnet test tests/PCHealthPro.Tests --no-build
 dotnet run --project src/PCHealthPro.App --no-build
 ```
 
-Chọn **Tổng quan** để xem lần quét gần nhất. Bấm một thẻ phần cứng để tới trang chi tiết, hoặc chọn **Chạy kiểm tra nhanh** để quét lại. Trang **Windows** hiển thị thông tin kích hoạt do Windows cung cấp và dữ liệu Office khi có. KMS cũng được sử dụng trong các tổ chức có giấy phép. Trạng thái kích hoạt cần được đối chiếu với chứng từ nếu cần xác minh nguồn bản quyền.
+Trên **Tổng quan**, hình minh họa cho biết loại máy. Laptop có logo hoặc tên hãng trên màn hình. Các thẻ cho biết xung cơ bản của CPU khi xác định được, số khe RAM đã dùng và còn trống, cấu hình từng nhóm thanh, từng GPU và từng ổ đĩa. Bấm thẻ để xem chi tiết.
 
-Trong **CPU & RAM**, mở chi tiết bộ nhớ để xem từng thanh và khe cắm, hoặc chuyển sang **Máy & BIOS** để xem bo mạch, firmware và Secure Boot. Trong **Mạng & WiFi**, ba tab cho phép xem bộ điều hợp, chuẩn Wi-Fi và thiết bị Bluetooth. Trang **Windows** có tab **Office** riêng để xem phiên bản và trạng thái kích hoạt từng sản phẩm.
+**Card đồ họa** liệt kê từng bộ điều hợp và nguồn nhận diện GPU tích hợp hoặc rời. **Màn hình** hiển thị hãng, model và thông số nhận từ màn hình. Trong **Windows → Bản quyền**, có thể xem trạng thái kích hoạt Windows, kết quả xác thực cục bộ khi có và thông tin cấp phép Office. KMS có thể là kênh cấp phép hợp lệ của tổ chức. Khi cần xác định nguồn mua, hãy đối chiếu với hóa đơn hoặc hợp đồng cấp phép.
 
-Ứng dụng đọc cục bộ bằng quyền người dùng hiện tại. Trường thiếu quyền hoặc thiếu driver hiển thị “Không có dữ liệu”. Lỗi truy vấn được ghi theo tên nguồn và loại lỗi trong thư mục `logs` cạnh ứng dụng. Mở Cài đặt để đổi ngôn ngữ. Ứng dụng lưu lựa chọn ngôn ngữ và trạng thái hướng dẫn lần đầu tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro`.
+Trong **Cài đặt**, chọn từng nhóm phần cứng cho lượt quét, từng bài thử tương tác và việc mở benchmark sau lượt kiểm tra nhanh. Các lựa chọn được lưu tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro\settings.ini`. Giao diện hỗ trợ tiếng Việt và tiếng Anh. Ứng dụng đọc dữ liệu bằng quyền hiện tại và cho biết khi driver thiếu thông tin.
 
 ## Kiểm tra ổ cứng và pin
 
@@ -25,13 +25,15 @@ Trang Ổ cứng liệt kê từng thiết bị, giao tiếp và bộ đếm SMA
 
 Mỗi ổ có đánh giá và lý do. Windows báo ổ lỗi, SMART cảnh báo nghiêm trọng, sector chờ xử lý, lỗi dữ liệu chưa sửa hoặc mức dùng tuổi thọ từ 100% sẽ hiện “Có vấn đề”. Các ngưỡng cảnh báo của ứng dụng gồm nhiệt độ từ 60 °C và tuổi thọ đã dùng từ 90%. Trang cũng cảnh báo khi ổ có sector đã phân bổ lại hoặc Windows Storage báo cần chú ý.
 
-Trang Pin hiển thị dữ liệu riêng từng bộ pin. Độ chai được tính từ dung lượng thiết kế và dung lượng sạc đầy hiện tại. Nếu WMI thiếu thông tin, ứng dụng có thể đọc phần pin đã lắp trong báo cáo XML tạm thời của powercfg và xóa báo cáo sau khi đọc. Máy bàn có trạng thái riêng khi Windows xác nhận máy không có pin.
+Nếu ổ cung cấp mức hao mòn, ứng dụng tính phần trăm tuổi thọ ước tính còn lại. Khi nhận diện được ổ, ứng dụng lưu mốc giờ hoạt động tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro\drive-hours` để cảnh báo nếu bộ đếm giảm ở lần kiểm tra sau. Một lần đọc SMART chỉ cho biết giá trị hiện có.
+
+Trang **Pin** hiển thị dung lượng thiết kế và dung lượng sạc đầy theo Wh, thêm mAh khi có điện áp thiết kế. Từng bộ pin có độ chai, nhiệt độ, chu kỳ sạc, ngày sản xuất, tuổi tính từ ngày sản xuất và thời gian chạy pin của lần xả hiện tại nếu phần cứng cung cấp. Máy bàn có trạng thái riêng khi Windows xác nhận máy không có pin.
 
 ## Benchmark ổ cứng
 
 Trong **Ổ cứng**, chọn tab **Đo tốc độ ổ cứng**, rồi chọn phân vùng và kích thước file thử (256 MiB, 1 GiB hoặc 4 GiB). Nếu thư mục mặc định thiếu quyền ghi, chọn một thư mục khác trên phân vùng muốn đo. Nút **Bắt đầu đo** hiển thị vị trí, kích thước file và cảnh báo hao mòn SSD trước khi chạy.
 
-Ứng dụng ghi rồi đọc tuần tự toàn bộ file theo khối 1 MiB. Sau đó ứng dụng đo ghi và đọc ngẫu nhiên khối 4 KiB, lần lượt với một và tối đa 32 yêu cầu I/O đồng thời (QD1/QD32). Mỗi lượt ngẫu nhiên kết thúc khi đạt kích thước file hoặc sau khoảng ba giây, cộng thời gian hoàn tất I/O đang chờ. Biểu đồ hiển thị tốc độ theo thời gian của lượt hiện tại. Kết quả mỗi lượt gồm tốc độ trung bình tính theo MB/s thập phân và số thao tác mỗi giây (IOPS).
+Ứng dụng đo ghi và đọc tuần tự theo khối 1 MiB ở Q1 và Q8, tương ứng với một và tối đa tám yêu cầu đồng thời. So sánh tốc độ giữa các công cụ bằng cùng kích thước file, kích thước khối và độ sâu hàng đợi. Sau đó ứng dụng đo ghi và đọc ngẫu nhiên khối 4 KiB, lần lượt với một và tối đa 32 yêu cầu I/O đồng thời (QD1/QD32). Mỗi lượt ngẫu nhiên kết thúc khi đạt kích thước file hoặc sau khoảng ba giây, cộng thời gian hoàn tất I/O đang chờ. Biểu đồ hiển thị tốc độ theo thời gian của lượt hiện tại. Kết quả mỗi lượt gồm tốc độ trung bình tính theo MB/s thập phân và số thao tác mỗi giây (IOPS).
 
 Phép đo dùng I/O trực tiếp và write-through, kiểm tra dung lượng trống, giữ 16 MiB dự phòng và tạo một file mới với chế độ xóa khi đóng. Nút **Hủy** dừng phép đo và giữ kết quả những lượt đã hoàn tất.
 
@@ -43,13 +45,13 @@ Trong **Âm thanh & Mic**, chọn micro để xem mức tín hiệu hoặc thu t
 
 Trên trang Màn hình, mở chế độ toàn màn hình, nhấp chuột hoặc nhấn phím để chuyển qua năm màu và một dải chuyển sắc. Nhấn Esc để thoát. Trên trang Bàn phím & Touchpad, chọn **Bắt đầu thử phím** để xem các phím Windows chuyển đến ứng dụng. Trong vùng vẽ, thử chuột trái, chuột phải, cuộn hoặc chạm bằng nhiều ngón. Bộ đếm điểm chạm phản ánh các tiếp xúc Windows gửi dưới dạng cảm ứng; cử chỉ touchpad có thể xuất hiện dưới dạng chuột hoặc cuộn.
 
-Chọn **Đạt**, **Không đạt** hoặc **Bỏ qua** riêng cho từng bài. Trang **Báo cáo** tổng hợp sáu kết quả của phiên đang mở. Ảnh thử và âm thanh được xử lý trong bộ nhớ.
+Chọn **Đạt**, **Không đạt** hoặc **Bỏ qua** riêng cho từng bài. Trang **Báo cáo** tổng hợp các bài thử được chọn trong phiên. Ảnh thử và âm thanh được xử lý trong bộ nhớ.
 
 ## Xuất báo cáo và so sánh các lần kiểm tra
 
 Mở **Tổng quan**, đợi ứng dụng quét xong rồi dùng **Kiểm tra tiếp** để thực hiện các bài tương tác còn lại. Trên trang **Báo cáo**, chọn **Phiên hiện tại**. Mở **Ghi chú kiểm tra** nếu muốn bổ sung người bán, giá và tình trạng ngoại hình. Mở **Chi tiết** để xem kết quả theo nhóm.
 
-- Chọn **PDF** để in hoặc gửi bản đã dàn trang, **HTML** để đọc bằng trình duyệt ngoại tuyến hoặc **JSON** để xử lý dữ liệu. Chọn **Xuất file** và chọn nơi lưu. Báo cáo gồm thời điểm quét, tên máy, thông số, đánh giá, sáu kết quả tương tác và các lượt benchmark đã đo trong phiên.
+- Chọn **PDF** để in hoặc gửi bản đã dàn trang, **HTML** để đọc bằng trình duyệt ngoại tuyến hoặc **JSON** để xử lý dữ liệu. Chọn **Xuất file** và chọn nơi lưu. Báo cáo gồm thời điểm quét, tên máy, thông số, đánh giá, kết quả tương tác và các lượt benchmark đã đo trong phiên.
 - Tùy chọn **Ẩn số sê-ri và địa chỉ MAC** được bật sẵn và áp dụng cả khi xuất file lẫn lưu lịch sử. Bản đã lưu với tùy chọn này sẽ giữ các giá trị đã che. Tên máy và ghi chú vẫn xuất hiện trong báo cáo, nên hãy xem lại trước khi chia sẻ. Ảnh và âm thanh thử chỉ tồn tại trong bộ nhớ.
 - Chọn **Lưu lịch sử** để lưu một bản JSON tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro\history`. Mở lại trang **Báo cáo** và chọn lần kiểm tra theo tên máy, ngày giờ để xem hoặc xuất lại. Ở ô **So sánh**, chọn bản đối chiếu. Mỗi thay đổi hiển thị theo chiều từ bản đối chiếu sang bản đang xem. Có thể sao lưu các file JSON trong thư mục này.
 

@@ -45,7 +45,7 @@
   <data name="Bluetooth" xml:space="preserve"><value>Bluetooth</value></data>
   <data name="WindowsActivation" xml:space="preserve"><value>Windows activation</value></data>
   <data name="Office" xml:space="preserve"><value>Office installation</value></data>
-  <data name="OfficeActivation" xml:space="preserve"><value>Office volume activation</value></data>
+  <data name="OfficeActivation" xml:space="preserve"><value>Office activation (SPP)</value></data>
   <data name="OfficeLegacy" xml:space="preserve"><value>Legacy Office activation</value></data>
   <data name="Model" xml:space="preserve"><value>Model</value></data>
   <data name="Manufacturer" xml:space="preserve"><value>Manufacturer</value></data>
@@ -186,8 +186,8 @@
   <data name="BenchLocalOnly" xml:space="preserve"><value>Choose a local fixed or removable volume.</value></data>
   <data name="BenchNoSpace" xml:space="preserve"><value>Insufficient free space for the test file and 16 MiB reserve.</value></data>
   <data name="BenchAlignment" xml:space="preserve"><value>This volume does not support the required 4 KiB direct I/O alignment.</value></data>
-  <data name="SeqWrite" xml:space="preserve"><value>Sequential write · 1 MiB</value></data>
-  <data name="SeqRead" xml:space="preserve"><value>Sequential read · 1 MiB</value></data>
+  <data name="SeqWrite" xml:space="preserve"><value>Sequential write · 1 MiB Q1</value></data>
+  <data name="SeqRead" xml:space="preserve"><value>Sequential read · 1 MiB Q1</value></data>
   <data name="RandomWrite1" xml:space="preserve"><value>Random write · 4 KiB · QD1</value></data>
   <data name="RandomRead1" xml:space="preserve"><value>Random read · 4 KiB · QD1</value></data>
   <data name="RandomWrite32" xml:space="preserve"><value>Random write · 4 KiB · QD32</value></data>
@@ -287,4 +287,55 @@
   <data name="BluetoothUnavailable" xml:space="preserve"><value>Windows did not report Bluetooth device information.</value></data>
   <data name="OfficeUnavailable" xml:space="preserve"><value>Office installation and activation information is unavailable.</value></data>
   <data name="AdaptersUnavailable" xml:space="preserve"><value>Network adapter information is unavailable.</value></data>
+  <data name="UsedSlots" xml:space="preserve"><value>Occupied slots</value></data>
+  <data name="RamOccupancy" xml:space="preserve"><value>{0} of {1} slots occupied · {2} free</value></data>
+  <data name="RamModulesOnly" xml:space="preserve"><value>{0} modules detected · Slot total unavailable</value></data>
+  <data name="RamSlotsOnly" xml:space="preserve"><value>{0} slots · Occupancy unavailable</value></data>
+  <data name="RamSlotsUnknown" xml:space="preserve"><value>RAM slot count unavailable</value></data>
+  <data name="CpuPackages" xml:space="preserve"><value>{0} processors</value></data>
+  <data name="DiskCount" xml:space="preserve"><value>Physical drives · {0}</value></data>
+  <data name="BaseClock" xml:space="preserve"><value>Base clock</value></data>
+  <data name="GpuType" xml:space="preserve"><value>GPU type</value></data>
+  <data name="GpuVirtual" xml:space="preserve"><value>Virtual adapter</value></data>
+  <data name="GpuIntegrated" xml:space="preserve"><value>Integrated GPU</value></data>
+  <data name="GpuDiscrete" xml:space="preserve"><value>Discrete GPU</value></data>
+  <data name="GpuUnknown" xml:space="preserve"><value>GPU type unavailable</value></data>
+  <data name="LicenseTab" xml:space="preserve"><value>Licensing</value></data>
+  <data name="WindowsValidation" xml:space="preserve"><value>Windows validation</value></data>
+  <data name="GenuineState" xml:space="preserve"><value>Local validation</value></data>
+  <data name="GenuineLocal" xml:space="preserve"><value>Validated by Windows</value></data>
+  <data name="GenuineInvalid" xml:space="preserve"><value>Windows reports an invalid license</value></data>
+  <data name="GenuineTampered" xml:space="preserve"><value>Windows detected licensing data tampering</value></data>
+  <data name="GenuineOffline" xml:space="preserve"><value>Offline validation unavailable</value></data>
+  <data name="ProductKeyChannel" xml:space="preserve"><value>License channel</value></data>
+  <data name="LicenseEvidence" xml:space="preserve"><value>Compare the local results with the purchase receipt or your organization’s entitlement. KMS is an organizational volume activation method.</value></data>
+  <data name="OfficeLicenseMissing" xml:space="preserve"><value>Office activation data is unavailable from the licensing service. In Word or Excel, open File → Account to check the account entitlement.</value></data>
+  <data name="ScanScope" xml:space="preserve"><value>Scan selection</value></data>
+  <data name="ScanScopeHint" xml:space="preserve"><value>Choose the groups to include in the next quick check.</value></data>
+  <data name="OfferBenchmark" xml:space="preserve"><value>Open the disk read/write test after a quick check</value></data>
+  <data name="ManufactureDate" xml:space="preserve"><value>Manufacture date</value></data>
+  <data name="BatteryAgeDays" xml:space="preserve"><value>Days since manufacture</value></data>
+  <data name="TimeOnBattery" xml:space="preserve"><value>Time on battery since unplugging</value></data>
+  <data name="LifeRemaining" xml:space="preserve"><value>Estimated SSD endurance remaining</value></data>
+  <data name="HoursTrend" xml:space="preserve"><value>SMART hour comparison</value></data>
+  <data name="HoursFirst" xml:space="preserve"><value>First hour reading recorded</value></data>
+  <data name="HoursConsistent" xml:space="preserve"><value>Hours have not decreased from the saved reading</value></data>
+  <data name="HoursDecreased" xml:space="preserve"><value>Hours are below the saved reading for this drive. Verify its service history.</value></data>
+  <data name="HoursUnavailable" xml:space="preserve"><value>Insufficient evidence for comparison</value></data>
+  <data name="Volumes" xml:space="preserve"><value>Volumes</value></data>
+  <data name="NotMeasured" xml:space="preserve"><value>Read/write speed · No measurement this session</value></data>
+  <data name="BenchMethod" xml:space="preserve"><value>Sequential 1 MiB at Q1 and Q8, random 4 KiB at Q1 and Q32. Uses direct I/O and write-through. Compare runs with matching size, queue depth and write policy.</value></data>
+  <data name="SeqWrite8" xml:space="preserve"><value>Sequential write · 1 MiB Q8</value></data>
+  <data name="SeqRead8" xml:space="preserve"><value>Sequential read · 1 MiB Q8</value></data>
+  <data name="Chassis" xml:space="preserve"><value>Chassis</value></data>
+  <data name="ChassisTypes" xml:space="preserve"><value>Form factor</value></data>
+  <data name="PanelVendor" xml:space="preserve"><value>Monitor manufacturer (EDID)</value></data>
+  <data name="ScopeDisabled" xml:space="preserve"><value>This group was omitted. Select it in Settings and run a quick check.</value></data>
+  <data name="RatedBaseClock" xml:space="preserve"><value>Nominal base clock</value></data>
+  <data name="GpuDiscreteModel" xml:space="preserve"><value>Discrete GPU · Product family</value></data>
+  <data name="GpuIntegratedModel" xml:space="preserve"><value>Integrated GPU · Product family</value></data>
+  <data name="OfficeSubscription" xml:space="preserve"><value>Microsoft 365 subscription</value></data>
+  <data name="PanelSummary" xml:space="preserve"><value>Detected monitor</value></data>
+  <data name="PreferredMode" xml:space="preserve"><value>Preferred EDID mode</value></data>
+  <data name="ManualOptions" xml:space="preserve"><value>Guided manual tests</value></data>
 </root>

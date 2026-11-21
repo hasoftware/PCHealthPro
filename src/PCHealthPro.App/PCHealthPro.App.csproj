@@ -8,10 +8,12 @@
     <WindowsPackageType>None</WindowsPackageType>
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SatelliteResourceLanguages>en;en-US;vi;vi-VN</SatelliteResourceLanguages>
     <DefaultLanguage>en-US</DefaultLanguage>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Assets\Brands\*.png" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest"/>
     <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
     <ProjectReference Include="../PCHealthPro.Core/PCHealthPro.Core.csproj" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.8.260710003" />
@@ -23,6 +25,7 @@
        Include them in CLI publish as well as ordinary development builds. -->
   <Target Name="PublishWinUIResources" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="$([System.Text.RegularExpressions.Regex]::IsMatch('%(ResolvedFileToPublish.RelativePath)', '(?i)^(?!(?:en-us|vi-vn)[/\\\\])[a-z]{2,3}(?:-[a-z0-9]+)+[/\\\\]Microsoft[.]UI[.]Xaml(?:[.]Phone)?[.]dll[.]mui$'))"/>
       <WinUiOutput Include="$(TargetDir)$(AssemblyName).pri;$(TargetDir)**\*.xbf"/>
       <ResolvedFileToPublish Include="@(WinUiOutput)">
         <RelativePath>%(WinUiOutput.RecursiveDir)%(WinUiOutput.Filename)%(WinUiOutput.Extension)</RelativePath>

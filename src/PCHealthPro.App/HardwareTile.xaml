@@ -9,12 +9,17 @@
  <Button x:Name="Open" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
    VerticalContentAlignment="Stretch" Padding="16,12" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
    <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8" MinHeight="82">
-     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+     <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8">
        <FontIcon x:Name="Icon" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
        <TextBlock x:Name="Category" Grid.Column="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
-       <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+       <Border x:Name="Brand" Grid.Column="2" Visibility="Collapsed"/>
+       <FontIcon Grid.Column="3" Glyph="&#xE76C;" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
      </Grid>
-     <TextBlock Grid.Row="1" x:Name="Reading" Style="{ThemeResource BodyStrongTextBlockStyle}" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap"/>
+     <StackPanel Grid.Row="1" Spacing="5">
+       <TextBlock x:Name="Reading" FontSize="18" FontWeight="SemiBold" TextWrapping="Wrap"/>
+       <TextBlock x:Name="Facts" TextWrapping="Wrap"/>
+       <TextBlock x:Name="Detail" Style="{StaticResource MetricLabel}" TextWrapping="Wrap"/>
+     </StackPanel>
      <StackPanel x:Name="StatusLine" Grid.Row="2" Orientation="Horizontal" Spacing="6">
        <FontIcon x:Name="StatusIcon" FontSize="12"/>
        <TextBlock x:Name="State" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>

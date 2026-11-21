@@ -22,7 +22,7 @@ public sealed partial class MainWindow : Window
     [
         ("Overview", "\uE80F", 1), ("Compute", "\uE950", 2), ("Storage", "\uEDA2", 3),
         ("Battery", "\uE83F", 3), ("Network", "\uE701", 2), ("Display", "\uE7F4", 5),
-        ("Audio", "\uE767", 5), ("Camera", "\uE722", 5), ("Input", "\uE765", 5),
+        ("GPU", "\uE7F4", 2), ("Audio", "\uE767", 5), ("Camera", "\uE722", 5), ("Input", "\uE765", 5),
         ("Windows", "\uE770", 2), ("Reports", "\uE9F9", 6), ("Settings", "\uE713", 1)
     ];
 
@@ -39,10 +39,12 @@ public sealed partial class MainWindow : Window
 
     private readonly InteractivePane manual;
     private readonly ManualTestSession tests;
+    private readonly BenchmarkViewModel diskTest;
     public MainWindow(OverviewViewModel model, LanguageService language, BenchmarkViewModel benchmark, ManualTestSession session)
     {
         Model = model;
         tests = session;
+        diskTest = benchmark;
         this.language = language;
         using var identity = WindowsIdentity.GetCurrent();
         elevated = new WindowsPrincipal(identity).IsInRole(WindowsBuiltInRole.Administrator);
@@ -85,10 +87,18 @@ public sealed partial class MainWindow : Window
             (item.Key is "Settings" or "Reports" ? Nav.FooterMenuItems : Nav.MenuItems).Add(entry);
             if (item.Key == section) Nav.SelectedItem = entry;
         }
-        LanguageBox.ItemsSource = new[] { language.Get("SystemLanguage"), "Tiếng Việt", "English" };
+        LanguageBox.ItemsSource = new[] { language.Get("SystemLanguage"), "Tiáº¿ng Viá»‡t", "English" };
         LanguageBox.SelectedIndex = language.Selection switch { "vi-VN" => 1, "en-US" => 2, _ => 0 };
         LanguageTitle.Text = language.Get("Language");
         AutomationProperties.SetName(LanguageBox, LanguageTitle.Text);
+        ScanPreferences.Header = language.Get("ScanScope");
+        ScanScopeHint.Text = language.Get("ScanScopeHint");
+        IniPath.Text = language.SettingsPath;
+        BenchmarkChoice.Content = language.Get("OfferBenchmark");
+        BenchmarkChoice.IsChecked = language.IncludeBenchmark;
+        ManualOptionsTitle.Text = language.Get("ManualOptions");
+        DrawOptions(ScanChoices, HardwareScan.Categories, false);
+        DrawOptions(ManualChoices, Enum.GetNames<ManualTest>(), true);
         UpdateTitle.Text = language.Get("UpdatesTitle");
         PrivacyTitle.Text = language.Get("PrivacyTitle");
         AppVersion.Text = $"{Title} · v{typeof(App).Assembly.GetName().Version!.ToString(3)}";
@@ -124,10 +134,56 @@ public sealed partial class MainWindow : Window
         QuickCheck.Margin = narrow ? new Thickness(0, 8, 0, 0) : new Thickness(0);
     }
 
+    private void DrawOptions(Grid grid, IEnumerable<string> keys, bool manualOptions)
+    {
+        grid.Children.Clear();
+        grid.RowDefinitions.Clear();
+        foreach (var key in keys)
+        {
+            int index = grid.Children.Count;
+            var box = new CheckBox { Content = language.Get(manualOptions ? "Test" + key : key),
+                IsChecked = manualOptions ? language.ManualEnabled(key) : language.ScanEnabled(key) };
+            AutomationProperties.SetAutomationId(box, (manualOptions ? "Manual" : "Scan") + key);
+            box.Click += (_, _) => SaveOption(box, enabled =>
+            {
+                if (manualOptions) language.SetManual(key, enabled);
+                else language.SetScan(key, enabled);
+            });
+            if (index % 2 == 0) grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Grid.SetRow(box, index / 2); Grid.SetColumn(box, index % 2); grid.Children.Add(box);
+        }
+    }
+
+    private void SaveOption(CheckBox box, Action<bool> save)
+    {
+        try { save(box.IsChecked == true); SettingsError.Visibility = Visibility.Collapsed; }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
+            box.IsChecked = box.IsChecked != true;
+            SettingsError.Text = e.Message;
+            SettingsError.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void ChooseBenchmark(object sender, RoutedEventArgs args) => SaveOption(BenchmarkChoice, language.SetBenchmark);
+
+    private async void RunQuickCheck(object sender, RoutedEventArgs args)
+    {
+        if (Model.RefreshCommand.IsRunning) return;
+        try { await Model.RefreshCommand.ExecuteAsync(null); }
+        catch (OperationCanceledException) { return; }
+        if (language.IncludeBenchmark && section == "Overview")
+        {
+            OpenHardware("Storage");
+            DiskTabs.SelectedItem = DiskBenchTab;
+        }
+    }
+
     private void ChangeLanguage(object sender, SelectionChangedEventArgs args)
     {
         if (updating || LanguageBox.SelectedIndex < 0) return;
-        language.Change(LanguageBox.SelectedIndex switch { 1 => "vi-VN", 2 => "en-US", _ => "system" });
+        try { language.Change(LanguageBox.SelectedIndex switch { 1 => "vi-VN", 2 => "en-US", _ => "system" }); }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException) { UpdateState.Text = e.Message; }
         Localize();
     }
 
@@ -203,7 +259,7 @@ public sealed partial class MainWindow : Window
         Heading.Text = language.Get(section);
         ScanPanel.Visibility = HardwareTitle.Visibility = section == "Overview" ? Visibility.Visible : Visibility.Collapsed;
         manual.Show(section);
-        SystemInventory.Visibility = section is "Compute" or "Network" or "Windows" ? Visibility.Visible : Visibility.Collapsed;
+        SystemInventory.Visibility = section is "Compute" or "Network" or "Windows" or "GPU" or "Display" ? Visibility.Visible : Visibility.Collapsed;
         OverviewPanel.Visibility = SystemInventory.Visibility == Visibility.Visible || section is "Settings" or "Reports" ? Visibility.Collapsed : Visibility.Visible;
         SettingsPanel.Visibility = section == "Settings" ? Visibility.Visible : Visibility.Collapsed;
         DiskTabs.Visibility = section == "Storage" ? Visibility.Visible : Visibility.Collapsed;
@@ -236,21 +292,26 @@ public sealed partial class MainWindow : Window
     private void UpdateStatus()
     {
         bool busy = Model.RefreshCommand.IsRunning;
+        QuickCheck.IsEnabled = !busy;
         Progress.Visibility = busy ? Visibility.Visible : Visibility.Collapsed;
         var machine = Model.Readings.FirstOrDefault(r => r.Category == "Machine");
+        var machineFields = machine?.Groups.SelectMany(g => g.Fields);
+        var kind = machineFields?.FirstOrDefault(f => f.Label == "ChassisTypes")?.Value ?? machineFields?.FirstOrDefault(f => f.Label == "PCSystemType")?.Value;
+        var maker = machine?.Groups.FirstOrDefault(g => g.Label == "Machine")?.Fields.FirstOrDefault(f => f.Label == "Manufacturer")?.Value;
+        MachineArt.Show(kind, maker, kind == null ? language.Get("Machine") : language.Get(kind));
         var model = machine?.Value;
         MachineName.Text = string.IsNullOrWhiteSpace(model) || model.Equals("System Product Name", StringComparison.OrdinalIgnoreCase)
             ? Environment.MachineName
             : model;
         CheckStatus.Text = busy || Model.CheckedAt == null ? language.Get("Busy")
             : string.Format(language.Get("ScannedAt"), Model.CheckedAt.Value.ToLocalTime().ToString("HH:mm"));
-        var results = tests.Snapshot();
+        var results = tests.Snapshot().Where(t => language.ManualEnabled(t.Test.ToString())).ToArray();
         var next = results.FirstOrDefault(t => t.Verdict == TestVerdict.Untested);
-        ManualProgress.Visibility = section == "Overview" && !busy && Model.CheckedAt != null
+        ManualProgress.Visibility = results.Length > 0 && section == "Overview" && !busy && Model.CheckedAt != null
             ? Visibility.Visible : Visibility.Collapsed;
         var recorded = results.Count(r => r.Verdict != TestVerdict.Untested);
         ManualCount.Text = string.Format(language.Get("ManualCount"), recorded, results.Length);
-        ManualMeter.Maximum = results.Length;
+        ManualMeter.Maximum = Math.Max(1, results.Length);
         ManualMeter.Value = recorded;
         AutomationProperties.SetName(ManualMeter, ManualCount.Text);
         if (next == null)
@@ -268,7 +329,7 @@ public sealed partial class MainWindow : Window
 
     private void OpenNextManual(object sender, RoutedEventArgs args)
     {
-        var next = tests.Snapshot().FirstOrDefault(t => t.Verdict == TestVerdict.Untested);
+        var next = tests.Snapshot().FirstOrDefault(t => language.ManualEnabled(t.Test.ToString()) && t.Verdict == TestVerdict.Untested);
         Nav.SelectedItem = Nav.MenuItems.Concat(Nav.FooterMenuItems).OfType<NavigationViewItem>().FirstOrDefault(i => Equals(i.Tag, NextManual.Tag));
         if (next != null && ManualPane.Children.OfType<ManualTestCard>().FirstOrDefault(c => Equals(c.Tag, next.Test)) is { } card)
             card.DispatcherQueue.TryEnqueue(() => card.StartBringIntoView());
@@ -276,7 +337,7 @@ public sealed partial class MainWindow : Window
 
     private void ResizeCards(object sender, SizeChangedEventArgs args)
     {
-        int count = args.NewSize.Width >= 640 ? 3 : args.NewSize.Width >= 400 ? 2 : 1;
+        int count = args.NewSize.Width >= 840 ? 3 : args.NewSize.Width >= 510 ? 2 : 1;
         if (columns == count) return;
         columns = count;
         if (section == "Overview") DrawCards();
@@ -284,7 +345,7 @@ public sealed partial class MainWindow : Window
 
     private void OpenHardware(string category)
     {
-        var target = category switch { "CPU" or "RAM" => "Compute", "GPU" => "Display", _ => category };
+        var target = category switch { "CPU" or "RAM" => "Compute", _ => category };
         if (target == "Storage") DiskTabs.SelectedItem = DiskHealthTab;
         Nav.SelectedItem = Nav.MenuItems.OfType<NavigationViewItem>().First(i => Equals(i.Tag, target));
         if (target is "Compute" or "Windows") { SystemInventory.OpenHardware(category); return; }
@@ -298,9 +359,9 @@ public sealed partial class MainWindow : Window
 
     private void DrawCards()
     {
-        if (section is "Compute" or "Network" or "Windows")
+        if (section is "Compute" or "Network" or "Windows" or "GPU" or "Display")
         {
-            SystemInventory.Show(section, language, Model.Readings);
+            SystemInventory.Show(section, language, Model.Readings, Model.CheckedAt.HasValue);
             return;
         }
         Cards.Children.Clear();
@@ -318,10 +379,19 @@ public sealed partial class MainWindow : Window
             for (int i = 0; i < Math.Max(1, devices?.Count ?? 0); i++)
             {
                 var device = devices?.ElementAtOrDefault(i);
-                var fallback = device != null ? $"{language.Get(section)} {i + 1}" : language.Get(reading == null ? "Busy" :
+                var fallback = device != null ? $"{language.Get(section)} {i + 1}" : language.Get(reading == null ? (Model.CheckedAt == null ? "Busy" : "ScopeDisabled") :
                     reading.Status == HealthStatus.Absent ? "Absent" : "Unknown");
                 var card = new DeviceCard();
                 card.Show(section, device, fallback, language);
+                if (section == "Storage" && device != null)
+                {
+                    var volumes = device.Fields.FirstOrDefault(f => f.Label == "Volumes")?.Value?.Split(", ") ?? [];
+                    var recent = diskTest.Status == "BenchDone" && volumes.Contains(diskTest.Volume, StringComparer.OrdinalIgnoreCase)
+                        ? diskTest.Results.Where(s => s.Phase is PCHealthPro.Core.Benchmark.BenchmarkPhase.SeqWrite8 or PCHealthPro.Core.Benchmark.BenchmarkPhase.SeqRead8)
+                            .Select(s => $"{language.Get(s.Phase.ToString())}   {s.MegabytesPerSecond:N0} MB/s").ToArray() : [];
+                    card.SetBenchSummary(recent.Length == 0 ? language.Get("NotMeasured") :
+                        $"{diskTest.Volume} · {diskTest.SizeMiB} MiB\n" + string.Join("\n", recent));
+                }
                 Cards.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
                 Grid.SetRow(card, i);
                 Cards.Children.Add(card);
@@ -333,31 +403,25 @@ public sealed partial class MainWindow : Window
         var readings = Model.Readings.Where(reading => section switch
         {
             "Overview" => reading.Category is "CPU" or "RAM" or "GPU" or "Windows" or "Storage" or "Battery",
-            "Display" => reading.Category is "GPU" or "Display",
+            "Display" => reading.Category == "Display",
             _ => reading.Category == section
-        }).ToArray();
-        for (int index = 0; index < readings.Length; index++)
+        });
+        var tiles = readings.SelectMany(r => section == "Overview" && r.Category == "GPU" && r.Groups.Any(g => g.Fields.Any(f => f.Value != null))
+            ? r.Groups.Where(g => g.Fields.Any(f => f.Value != null)).Select(g => r with { Value = g.Fields.FirstOrDefault(f => f.Label == "Name")?.Value, Groups = [g] })
+            : new[] { r }).Where(r => r.Category != "GPU" || r.Groups.All(g => !g.Fields.Any(f => f.Label == "GpuType" && f.Value == "GpuVirtual"))).ToArray();
+        for (int index = 0; index < tiles.Length; index++)
         {
             if (index % count == 0) Cards.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            var reading = readings[index];
+            var reading = tiles[index];
             var name = language.Get(reading.Category);
             var value = reading.Value ?? language.Get(reading.Status == HealthStatus.Absent ? "Absent" : "Unknown");
             if (section == "Overview")
             {
                 var glyph = reading.Category switch { "CPU" => "\uE950", "RAM" => "\uE964", "GPU" => "\uE7F4",
                     "Storage" => "\uEDA2", "Battery" => "\uE83F", _ => "\uE770" };
-                string? Field(string key) => reading.Groups.SelectMany(g => g.Fields).FirstOrDefault(f => f.Label == key && f.Value != null)?.Value;
-                var caption = reading.Category switch
-                {
-                    "CPU" when Field("NumberOfCores") is { } cores && Field("NumberOfLogicalProcessors") is { } threads =>
-                        string.Format(language.Get("CpuTopology"), cores, threads),
-                    "RAM" when Field("ConfiguredClockSpeed") is { } speed => speed,
-                    "GPU" when Field("CurrentHorizontalResolution") is { } width && Field("CurrentVerticalResolution") is { } height => $"{width} × {height}",
-                    "Windows" when Field("BuildNumber") is { } build => $"{language.Get("BuildNumber")} {build}",
-                    _ => null
-                };
                 var tile = new HardwareTile();
-                tile.Bind(name, glyph, value, reading.Status, caption ?? (value == language.Get(reading.Status.ToString()) ? "" : language.Get(reading.Status.ToString())),
+                var summary = OverviewTileContent.From(reading, language);
+                tile.Bind(name, glyph, summary, reading.Status, language.Get(reading.Status.ToString()), BrandMark.For(reading),
                     () => OpenHardware(reading.Category));
                 Grid.SetColumn(tile, index % count);
                 Grid.SetRow(tile, index / count);

@@ -62,6 +62,7 @@ internal static class NativeInventory
                 // Match the active interface before reading its cached EDID.
                 var parts = panel.Id.Split('#');
                 if (parts.Length != 4 || !parts[0].EndsWith(@"\DISPLAY", StringComparison.OrdinalIgnoreCase)) continue;
+                output["PanelInstance"] = $@"DISPLAY\{parts[1]}\{parts[2]}";
                 try
                 {
                     var path = $@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Enum\DISPLAY\{parts[1]}\{parts[2]}\Device Parameters";
@@ -81,10 +82,24 @@ internal static class NativeInventory
         ReadOnlySpan<byte> header = [0, 255, 255, 255, 255, 255, 255, 0];
         if (data.Length < 128 || !data.AsSpan(0, 8).SequenceEqual(header) ||
             data.Take(128).Sum(b => b) % 256 != 0) return;
+        var vendor = (data[8] << 8) | data[9];
+        var letters = new[] { (vendor >> 10) & 31, (vendor >> 5) & 31, vendor & 31 };
+        if (letters.All(c => c is >= 1 and <= 26))
+            row["PanelVendor"] = new string(letters.Select(c => (char)('A' + c - 1)).ToArray());
         if (data[21] > 0 && data[22] > 0)
         {
             row["MaxHorizontalImageSize"] = data[21];
             row["MaxVerticalImageSize"] = data[22];
+        }
+        // First detailed timing is the preferred mode when EDID declares it.
+        if ((data[24] & 2) != 0 && (data[54] != 0 || data[55] != 0))
+        {
+            var h = data[56] + ((data[58] & 0xf0) << 4);
+            var v = data[59] + ((data[61] & 0xf0) << 4);
+            var ht = h + data[57] + ((data[58] & 15) << 8);
+            var vt = v + data[60] + ((data[61] & 15) << 8);
+            if (h > 0 && v > 0 && (data[71] & 0x80) == 0)
+                row["PreferredMode"] = $"{h} × {v} · {(data[54] + (data[55] << 8)) * 10000d / ht / vt:0.##} Hz";
         }
         for (int offset = 54; offset <= 108; offset += 18)
         {

@@ -19,7 +19,7 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
         var source = new WindowsInventorySource();
-        foreach (var module in InventoryCatalog.Create(source))
+        foreach (var module in InventoryCatalog.Create(source, new DriveHourHistory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "HASOFTWARE", "PCHealthPro", "drive-hours"))))
             services.AddSingleton(module);
         services.AddSingleton<HardwareScan>();
         services.AddSingleton<LanguageService>();

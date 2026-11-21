@@ -19,6 +19,43 @@ public sealed class DriveBatteryTests
     }
 
     [Fact]
+    public void DriveHourBaselinePersistsAndNeverDropsAfterARegression()
+    {
+        var dir = Directory.CreateTempSubdirectory();
+        try
+        {
+            var first = new DriveHourHistory(dir.FullName);
+            Assert.Equal("HoursFirst", first.Compare("Model", "serial-A", 300));
+            var later = new DriveHourHistory(dir.FullName);
+            Assert.Equal("HoursDecreased", later.Compare("Model", "serial-A", 10));
+            Assert.Equal("HoursDecreased", later.Compare("Model", "serial-A", 299));
+            Assert.Equal("HoursConsistent", later.Compare("Model", "serial-A", 301));
+            Assert.Equal("HoursFirst", later.Compare("Model", "serial-B", 100));
+            Assert.Equal("HoursUnavailable", later.Compare("Model", null, 20));
+        }
+        finally { dir.Delete(true); }
+    }
+
+    [Fact]
+    public async Task PackTemperatureCapacityAndAgeUseMatchingBatteryData()
+    {
+        var source = new Source(new()
+        {
+            ["BatteryStaticData"] = [new() { ["InstanceName"] = "Pack_0", ["DesignedCapacity"] = 60000, ["ManufactureDate"] = "20230101000000.000000+000" }],
+            ["BatteryFullChargedCapacity"] = [new() { ["InstanceName"] = "Pack_0", ["FullChargedCapacity"] = 45000 }],
+            ["BatteryTemperature"] = [new() { ["InstanceName"] = "Pack_0", ["Temperature"] = 3032 }],
+            ["Win32_Battery"] = [new() { ["PNPDeviceID"] = "Pack", ["DesignVoltage"] = 12000 }]
+        });
+        var pack = Assert.Single((await new BatteryModule(source).ReadAsync(default)).Groups);
+        string? V(string k) => pack.Fields.Single(f => f.Label == k).Value;
+        Assert.Equal("60 Wh (5000 mAh)", V("DesignCapacity"));
+        Assert.Equal("45 Wh (3750 mAh)", V("FullCapacity"));
+        Assert.Equal("25 %", V("BatteryWear"));
+        Assert.Equal("2023-01-01", V("ManufactureDate"));
+        Assert.StartsWith("30", V("Temperature"));
+    }
+
+    [Fact]
     public void NvmeKeeps128BitCountersAndUsesDecimalDataUnits()
     {
         byte[] log = new byte[512];
