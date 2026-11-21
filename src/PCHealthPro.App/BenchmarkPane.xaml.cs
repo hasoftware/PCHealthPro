@@ -60,7 +60,8 @@ public sealed partial class BenchmarkPane : UserControl
         Title.Text = language.Get("BenchTitle");
         Volume.Header = language.Get("BenchVolume");
         SizeBox.Header = language.Get("BenchSize");
-        StartButton.Content = language.Get("BenchStart");
+        StartLabel.Text = language.Get("BenchStart");
+        AutomationProperties.SetName(StartButton, StartLabel.Text);
         CancelButton.Content = language.Get("BenchCancel");
         FolderButton.Content = language.Get("BenchFolder");
         AutomationProperties.SetName(Plot, language.Get("BenchChart"));

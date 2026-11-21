@@ -1,0 +1,19 @@
+<UserControl x:Class="PCHealthPro.App.Diagnostics.ManualTestCard"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Border Style="{StaticResource InspectionSurface}">
+  <StackPanel Spacing="16">
+   <Grid x:Name="HeaderGrid" ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" SizeChanged="ResizeHeader">
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12" VerticalAlignment="Center">
+     <Border Width="40" Height="40" VerticalAlignment="Top" CornerRadius="8" Background="{ThemeResource LayerFillColorDefaultBrush}">
+      <FontIcon x:Name="Icon" Style="{StaticResource TestGlyph}"/>
+     </Border>
+     <TextBlock x:Name="Heading" Grid.Column="1" VerticalAlignment="Center" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+    </Grid>
+    <ComboBox x:Name="Verdict" Grid.Column="1" MinWidth="136"/>
+   </Grid>
+   <Border Height="1" Background="{ThemeResource DividerStrokeColorDefaultBrush}"/>
+   <StackPanel x:Name="TestBody" Spacing="8"/>
+  </StackPanel>
+ </Border>
+</UserControl>

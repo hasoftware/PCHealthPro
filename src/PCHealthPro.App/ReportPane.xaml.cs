@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Automation;
 using PCHealthPro.App.Services;
 using PCHealthPro.App.ViewModels;
 using PCHealthPro.Core.Diagnostics;
@@ -39,6 +40,30 @@ public sealed partial class ReportPane : UserControl
     }
 
     private string T(string key) => strings.Get(key);
+    private Visibility HasText(string text) => string.IsNullOrWhiteSpace(text) ? Visibility.Collapsed : Visibility.Visible;
+
+    private void OpenDetails(Expander sender, ExpanderExpandingEventArgs args)
+    {
+        if (ForExport(selected ?? Current()) is { } report) DrawDetails(ReportLayout.Create(report, T));
+    }
+
+    private void DrawDetails(ReportLayout layout)
+    {
+        Details.Children.Clear();
+        foreach (var group in layout.Sections)
+        {
+            var block = new Expander { Header = new TextBlock { Text = group.Title, TextWrapping = TextWrapping.Wrap },
+                HorizontalAlignment = HorizontalAlignment.Stretch, HorizontalContentAlignment = HorizontalAlignment.Stretch };
+            block.Expanding += (sender, _) =>
+            {
+                if (sender.Content != null) return;
+                var fields = new StackPanel();
+                foreach (var line in group.Lines) fields.Children.Add(new ReadingRow(line.Label, line.Value));
+                sender.Content = fields;
+            };
+            Details.Children.Add(block);
+        }
+    }
     public void Show(bool show)
     {
         active = show;
@@ -47,8 +72,12 @@ public sealed partial class ReportPane : UserControl
         if (!show) return;
         SourceBox.Header = T("ReportSource"); CompareBox.Header = T("ReportCompare");
         Seller.Header = T("ReportSeller"); Price.Header = T("ReportPrice"); Notes.Header = T("ReportCondition");
-        HideIds.Content = T("ReportHide"); ExportButton.Content = T("ReportExport"); HistoryButton.Content = T("ReportSave");
+        HideIds.Content = T("ReportHide"); ExportLabel.Text = T("ReportExport"); HistoryButton.Content = T("ReportSave");
+        AutomationProperties.SetName(ExportButton, ExportLabel.Text);
         DetailBox.Header = T("Details");
+        NotesBox.Header = T("ReportNotes");
+        OutputTitle.Text = T("ReportOutput");
+        AutomationProperties.SetName(Format, T("ReportFormat"));
         Render();
         _ = LoadHistoryAsync();
     }
@@ -89,6 +118,20 @@ public sealed partial class ReportPane : UserControl
     }
 
     private ReportNotes ReadNotes() => new(Seller.Text.Trim(), Price.Text.Trim(), Notes.Text.Trim());
+
+    private void ResizeActions(object sender, SizeChangedEventArgs args)
+    {
+        bool narrow = args.NewSize.Width < 340;
+        Grid.SetColumn(HistoryButton, narrow ? 0 : 2);
+        Grid.SetColumnSpan(HistoryButton, narrow ? 3 : 1);
+        Grid.SetRow(HistoryButton, narrow ? 1 : 0);
+        HistoryButton.Margin = narrow ? new Thickness(0, 8, 0, 0) : new Thickness(0);
+    }
+
+    private void FinishEditingNotes(object sender, RoutedEventArgs args)
+    {
+        if (active && selected == null && (CompareBox.SelectedIndex > 0 || DetailBox.IsExpanded)) Render();
+    }
     private InspectionReport? Current()
     {
         if (overview.CheckedAt == null || overview.Readings.Count == 0 || overview.RefreshCommand.IsRunning) return null;
@@ -108,10 +151,12 @@ public sealed partial class ReportPane : UserControl
         HideIds.IsEnabled = !busy && selected?.IdentifiersHidden != true;
         ExportButton.IsEnabled = !busy && report != null;
         HistoryButton.IsEnabled = ExportButton.IsEnabled && selected == null;
-        if (report == null) { Summary.Text = T("ReportWait"); Details.Text = Comparison.Text = ""; return; }
+        if (report == null) { Summary.Text = T("ReportWait"); Details.Children.Clear(); Comparison.Text = ""; return; }
         var layout = ReportLayout.Create(report, T);
-        Summary.Text = $"{layout.Machine} · {layout.Date}\n" + string.Join("\n", report.Tests.Select(test => $"{T("Test" + test.Test)} · {T("Verdict" + test.Verdict)}"));
-        Details.Text = string.Join("\n\n", layout.Sections.Select(s => s.Title + "\n" + string.Join("\n", s.Lines.Select(l => $"{l.Label} · {l.Value}"))));
+        Summary.Text = $"{layout.Machine} · {layout.Date}\n" +
+            string.Format(T("ReportCoverage"), report.Hardware.Length,
+                report.Tests.Count(test => test.Verdict != TestVerdict.Untested), report.Tests.Length);
+        if (DetailBox.IsExpanded) DrawDetails(layout);
         Comparison.Text = "";
         if (CompareBox.SelectedIndex <= 0 || CompareBox.SelectedItem is not Entry entry) return;
         var other = ForExport(entry.Report ?? Current());

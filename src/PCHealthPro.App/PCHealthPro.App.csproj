@@ -23,9 +23,9 @@
        Include them in CLI publish as well as ordinary development builds. -->
   <Target Name="PublishWinUIResources" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
-      <WinUiOutput Include="$(TargetDir)$(AssemblyName).pri;$(TargetDir)*.xbf"/>
+      <WinUiOutput Include="$(TargetDir)$(AssemblyName).pri;$(TargetDir)**\*.xbf"/>
       <ResolvedFileToPublish Include="@(WinUiOutput)">
-        <RelativePath>%(WinUiOutput.Filename)%(WinUiOutput.Extension)</RelativePath>
+        <RelativePath>%(WinUiOutput.RecursiveDir)%(WinUiOutput.Filename)%(WinUiOutput.Extension)</RelativePath>
         <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       </ResolvedFileToPublish>
     </ItemGroup>

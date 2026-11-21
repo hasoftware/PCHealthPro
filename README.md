@@ -13,7 +13,9 @@ dotnet test tests/PCHealthPro.Tests --no-build
 dotnet run --project src/PCHealthPro.App --no-build
 ```
 
-Chọn Tổng quan để quét máy. Mở các nhóm trong từng thẻ để xem chi tiết. Thẻ Windows hiển thị thông tin kích hoạt do Windows cung cấp và dữ liệu Office khi có. KMS cũng được sử dụng trong các tổ chức có giấy phép. Trạng thái kích hoạt cần được đối chiếu với chứng từ nếu cần xác minh nguồn bản quyền.
+Chọn **Tổng quan** để xem lần quét gần nhất. Bấm một thẻ phần cứng để tới trang chi tiết, hoặc chọn **Chạy kiểm tra nhanh** để quét lại. Trang **Windows** hiển thị thông tin kích hoạt do Windows cung cấp và dữ liệu Office khi có. KMS cũng được sử dụng trong các tổ chức có giấy phép. Trạng thái kích hoạt cần được đối chiếu với chứng từ nếu cần xác minh nguồn bản quyền.
+
+Trong **CPU & RAM**, mở chi tiết bộ nhớ để xem từng thanh và khe cắm, hoặc chuyển sang **Máy & BIOS** để xem bo mạch, firmware và Secure Boot. Trong **Mạng & WiFi**, ba tab cho phép xem bộ điều hợp, chuẩn Wi-Fi và thiết bị Bluetooth. Trang **Windows** có tab **Office** riêng để xem phiên bản và trạng thái kích hoạt từng sản phẩm.
 
 Ứng dụng đọc cục bộ bằng quyền người dùng hiện tại. Trường thiếu quyền hoặc thiếu driver hiển thị “Không có dữ liệu”. Lỗi truy vấn được ghi theo tên nguồn và loại lỗi trong thư mục `logs` cạnh ứng dụng. Mở Cài đặt để đổi ngôn ngữ. Ứng dụng lưu lựa chọn ngôn ngữ và trạng thái hướng dẫn lần đầu tại `%LOCALAPPDATA%\HASOFTWARE\PCHealthPro`.
 
@@ -27,7 +29,7 @@ Trang Pin hiển thị dữ liệu riêng từng bộ pin. Độ chai được t
 
 ## Benchmark ổ cứng
 
-Mở trang Ổ cứng, chọn phân vùng và kích thước file thử (256 MiB, 1 GiB hoặc 4 GiB). Nếu thư mục mặc định thiếu quyền ghi, chọn một thư mục khác trên phân vùng muốn đo. Nút **Bắt đầu đo** hiển thị vị trí, kích thước file và cảnh báo hao mòn SSD trước khi chạy.
+Trong **Ổ cứng**, chọn tab **Đo tốc độ ổ cứng**, rồi chọn phân vùng và kích thước file thử (256 MiB, 1 GiB hoặc 4 GiB). Nếu thư mục mặc định thiếu quyền ghi, chọn một thư mục khác trên phân vùng muốn đo. Nút **Bắt đầu đo** hiển thị vị trí, kích thước file và cảnh báo hao mòn SSD trước khi chạy.
 
 Ứng dụng ghi rồi đọc tuần tự toàn bộ file theo khối 1 MiB. Sau đó ứng dụng đo ghi và đọc ngẫu nhiên khối 4 KiB, lần lượt với một và tối đa 32 yêu cầu I/O đồng thời (QD1/QD32). Mỗi lượt ngẫu nhiên kết thúc khi đạt kích thước file hoặc sau khoảng ba giây, cộng thời gian hoàn tất I/O đang chờ. Biểu đồ hiển thị tốc độ theo thời gian của lượt hiện tại. Kết quả mỗi lượt gồm tốc độ trung bình tính theo MB/s thập phân và số thao tác mỗi giây (IOPS).
 
@@ -45,7 +47,7 @@ Chọn **Đạt**, **Không đạt** hoặc **Bỏ qua** riêng cho từng bài.
 
 ## Xuất báo cáo và so sánh các lần kiểm tra
 
-Mở **Tổng quan**, đợi ứng dụng quét xong rồi dùng **Kiểm tra tiếp** để thực hiện các bài tương tác còn lại. Trên trang **Báo cáo**, chọn **Phiên hiện tại**, nhập người bán, giá kèm đơn vị tiền và ghi chú ngoại hình nếu cần.
+Mở **Tổng quan**, đợi ứng dụng quét xong rồi dùng **Kiểm tra tiếp** để thực hiện các bài tương tác còn lại. Trên trang **Báo cáo**, chọn **Phiên hiện tại**. Mở **Ghi chú kiểm tra** nếu muốn bổ sung người bán, giá và tình trạng ngoại hình. Mở **Chi tiết** để xem kết quả theo nhóm.
 
 - Chọn **PDF** để in hoặc gửi bản đã dàn trang, **HTML** để đọc bằng trình duyệt ngoại tuyến hoặc **JSON** để xử lý dữ liệu. Chọn **Xuất file** và chọn nơi lưu. Báo cáo gồm thời điểm quét, tên máy, thông số, đánh giá, sáu kết quả tương tác và các lượt benchmark đã đo trong phiên.
 - Tùy chọn **Ẩn số sê-ri và địa chỉ MAC** được bật sẵn và áp dụng cả khi xuất file lẫn lưu lịch sử. Bản đã lưu với tùy chọn này sẽ giữ các giá trị đã che. Tên máy và ghi chú vẫn xuất hiện trong báo cáo, nên hãy xem lại trước khi chia sẻ. Ảnh và âm thanh thử chỉ tồn tại trong bộ nhớ.
@@ -62,7 +64,7 @@ Từ thư mục chứa solution, chạy lệnh sau trên máy build. Script dùn
 Thư mục `artifacts` chứa ZIP portable, bộ cài MSI và file `.sha256` theo phiên bản khai báo trong `Directory.Build.props`. Cả hai gói đều chứa runtime .NET và Windows App SDK. Máy sử dụng chỉ cần Windows x64 tương thích.
 
 - **Portable**. Giải nén toàn bộ ZIP vào một thư mục trên máy hoặc USB rồi mở `PCHealthPro.App.exe`. Giữ các DLL và tài nguyên giao diện cùng cấu trúc thư mục đã giải nén. Lịch sử và lựa chọn ngôn ngữ thuộc tài khoản Windows trên máy đang dùng.
-- **MSI**. Mở file MSI để cài cho tài khoản hiện tại. Khởi chạy **PC Health Pro** từ Start Menu. Gỡ qua mục ứng dụng đã cài của Windows. Lịch sử kiểm tra được lưu riêng với thư mục cài đặt.
+- **MSI**. Mở file MSI để cài cho tài khoản hiện tại. Nếu đã cài bản thử v0.0.1 trước đó bằng MSI, hãy đóng ứng dụng rồi mở gói MSI mới để thay thế bản cũ. Khởi chạy **PC Health Pro** từ Start Menu. Gỡ qua mục ứng dụng đã cài của Windows. Lịch sử kiểm tra được lưu riêng với thư mục cài đặt.
 
 Gói nghiệm thu v0.0.1 chưa ký số. Trước khi chạy gói phân phối, lấy bộ cài và danh sách SHA-256 từ nguồn HASOFTWARE tin cậy rồi đối chiếu kết quả của lệnh sau với dòng có cùng tên file.
 

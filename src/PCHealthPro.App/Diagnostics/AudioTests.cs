@@ -38,12 +38,16 @@ internal sealed class AudioTests : IDisposable
         this.ui = ui;
         ui.Card(host, ManualTest.Microphone, out var mic);
         inputs = ui.Picker(mic, "MicDevice");
+        var levelLabel = ui.Text(ui.T("MicLevel"));
+        levelLabel.Style = (Style)Application.Current.Resources["MetricLabel"];
+        mic.Children.Add(levelLabel);
         mic.Children.Add(level);
         Microsoft.UI.Xaml.Automation.AutomationProperties.SetName(level, ui.T("MicLevel"));
-        monitor = ui.Button(mic, "MicMonitor", (_, _) => Capture(false));
-        record = ui.Button(mic, "MicRecord", (_, _) => Capture(true));
-        replay = ui.Button(mic, "MicReplay", (_, _) => { if (clip != null) Play(clip, mono, true); });
-        micStop = ui.Button(mic, "TestStop", (_, _) => { StopMic(); if (playingMic) StopPlayer(); micStatus!.Text = ""; Refresh(); });
+        var micActions = ui.Actions(mic);
+        monitor = ui.Button(micActions, "MicMonitor", (_, _) => Capture(false), primary: true);
+        record = ui.Button(micActions, "MicRecord", (_, _) => Capture(true));
+        replay = ui.Button(micActions, "MicReplay", (_, _) => { if (clip != null) Play(clip, mono, true); });
+        micStop = ui.Button(micActions, "TestStop", (_, _) => { StopMic(); if (playingMic) StopPlayer(); micStatus!.Text = ""; Refresh(); });
         micStatus = ui.Text();
         mic.Children.Add(micStatus);
 
@@ -52,10 +56,11 @@ internal sealed class AudioTests : IDisposable
         volume.Header = ui.T("SpeakerVolume");
         speaker.Children.Add(volume);
         volume.ValueChanged += (_, _) => { if (gain != null) gain.Volume = (float)(volume.Value / 100); };
+        var speakerActions = ui.Actions(speaker);
         foreach (var channel in Enum.GetValues<SpeakerChannel>())
-            tones.Add(ui.Button(speaker, "Tone" + channel, (_, _) => Tone(channel, false)));
-        tones.Add(ui.Button(speaker, "ToneSweep", (_, _) => Tone(SpeakerChannel.Stereo, true)));
-        speakerStop = ui.Button(speaker, "TestStop", (_, _) => { StopPlayer(); speakerStatus!.Text = ""; Refresh(); });
+            tones.Add(ui.Button(speakerActions, "Tone" + channel, (_, _) => Tone(channel, false)));
+        tones.Add(ui.Button(speakerActions, "ToneSweep", (_, _) => Tone(SpeakerChannel.Stereo, true)));
+        speakerStop = ui.Button(speakerActions, "TestStop", (_, _) => { StopPlayer(); speakerStatus!.Text = ""; Refresh(); });
         speakerStatus = ui.Text();
         speaker.Children.Add(speakerStatus);
         inputs.SelectionChanged += (_, _) => { StopMic(); if (playingMic) StopPlayer(); clip = null; micStatus.Text = ""; Refresh(); };
@@ -63,6 +68,8 @@ internal sealed class AudioTests : IDisposable
         timeout.Tick += (_, _) => { StopMic(); micStatus.Text = ui.T("MicTimeout"); Refresh(); };
         Load(inputs, DataFlow.Capture, micStatus);
         Load(outputs, DataFlow.Render, speakerStatus);
+        if (!inputs.IsEnabled) inputs.Visibility = micActions.Visibility = level.Visibility = levelLabel.Visibility = Visibility.Collapsed;
+        if (!outputs.IsEnabled) outputs.Visibility = speakerActions.Visibility = volume.Visibility = Visibility.Collapsed;
         Refresh();
     }
 
@@ -77,7 +84,8 @@ internal sealed class AudioTests : IDisposable
                 using (endpoint) endpoints.Add(new(endpoint.ID, endpoint.FriendlyName));
             }
             list.ItemsSource = endpoints;
-            if (endpoints.Count == 0) { status.Text = ui.T("TestNoDevice"); return; }
+            list.IsEnabled = endpoints.Count > 0;
+            if (endpoints.Count == 0) { status.Text = ui.T(flow == DataFlow.Capture ? "MicAbsent" : "SpeakersAbsent"); return; }
             list.SelectedIndex = 0;
             using var preferred = enumerator.GetDefaultAudioEndpoint(flow, Role.Multimedia);
             list.SelectedItem = endpoints.FirstOrDefault(e => e.Id == preferred.ID) ?? endpoints[0];

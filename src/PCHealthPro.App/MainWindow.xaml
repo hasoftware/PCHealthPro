@@ -3,38 +3,90 @@
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
  xmlns:local="using:PCHealthPro.App">
  <Window.SystemBackdrop><MicaBackdrop/></Window.SystemBackdrop>
- <NavigationView x:Name="Nav" PaneDisplayMode="Auto" CompactModeThresholdWidth="640"
-   ExpandedModeThresholdWidth="1060" OpenPaneLength="264" IsBackButtonVisible="Collapsed"
+ <Grid RowDefinitions="Auto,*">
+ <Grid x:Name="AppTitleBar" Height="36" Padding="20,0" ColumnDefinitions="Auto,*" ColumnSpacing="12" Background="Transparent">
+   <FontIcon Glyph="&#xE950;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+   <TextBlock x:Name="AppTitle" Grid.Column="1" Style="{ThemeResource CaptionTextBlockStyle}" VerticalAlignment="Center"/>
+ </Grid>
+ <NavigationView x:Name="Nav" Grid.Row="1" PaneDisplayMode="Auto" CompactModeThresholdWidth="300"
+   ExpandedModeThresholdWidth="960" OpenPaneLength="224" IsBackButtonVisible="Collapsed" IsTitleBarAutoPaddingEnabled="False"
    IsSettingsVisible="False" SelectionChanged="Navigate">
-   <ScrollViewer x:Name="Scroller">
-     <StackPanel x:Name="Body" Padding="24" Spacing="16" MaxWidth="1200" HorizontalAlignment="Stretch">
+   <ScrollViewer x:Name="Scroller" HorizontalContentAlignment="Stretch" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+     <Grid>
+     <StackPanel x:Name="Body" Padding="24,16,24,24" Spacing="12" MaxWidth="1200" HorizontalAlignment="Stretch">
        <TextBlock x:Name="Heading" Style="{ThemeResource TitleTextBlockStyle}"/>
-       <InfoBar x:Name="UpdateNotice" IsClosable="True">
+       <InfoBar x:Name="UpdateNotice" IsClosable="True" Visibility="{x:Bind UpdateNotice.IsOpen, Mode=OneWay}">
          <InfoBar.ActionButton><Button x:Name="ApplyUpdate" Click="InstallUpdate"/></InfoBar.ActionButton>
        </InfoBar>
        <StackPanel x:Name="ManualPane" Spacing="12" Visibility="Collapsed"/>
        <local:ReportPane x:Name="Report" Visibility="Collapsed"/>
-       <StackPanel x:Name="OverviewPanel" Spacing="16">
-         <StackPanel Orientation="Horizontal" Spacing="12">
-           <Button x:Name="QuickCheck" Command="{x:Bind Model.RefreshCommand}" CornerRadius="8" Style="{ThemeResource AccentButtonStyle}"/>
-           <ProgressRing x:Name="Progress" Width="24" Height="24"/>
-         </StackPanel>
-         <TextBlock x:Name="CheckStatus" AutomationProperties.LiveSetting="Polite"/>
-         <Button x:Name="NextManual" Visibility="Collapsed" Click="OpenNextManual"/>
-         <local:BenchmarkPane x:Name="Benchmark" Visibility="Collapsed"/>
-         <InfoBar x:Name="SmartNotice" IsClosable="False" Severity="Informational">
+       <local:SystemInventoryPane x:Name="SystemInventory" Visibility="Collapsed"/>
+       <StackPanel x:Name="OverviewPanel" Spacing="12">
+         <Grid x:Name="ScanPanel" CornerRadius="8" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+           <Border IsHitTestVisible="False" Opacity=".12"><Border.Background>
+             <LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="{ThemeResource SystemAccentColor}"/><GradientStop Offset="1" Color="Transparent"/></LinearGradientBrush>
+           </Border.Background></Border>
+           <Grid Padding="16" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" RowDefinitions="Auto,Auto,Auto" SizeChanged="ResizeScanPanel">
+             <Border Grid.RowSpan="2" Width="44" Height="44" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" VerticalAlignment="Center"><FontIcon Glyph="&#xE7F4;" FontSize="24" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/></Border>
+             <TextBlock x:Name="MachineName" Grid.Column="1" Style="{ThemeResource SubtitleTextBlockStyle}" TextWrapping="Wrap"/>
+             <TextBlock x:Name="CheckStatus" Grid.Column="1" Grid.Row="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+             <Button x:Name="QuickCheck" Grid.Column="2" Grid.RowSpan="2" VerticalAlignment="Center" Command="{x:Bind Model.RefreshCommand}">
+               <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE72C;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/><TextBlock x:Name="QuickCheckLabel"/></StackPanel>
+             </Button>
+           </Grid>
+           <ProgressBar x:Name="Progress" VerticalAlignment="Bottom" Visibility="Collapsed" IsIndeterminate="True"/>
+         </Grid>
+         <TextBlock x:Name="HardwareTitle" Margin="0,4,0,0" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+         <SelectorBar x:Name="DiskTabs" Visibility="Collapsed" SelectionChanged="DiskTabChanged">
+           <SelectorBarItem x:Name="DiskHealthTab" IsSelected="True"/>
+           <SelectorBarItem x:Name="DiskBenchTab"/>
+         </SelectorBar>
+         <Grid x:Name="Cards" ColumnSpacing="12" RowSpacing="12" SizeChanged="ResizeCards"/>
+         <InfoBar x:Name="SmartNotice" Visibility="{x:Bind SmartNotice.IsOpen, Mode=OneWay}" IsClosable="False" Severity="Informational">
            <InfoBar.ActionButton><Button x:Name="Elevate" Click="RestartElevated"/></InfoBar.ActionButton>
          </InfoBar>
-         <Grid x:Name="Cards" ColumnSpacing="12" RowSpacing="12" SizeChanged="ResizeCards"/>
+         <Border x:Name="ManualProgress" Style="{StaticResource InspectionSurface}" Visibility="Collapsed">
+           <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12" RowDefinitions="Auto,Auto" RowSpacing="8">
+             <TextBlock x:Name="ManualCount" Style="{ThemeResource BodyStrongTextBlockStyle}" TextWrapping="Wrap"/>
+             <ProgressBar x:Name="ManualMeter" Grid.Row="1" HorizontalAlignment="Stretch" Maximum="6"/>
+             <Button Grid.Column="1" Grid.RowSpan="2" x:Name="NextManual" VerticalAlignment="Center" Click="OpenNextManual"/>
+           </Grid>
+         </Border>
+         <local:BenchmarkPane x:Name="Benchmark" Visibility="Collapsed"/>
        </StackPanel>
        <StackPanel x:Name="SettingsPanel" Spacing="12" Visibility="Collapsed">
-         <ComboBox x:Name="LanguageBox" SelectionChanged="ChangeLanguage" MinWidth="220"/>
-         <TextBlock x:Name="Privacy" TextWrapping="Wrap"/>
-         <CheckBox x:Name="Updates" Click="ToggleUpdates"/>
-         <TextBlock x:Name="UpdateState" TextWrapping="Wrap"/>
+         <Border Style="{StaticResource InspectionSurface}">
+           <Grid x:Name="LanguageRow" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="12" SizeChanged="ResizeLanguage">
+             <FontIcon Glyph="&#xE774;" Style="{StaticResource TestGlyph}"/>
+             <TextBlock x:Name="LanguageTitle" Grid.Column="1" Style="{ThemeResource BodyStrongTextBlockStyle}" VerticalAlignment="Center" TextWrapping="Wrap"/>
+             <ComboBox x:Name="LanguageBox" Grid.Column="2" SelectionChanged="ChangeLanguage" MinWidth="160"/>
+           </Grid>
+         </Border>
+         <Border Style="{StaticResource InspectionSurface}">
+           <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+             <FontIcon Glyph="&#xE895;" VerticalAlignment="Top" Style="{StaticResource TestGlyph}"/>
+             <StackPanel Grid.Column="1" Spacing="8">
+               <TextBlock x:Name="UpdateTitle" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+               <CheckBox x:Name="Updates" Click="ToggleUpdates"><TextBlock x:Name="UpdateLabel" TextWrapping="Wrap"/></CheckBox>
+               <TextBlock x:Name="UpdateState" Visibility="{x:Bind TextVisibility(UpdateState.Text), Mode=OneWay}" AutomationProperties.LiveSetting="Polite" TextWrapping="Wrap"/>
+             </StackPanel>
+           </Grid>
+         </Border>
+         <Border Style="{StaticResource InspectionSurface}">
+           <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+             <FontIcon Glyph="&#xE72E;" Style="{StaticResource TestGlyph}" VerticalAlignment="Top"/>
+             <StackPanel Grid.Column="1" Spacing="8">
+               <TextBlock x:Name="PrivacyTitle" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+               <TextBlock x:Name="Privacy" TextWrapping="Wrap"/>
+             </StackPanel>
+           </Grid>
+         </Border>
+         <TextBlock x:Name="AppVersion" Style="{StaticResource MetricLabel}" IsTextSelectionEnabled="True" TextWrapping="Wrap"/>
        </StackPanel>
        <TeachingTip x:Name="Tip" Target="{x:Bind QuickCheck}" PreferredPlacement="Bottom" Closed="DismissTip"/>
      </StackPanel>
+     </Grid>
    </ScrollViewer>
  </NavigationView>
+ </Grid>
 </Window>

@@ -261,4 +261,30 @@
   <data name="UpdateCurrent" xml:space="preserve"><value>No newer release is available.</value></data>
   <data name="UpdateZip" xml:space="preserve"><value>Download and verify the portable ZIP, open it in a new folder beside this copy and close this session? Save the inspection first.</value></data>
   <data name="UpdateMsi" xml:space="preserve"><value>Download and verify the MSI, start Windows Installer and close this session? Save the inspection first.</value></data>
+  <data name="HardwareSummary" xml:space="preserve"><value>Hardware</value></data>
+  <data name="ScannedAt" xml:space="preserve"><value>Last scanned at {0}</value></data>
+  <data name="ReportOutput" xml:space="preserve"><value>Save report</value></data>
+  <data name="ReportFormat" xml:space="preserve"><value>File format</value></data>
+  <data name="ReportCoverage" xml:space="preserve"><value>{0} hardware categories · {1} of {2} interactive tests recorded</value></data>
+  <data name="CpuTopology" xml:space="preserve"><value>{0} cores · {1} threads</value></data>
+  <data name="ManualCount" xml:space="preserve"><value>Interactive tests · {0} of {1} recorded</value></data>
+  <data name="DiskHealthTab" xml:space="preserve"><value>Drive health</value></data>
+  <data name="DiskDetails" xml:space="preserve"><value>Specifications and SMART</value></data>
+  <data name="BatteryDetails" xml:space="preserve"><value>Battery specifications</value></data>
+  <data name="CameraAbsent" xml:space="preserve"><value>Windows could not find an available camera.</value></data>
+  <data name="MicAbsent" xml:space="preserve"><value>Windows could not find an available microphone.</value></data>
+  <data name="SpeakersAbsent" xml:space="preserve"><value>Windows could not find an audio output device.</value></data>
+  <data name="PlatformTab" xml:space="preserve"><value>System &amp; BIOS</value></data>
+  <data name="AdaptersTab" xml:space="preserve"><value>Adapters</value></data>
+  <data name="WirelessTab" xml:space="preserve"><value>Wi-Fi</value></data>
+  <data name="OfficeTab" xml:space="preserve"><value>Office</value></data>
+  <data name="AdapterInventory" xml:space="preserve"><value>Windows adapter inventory</value></data>
+  <data name="UpdatesTitle" xml:space="preserve"><value>App updates</value></data>
+  <data name="PrivacyTitle" xml:space="preserve"><value>Privacy</value></data>
+  <data name="ComputeSummaryTab" xml:space="preserve"><value>Configuration</value></data>
+  <data name="OperatingSystemTab" xml:space="preserve"><value>Operating system</value></data>
+  <data name="WifiUnavailable" xml:space="preserve"><value>Windows did not report Wi-Fi capabilities for this PC.</value></data>
+  <data name="BluetoothUnavailable" xml:space="preserve"><value>Windows did not report Bluetooth device information.</value></data>
+  <data name="OfficeUnavailable" xml:space="preserve"><value>Office installation and activation information is unavailable.</value></data>
+  <data name="AdaptersUnavailable" xml:space="preserve"><value>Network adapter information is unavailable.</value></data>
 </root>

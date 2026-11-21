@@ -11,6 +11,12 @@ namespace PCHealthPro.App.Diagnostics;
 internal sealed class DisplayTest(Window owner) : IDisposable
 {
     private Window? screen;
+    internal static Brush[] Patterns() => [
+        new SolidColorBrush(Colors.Black), new SolidColorBrush(Colors.White), new SolidColorBrush(Colors.Red),
+        new SolidColorBrush(Colors.Lime), new SolidColorBrush(Colors.Blue),
+        new LinearGradientBrush { StartPoint = new(0, 0), EndPoint = new(1, 0),
+            GradientStops = { new GradientStop { Color = Colors.Black }, new GradientStop { Color = Colors.White, Offset = 1 } } }
+    ];
     public void Open()
     {
         if (screen != null) { screen.Activate(); return; }
@@ -19,12 +25,7 @@ internal sealed class DisplayTest(Window owner) : IDisposable
         var surface = new Grid();
         var focus = new ContentControl { IsTabStop = true, UseSystemFocusVisuals = false };
         surface.Children.Add(focus);
-        Brush[] fills = [
-            new SolidColorBrush(Colors.Black), new SolidColorBrush(Colors.White), new SolidColorBrush(Colors.Red),
-            new SolidColorBrush(Colors.Lime), new SolidColorBrush(Colors.Blue),
-            new LinearGradientBrush { StartPoint = new(0, 0), EndPoint = new(1, 0),
-                GradientStops = { new GradientStop { Color = Colors.Black }, new GradientStop { Color = Colors.White, Offset = 1 } } }
-        ];
+        var fills = Patterns();
         int index = 0;
         surface.Background = fills[0];
         void Next() => surface.Background = fills[index = (index + 1) % fills.Length];

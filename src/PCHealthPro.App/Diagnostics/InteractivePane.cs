@@ -28,8 +28,17 @@ internal sealed class InteractivePane(StackPanel host, LanguageService strings, 
                 ui.Card(host, ManualTest.Display, out var display);
                 var test = new DisplayTest(owner);
                 active = test;
+                var strip = new Grid { ColumnSpacing = 4, Height = 24 };
+                foreach (var fill in DisplayTest.Patterns())
+                {
+                    var swatch = new Border { Background = fill, Style = (Style)Application.Current.Resources["TestKey"] };
+                    Grid.SetColumn(swatch, strip.Children.Count);
+                    strip.ColumnDefinitions.Add(new ColumnDefinition());
+                    strip.Children.Add(swatch);
+                }
+                display.Children.Add(strip);
                 display.Children.Add(ui.Text(ui.T("DisplayHint")));
-                ui.Button(display, "DisplayStart", (_, _) => test.Open());
+                ui.Button(display, "DisplayStart", (_, _) => test.Open(), primary: true);
                 break;
             case "Input":
                 ui.Card(host, ManualTest.Keyboard, out var keyboard);

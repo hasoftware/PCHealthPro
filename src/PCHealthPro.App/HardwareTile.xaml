@@ -1,0 +1,24 @@
+<UserControl x:Class="PCHealthPro.App.HardwareTile"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <UserControl.Resources>
+   <Style x:Key="Good" TargetType="FontIcon"><Setter Property="Foreground" Value="{ThemeResource SystemFillColorSuccessBrush}"/></Style>
+   <Style x:Key="Attention" TargetType="FontIcon"><Setter Property="Foreground" Value="{ThemeResource SystemFillColorCautionBrush}"/></Style>
+   <Style x:Key="Problem" TargetType="FontIcon"><Setter Property="Foreground" Value="{ThemeResource SystemFillColorCriticalBrush}"/></Style>
+ </UserControl.Resources>
+ <Button x:Name="Open" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch"
+   VerticalContentAlignment="Stretch" Padding="16,12" CornerRadius="8" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+   <Grid RowDefinitions="Auto,*,Auto" RowSpacing="8" MinHeight="82">
+     <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="8">
+       <FontIcon x:Name="Icon" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+       <TextBlock x:Name="Category" Grid.Column="1" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}" TextWrapping="Wrap"/>
+       <FontIcon Grid.Column="2" Glyph="&#xE76C;" FontSize="10" Foreground="{ThemeResource TextFillColorTertiaryBrush}"/>
+     </Grid>
+     <TextBlock Grid.Row="1" x:Name="Reading" Style="{ThemeResource BodyStrongTextBlockStyle}" MaxLines="2" TextTrimming="CharacterEllipsis" TextWrapping="Wrap"/>
+     <StackPanel x:Name="StatusLine" Grid.Row="2" Orientation="Horizontal" Spacing="6">
+       <FontIcon x:Name="StatusIcon" FontSize="12"/>
+       <TextBlock x:Name="State" Style="{ThemeResource CaptionTextBlockStyle}" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+     </StackPanel>
+   </Grid>
+ </Button>
+</UserControl>

@@ -1,7 +1,7 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package Name="$(Product)" Manufacturer="HASOFTWARE" Version="$(Version)"
            UpgradeCode="D415C7E2-2AAD-4030-9CED-E7B69BE397E9" Scope="perUser">
-    <MajorUpgrade DowngradeErrorMessage="A newer version is already installed."/>
+    <MajorUpgrade AllowSameVersionUpgrades="yes" DowngradeErrorMessage="A newer version is already installed."/>
     <MediaTemplate EmbedCab="yes" CompressionLevel="high"/>
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="ProgramsFolder" Name="Programs">

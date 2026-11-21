@@ -5,6 +5,40 @@
  <Application.Resources>
    <ResourceDictionary>
      <ResourceDictionary.MergedDictionaries><controls:XamlControlsResources/></ResourceDictionary.MergedDictionaries>
+     <Style x:Key="InspectionSurface" TargetType="Border">
+       <Setter Property="CornerRadius" Value="8"/>
+       <Setter Property="Padding" Value="16"/>
+       <Setter Property="BorderThickness" Value="1"/>
+       <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+       <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}"/>
+     </Style>
+     <Style x:Key="MetricLabel" TargetType="TextBlock" BasedOn="{StaticResource CaptionTextBlockStyle}">
+       <Setter Property="Foreground" Value="{ThemeResource TextFillColorSecondaryBrush}"/>
+     </Style>
+     <Style x:Key="TestGlyph" TargetType="FontIcon">
+       <Setter Property="FontSize" Value="20"/>
+       <Setter Property="Foreground" Value="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+     </Style>
+     <Style x:Key="TestKey" TargetType="Border">
+       <Setter Property="Background" Value="{ThemeResource LayerFillColorDefaultBrush}"/>
+       <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}"/>
+       <Setter Property="BorderThickness" Value="1"/>
+       <Setter Property="CornerRadius" Value="4"/>
+       <Setter Property="Padding" Value="6,4"/>
+     </Style>
+     <Style x:Key="TestKeyPressed" TargetType="Border" BasedOn="{StaticResource TestKey}">
+       <Setter Property="Background" Value="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+     </Style>
+     <Style x:Key="PressedKeyLabel" TargetType="TextBlock">
+       <Setter Property="Foreground" Value="{ThemeResource SolidBackgroundFillColorBaseBrush}"/>
+     </Style>
+     <Style x:Key="PointerSurface" TargetType="Canvas">
+       <Setter Property="Background" Value="{ThemeResource LayerFillColorDefaultBrush}"/>
+     </Style>
+     <Style x:Key="PointerStroke" TargetType="Polyline">
+       <Setter Property="Stroke" Value="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+       <Setter Property="StrokeThickness" Value="3"/>
+     </Style>
    </ResourceDictionary>
  </Application.Resources>
 </Application>

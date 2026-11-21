@@ -25,23 +25,25 @@ internal static class InputTests
 
     public static void Keyboard(StackPanel body, TestControls ui)
     {
-        var listen = ui.Button(body, "KeyboardListen", (sender, _) => ((Button)sender).Focus(FocusState.Programmatic));
+        var actions = ui.Actions(body);
+        var listen = ui.Button(actions, "KeyboardListen", (sender, _) => ((Button)sender).Focus(FocusState.Programmatic), primary: true);
         var seen = new HashSet<int>();
         var labels = new Dictionary<int, Border>();
-        var layout = new StackPanel { Spacing = 3 };
-        var extra = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 3 };
-        var accent = (Brush)Application.Current.Resources["AccentFillColorDefaultBrush"];
-        var neutral = (Brush)Application.Current.Resources["CardBackgroundFillColorDefaultBrush"];
+        var layout = new StackPanel { Spacing = 4 };
+        var extra = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
+        var accent = (Style)Application.Current.Resources["TestKeyPressed"];
+        var neutral = (Style)Application.Current.Resources["TestKey"];
         void Key(Panel panel, int code, string name)
         {
-            var label = new Border { Padding = new Thickness(6, 4, 6, 4), CornerRadius = new CornerRadius(4),
-                Background = neutral, Child = new TextBlock { Text = name } };
+            double width = code switch { 32 => 160, 8 or 13 or 160 or 161 => 64, 9 or 20 => 50, _ => 32 };
+            var label = new Border { Style = neutral, MinWidth = width,
+                Child = new TextBlock { Text = name, HorizontalAlignment = HorizontalAlignment.Center } };
             labels.Add(code, label);
             panel.Children.Add(label);
         }
         foreach (var row in Rows)
         {
-            var line = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 3 };
+            var line = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 4 };
             foreach (var item in row.Split(' '))
             {
                 int colon = item.IndexOf(':');
@@ -63,18 +65,18 @@ internal static class InputTests
             if (!labels.ContainsKey(key)) Key(extra, key, e.OriginalKey.ToString());
             seen.Add(key);
             var tile = labels[key];
-            tile.Background = accent;
+            tile.Style = accent;
             var label = (TextBlock)tile.Child;
-            label.Foreground = (Brush)Application.Current.Resources["TextOnAccentFillColorPrimaryBrush"];
+            label.Style = (Style)Application.Current.Resources["PressedKeyLabel"];
             status.Text = $"{ui.T("KeyboardSeen")} {seen.Count} · {label.Text}";
             if (key != 9) e.Handled = true;
         }), true);
-        ui.Button(body, "TestReset", (_, _) =>
+        ui.Button(actions, "TestReset", (_, _) =>
         {
             foreach (var tile in labels.Values)
             {
-                tile.Background = neutral;
-                ((TextBlock)tile.Child).ClearValue(TextBlock.ForegroundProperty);
+                tile.Style = neutral;
+                ((TextBlock)tile.Child).ClearValue(FrameworkElement.StyleProperty);
             }
             seen.Clear();
             status.Text = ui.T("KeyboardHint");
@@ -85,12 +87,12 @@ internal static class InputTests
     public static void Pointer(StackPanel body, TestControls ui)
     {
         body.Children.Add(ui.Text(ui.T("PointerHint")));
-        var area = new Canvas { Height = 210, Background = (Brush)Application.Current.Resources["LayerFillColorDefaultBrush"],
+        var area = new Canvas { Height = 184, Style = (Style)Application.Current.Resources["PointerSurface"],
             ManipulationMode = ManipulationModes.None };
         AutomationProperties.SetName(area, ui.T("TestPointer"));
         AutomationProperties.SetAutomationId(area, "PointerCanvas");
         area.SizeChanged += (_, e) => area.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
-        body.Children.Add(area);
+        body.Children.Add(new Border { Style = (Style)Application.Current.Resources["TestKey"], Padding = new Thickness(0), Child = area });
         var status = ui.Text();
         body.Children.Add(status);
         var strokes = new Dictionary<uint, Polyline>();
@@ -108,7 +110,7 @@ internal static class InputTests
             }
             if (e.Pointer.PointerDeviceType == Microsoft.UI.Input.PointerDeviceType.Touch) touches.Add(p.PointerId);
             peak = Math.Max(peak, touches.Count);
-            var line = new Polyline { Stroke = (Brush)Application.Current.Resources["AccentTextFillColorPrimaryBrush"], StrokeThickness = 3 };
+            var line = new Polyline { Style = (Style)Application.Current.Resources["PointerStroke"] };
             line.Points.Add(p.Position);
             line.Points.Add(new Point(p.Position.X + 0.5, p.Position.Y));
             if (area.Children.Count >= 160) area.Children.RemoveAt(0);

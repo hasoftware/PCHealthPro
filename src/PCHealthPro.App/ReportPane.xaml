@@ -1,20 +1,40 @@
 <UserControl x:Class="PCHealthPro.App.ReportPane"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
- <StackPanel Spacing="12">
-  <ComboBox x:Name="SourceBox" HorizontalAlignment="Stretch" SelectionChanged="SourceChanged"/>
-  <TextBox x:Name="Seller" MaxLength="160"/>
-  <TextBox x:Name="Price" MaxLength="80"/>
-  <TextBox x:Name="Notes" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="3000"/>
-  <CheckBox x:Name="HideIds" IsChecked="True" Click="PrivacyChanged"/>
-  <StackPanel Orientation="Horizontal" Spacing="8">
-   <ComboBox x:Name="Format" SelectedIndex="0"><x:String>PDF</x:String><x:String>JSON</x:String><x:String>HTML</x:String></ComboBox>
-   <Button x:Name="ExportButton" Style="{ThemeResource AccentButtonStyle}" Click="Export"/>
-   <Button x:Name="HistoryButton" Click="Save"/>
-  </StackPanel>
-  <TextBlock x:Name="Status" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
-  <TextBlock x:Name="Summary" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
-  <Expander x:Name="DetailBox" HorizontalAlignment="Stretch"><TextBlock x:Name="Details" TextWrapping="Wrap" IsTextSelectionEnabled="True"/></Expander>
+ <StackPanel Spacing="8">
+  <Border Style="{StaticResource InspectionSurface}">
+   <StackPanel Spacing="12">
+    <ComboBox x:Name="SourceBox" HorizontalAlignment="Stretch" SelectionChanged="SourceChanged"/>
+    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+     <FontIcon Glyph="&#xE9F9;" FontSize="24" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+     <TextBlock Grid.Column="1" x:Name="Summary" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
+    </Grid>
+   </StackPanel>
+  </Border>
+  <Expander x:Name="NotesBox" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
+   <StackPanel Spacing="12">
+    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+     <TextBox x:Name="Seller" MaxLength="160" LostFocus="FinishEditingNotes"/>
+     <TextBox x:Name="Price" Grid.Column="1" MaxLength="80" LostFocus="FinishEditingNotes"/>
+    </Grid>
+    <TextBox x:Name="Notes" AcceptsReturn="True" TextWrapping="Wrap" MaxLength="3000" LostFocus="FinishEditingNotes"/>
+   </StackPanel>
+  </Expander>
+  <Border Style="{StaticResource InspectionSurface}">
+   <StackPanel Spacing="8">
+    <TextBlock x:Name="OutputTitle" Style="{ThemeResource BodyStrongTextBlockStyle}"/>
+    <CheckBox x:Name="HideIds" IsChecked="True" Click="PrivacyChanged"/>
+    <Grid ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="8" SizeChanged="ResizeActions">
+     <ComboBox x:Name="Format" SelectedIndex="0"><x:String>PDF</x:String><x:String>JSON</x:String><x:String>HTML</x:String></ComboBox>
+     <Button x:Name="ExportButton" Grid.Column="1" Click="Export">
+      <StackPanel Orientation="Horizontal" Spacing="8"><FontIcon Glyph="&#xE74E;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/><TextBlock x:Name="ExportLabel"/></StackPanel>
+     </Button>
+     <Button x:Name="HistoryButton" Grid.Column="2" Click="Save"/>
+    </Grid>
+   </StackPanel>
+  </Border>
+  <TextBlock x:Name="Status" Visibility="{x:Bind HasText(Status.Text), Mode=OneWay}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite"/>
+  <Expander x:Name="DetailBox" Expanding="OpenDetails" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"><StackPanel x:Name="Details" Spacing="4"/></Expander>
   <ComboBox x:Name="CompareBox" HorizontalAlignment="Stretch" SelectionChanged="ComparisonChanged"/>
   <TextBlock x:Name="Comparison" TextWrapping="Wrap" IsTextSelectionEnabled="True"/>
  </StackPanel>

@@ -11,31 +11,31 @@ internal sealed class TestControls(LanguageService strings, ManualTestSession se
     public string T(string key) => strings.Get(key);
     public TextBlock Text(string value = "") => new() { Text = value, TextWrapping = TextWrapping.Wrap };
 
-    public StackPanel Card(Panel host, ManualTest test, out StackPanel body)
+    public void Card(Panel host, ManualTest test, out StackPanel body)
     {
-        var card = new StackPanel { Spacing = 10, Padding = new Thickness(16), CornerRadius = new CornerRadius(8),
-            BorderThickness = new Thickness(1), BorderBrush = (Microsoft.UI.Xaml.Media.Brush)Application.Current.Resources["CardStrokeColorDefaultBrush"] };
-        var heading = Text(T("Test" + test));
-        heading.Style = (Style)Application.Current.Resources["SubtitleTextBlockStyle"];
-        card.Children.Add(heading);
-        body = new StackPanel { Spacing = 8 };
-        card.Children.Add(body);
-        var verdict = new ComboBox { Header = T("TestVerdict"), MinWidth = 180,
-            ItemsSource = Enum.GetValues<TestVerdict>().Select(v => T("Verdict" + v)).ToArray(),
-            SelectedIndex = (int)session.Get(test) };
-        AutomationProperties.SetAutomationId(verdict, test + "Verdict");
-        verdict.SelectionChanged += (_, _) =>
-        {
-            if (verdict.SelectedIndex >= 0) session.Mark(test, (TestVerdict)verdict.SelectedIndex);
-        };
-        card.Children.Add(verdict);
+        var card = new ManualTestCard { Tag = test };
+        body = card.Bind(test, session, strings);
         host.Children.Add(card);
-        return card;
     }
 
-    public Button Button(Panel host, string key, RoutedEventHandler click)
+    public TestActions Actions(Panel host)
+    {
+        var actions = new TestActions();
+        host.Children.Add(actions);
+        return actions;
+    }
+
+    public Button Button(Panel host, string key, RoutedEventHandler click, bool primary = false)
     {
         var button = new Button { Content = T(key) };
+        if (primary)
+        {
+            var action = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 8 };
+            action.Children.Add(new FontIcon { Glyph = "\uE768", FontSize = 14, Style = (Style)Application.Current.Resources["TestGlyph"] });
+            action.Children.Add(Text(T(key)));
+            button.Content = action;
+            AutomationProperties.SetName(button, T(key));
+        }
         AutomationProperties.SetAutomationId(button, key);
         button.Click += click;
         host.Children.Add(button);

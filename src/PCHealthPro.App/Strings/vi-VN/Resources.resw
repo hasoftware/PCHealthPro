@@ -261,4 +261,30 @@
   <data name="UpdateCurrent" xml:space="preserve"><value>Chưa có bản phát hành mới hơn.</value></data>
   <data name="UpdateZip" xml:space="preserve"><value>Tải và xác minh ZIP portable, mở bản mới ở thư mục bên cạnh rồi đóng phiên này? Hãy lưu lần kiểm tra trước.</value></data>
   <data name="UpdateMsi" xml:space="preserve"><value>Tải và xác minh MSI, mở Windows Installer rồi đóng phiên này? Hãy lưu lần kiểm tra trước.</value></data>
+  <data name="HardwareSummary" xml:space="preserve"><value>Phần cứng</value></data>
+  <data name="ScannedAt" xml:space="preserve"><value>Đã kiểm tra lúc {0}</value></data>
+  <data name="ReportOutput" xml:space="preserve"><value>Lưu báo cáo</value></data>
+  <data name="ReportFormat" xml:space="preserve"><value>Định dạng file</value></data>
+  <data name="ReportCoverage" xml:space="preserve"><value>{0} nhóm phần cứng · Đã ghi kết quả {1}/{2} bài kiểm tra tương tác</value></data>
+  <data name="CpuTopology" xml:space="preserve"><value>{0} nhân · {1} luồng</value></data>
+  <data name="ManualCount" xml:space="preserve"><value>Kiểm tra tương tác · {0}/{1} đã ghi kết quả</value></data>
+  <data name="DiskHealthTab" xml:space="preserve"><value>Tình trạng ổ</value></data>
+  <data name="DiskDetails" xml:space="preserve"><value>Thông số và SMART</value></data>
+  <data name="BatteryDetails" xml:space="preserve"><value>Thông số pin</value></data>
+  <data name="CameraAbsent" xml:space="preserve"><value>Windows chưa tìm thấy camera khả dụng.</value></data>
+  <data name="MicAbsent" xml:space="preserve"><value>Windows chưa tìm thấy micro khả dụng.</value></data>
+  <data name="SpeakersAbsent" xml:space="preserve"><value>Windows chưa tìm thấy thiết bị phát âm thanh.</value></data>
+  <data name="PlatformTab" xml:space="preserve"><value>Máy &amp; BIOS</value></data>
+  <data name="AdaptersTab" xml:space="preserve"><value>Bộ điều hợp</value></data>
+  <data name="WirelessTab" xml:space="preserve"><value>Wi-Fi</value></data>
+  <data name="OfficeTab" xml:space="preserve"><value>Office</value></data>
+  <data name="AdapterInventory" xml:space="preserve"><value>Thiết bị mạng theo Windows</value></data>
+  <data name="UpdatesTitle" xml:space="preserve"><value>Cập nhật ứng dụng</value></data>
+  <data name="PrivacyTitle" xml:space="preserve"><value>Quyền riêng tư</value></data>
+  <data name="ComputeSummaryTab" xml:space="preserve"><value>Cấu hình</value></data>
+  <data name="OperatingSystemTab" xml:space="preserve"><value>Hệ điều hành</value></data>
+  <data name="WifiUnavailable" xml:space="preserve"><value>Windows chưa cung cấp thông tin về chuẩn Wi-Fi trên máy này.</value></data>
+  <data name="BluetoothUnavailable" xml:space="preserve"><value>Windows chưa cung cấp thông tin thiết bị Bluetooth.</value></data>
+  <data name="OfficeUnavailable" xml:space="preserve"><value>Chưa đọc được thông tin cài đặt hoặc kích hoạt Office.</value></data>
+  <data name="AdaptersUnavailable" xml:space="preserve"><value>Chưa đọc được thông tin bộ điều hợp mạng.</value></data>
 </root>

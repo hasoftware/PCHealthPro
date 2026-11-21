@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Windows.Devices.Enumeration;
 using Windows.Graphics.Imaging;
@@ -13,6 +14,7 @@ internal sealed class CameraTest : IDisposable
     private readonly TestControls ui;
     private readonly ComboBox devices;
     private readonly Button start, stop, snap;
+    private readonly TestActions actions;
     private readonly Image preview = new() { MaxHeight = 300 };
     private readonly Image photo = new() { MaxHeight = 160 };
     private readonly TextBlock status;
@@ -28,9 +30,10 @@ internal sealed class CameraTest : IDisposable
         this.ui = ui;
         devices = ui.Picker(body, "CameraDevice");
         devices.DisplayMemberPath = "Name";
-        start = ui.Button(body, "CameraStart", async (_, _) => await StartAsync());
-        snap = ui.Button(body, "CameraSnap", (_, _) => takePhoto = true);
-        stop = ui.Button(body, "TestStop", (_, _) => Stop());
+        actions = ui.Actions(body);
+        start = ui.Button(actions, "CameraStart", async (_, _) => await StartAsync(), primary: true);
+        snap = ui.Button(actions, "CameraSnap", (_, _) => takePhoto = true);
+        stop = ui.Button(actions, "TestStop", (_, _) => Stop());
         status = ui.Text();
         body.Children.Add(status);
         body.Children.Add(preview);
@@ -48,7 +51,12 @@ internal sealed class CameraTest : IDisposable
             if (closed) return;
             devices.ItemsSource = list.ToArray();
             devices.SelectedIndex = list.Count == 0 ? -1 : 0;
-            if (list.Count == 0) status.Text = ui.T("TestNoDevice");
+            devices.IsEnabled = list.Count > 0;
+            if (list.Count == 0)
+            {
+                devices.Visibility = actions.Visibility = Visibility.Collapsed;
+                status.Text = ui.T("CameraAbsent");
+            }
         }
         catch (Exception ex) { if (!closed) status.Text = ui.Error(ex); }
     }
@@ -85,6 +93,7 @@ internal sealed class CameraTest : IDisposable
             frames = null;
             capture.Failed += Failed;
             preview.Source = live = new SoftwareBitmapSource();
+            preview.Visibility = Visibility.Visible;
             reader.FrameArrived += Frame;
             var format = source.CurrentFormat;
             var fps = format.FrameRate;
@@ -121,7 +130,7 @@ internal sealed class CameraTest : IDisposable
                         takePhoto = false;
                         var still = new SoftwareBitmapSource();
                         await still.SetBitmapAsync(copy);
-                        if (reader == sender) photo.Source = still;
+                        if (reader == sender) { photo.Source = still; photo.Visibility = Visibility.Visible; }
                     }
                 }
                 catch (Exception ex) { if (reader == sender) { Stop(); status.Text = ui.Error(ex); } }
@@ -144,6 +153,7 @@ internal sealed class CameraTest : IDisposable
         if (oldReader != null) { oldReader.FrameArrived -= Frame; oldReader.Dispose(); }
         if (capture != null) { capture.Failed -= Failed; capture.Dispose(); capture = null; }
         preview.Source = photo.Source = null;
+        preview.Visibility = photo.Visibility = Visibility.Collapsed;
         takePhoto = false;
         live = null;
         status.Text = "";
